@@ -35,16 +35,18 @@ Deadline: 23/02 (before next tutored session)
 ---
 
 # Tasks
+Each of us will lead a different task but we will work simultaneously on any task and different aspects of the project if/when needed.
 ## Phase I
-Inaki: 
-- Generation of random states and projective measurements
-- Overall code integration and software infrastructure
 
 Aido:
 - Classical simulation from Alice's perspective
 
 Tomas:
 - Classical simulation from Bob's perspective
+
+Inaki: 
+- Generation of random states and projective measurements
+- Overall code integration and software infrastructure
 
 
 # Open Questions
