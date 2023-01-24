@@ -45,3 +45,4 @@ Deadline: 23/02 (before next tutored session)
 - [Decomposition of any quantum measurement into extremals - Sentis et al., 2013](papers/2013-SentisEtAl-DecompositionOfAnyQuantumMeasurementIntoExtremals.pdf) (POVM decomposition into rank-1 measurements)
 - [Entanglement cost of generalised measurements - Jozsa et al., 2003]([papers/2003-JozsaEtAl-EntanglementCostOfGeneralisedMeasurements.pdf) (Naimark’s extensions)
 - [Random Unitary Matrices - ZyczkowskiAndKus, 1994](papers/1994-ZyczkowskiAndKus-RandomUnitaryMatrices.pdf)
+- Unitary decomposition into 1 and 2-qubit gates, Nielsen & Chuang, page 189
