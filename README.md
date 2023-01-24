@@ -11,7 +11,7 @@ Prove by classical and quantum computer based experiments that a qubit transmiss
 
 ## Phase I - Simulate prepare-and-measure PVMs classically
 
-### I.a - Generation of random states and projector measurements
+### I.a - Generation of random states and projection-valued measurements
 
 ### I.b - Classical simulation using Python
 
