@@ -7,15 +7,16 @@ Classical and quantum simulations of qubit transmission. Final Project for Postg
 
 ### A.1 - Generation of random states and projector measurements
 
-### A.2 - Classical simulation (Python)
+### A.2 - Classical simulation using Python
 
-### A.3 - Generation of multiple-qubit states towards Bell scenarios preparation
+### A.3 - Generation of multiple-qubit states towards Bell scenarios preparation (see D)
+
 
 ## B - Simulate prepare-and-measure PVMs classically with a quantum computer
 
 ### B.1 - Simulation using Qiskit Quantum Simulator
 
-### B.2 - Simulation using IBM-Q Quantum Computer. Error correction 
+### B.2 - Simulation using IBM Quantum Computer. Error correction 
 
 
 ## C - Simulate Prepare-and-Measure with POVMs
@@ -23,6 +24,7 @@ Classical and quantum simulations of qubit transmission. Final Project for Postg
 ### C.1 - Generation of POVM measurements
 
 ### C.2 - Perform Classical and quantum computer simulation (as per Phase B)
+
 
 ## D - Simulate using Bell scenarios
 
@@ -34,3 +36,4 @@ Classical and quantum simulations of qubit transmission. Final Project for Postg
  
  # References
 [Qiskit's Random State Vector API](http://qiskit.org/documentation/stubs/qiskit.quantum_info.random_statevector.html)
+Naimark's extension
