@@ -1,4 +1,4 @@
-# qubit-transmission-simulations
+# The clasical cost of transmitting a qubit 
 Classical and quantum simulations of qubit transmission. Final Project for Postgraduate Degree in Quantum Engineering by Universitat Politècnica de Catalunya (UPC).
 
 # Reference Paper
