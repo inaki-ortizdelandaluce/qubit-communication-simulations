@@ -33,26 +33,12 @@ Deadline: 23/02 (before next tutored session)
 ---
 ## Phase IV - Simulate using Bell scenarios
 ---
-
-# Tasks
-Each of us will lead a different task but we will work simultaneously on any task and different aspects of the project if/when needed.
-## Phase I
-
-Aido:
-- Classical simulation from Alice's perspective
-
-Tomas:
-- Classical simulation from Bob's perspective
-
-Inaki: 
-- Generation of random states and projective measurements
-- Overall code integration and software infrastructure
-
+## Phase V - Extend analysis to qutrits
+---
 
 # Open Questions
 
-- Using pure states or mixed states
-- Random states with Qiskit or uniform distribution over the Bloch sphere
+- Project Report
  
  # Other References
 - [The Communication Cost of Simulating Bell Correlations - Toner and Bacon, 2003](https://arxiv.org/abs/quant-ph/0304076)
