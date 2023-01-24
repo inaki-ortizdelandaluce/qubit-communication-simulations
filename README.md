@@ -42,5 +42,6 @@ Deadline: 23/02 (before next tutored session)
  
  # Other References
 - [The Communication Cost of Simulating Bell Correlations - Toner and Bacon, 2003](https://arxiv.org/abs/quant-ph/0304076)
-- [Qiskit's Random State Vector API](http://qiskit.org/documentation/stubs/qiskit.quantum_info.random_statevector.html)
-- Naimark's extension
+- [Decomposition of any quantum measurement into extremals - Sentis et al., 2013](papers/2013-SentisEtAl-DecompositionOfAnyQuantumMeasurementIntoExtremals.pdf) (POVM decomposition into rank-1 measurements)
+- [Entanglement cost of generalised measurements - Jozsa et al., 2003]([papers/2003-JozsaEtAl-EntanglementCostOfGeneralisedMeasurements.pdf) (Naimark’s extensions)
+- [Random Unitary Matrices - ZyczkowskiAndKus, 1994](papers/1994-ZyczkowskiAndKus-RandomUnitaryMatrices.pdf)
