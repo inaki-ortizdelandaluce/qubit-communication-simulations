@@ -17,7 +17,7 @@ Prove by classical and quantum computer based experiments that a qubit transmiss
 
 ### I.c - Generation of multiple-qubit states towards Bell scenarios preparation (see Phase IV)
 ---
-## Phase II - Simulate prepare-and-measure PVMs classically with a quantum computer
+## Phase II - Simulate prepare-and-measure PVMs with a quantum computer
 
 ### II.a - Simulation using Qiskit Quantum Simulator
 
