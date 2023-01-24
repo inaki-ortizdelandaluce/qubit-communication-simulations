@@ -40,5 +40,6 @@ Deadline: 23/02 (before next tutored session)
 - Random states with Qiskit or uniform distribution over the Bloch sphere
  
  # Other References
+- [The Communication Cost of Simulating Bell Correlations - Toner and Bacon, 2003](https://arxiv.org/abs/quant-ph/0304076)
 - [Qiskit's Random State Vector API](http://qiskit.org/documentation/stubs/qiskit.quantum_info.random_statevector.html)
 - Naimark's extension
