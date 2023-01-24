@@ -34,6 +34,19 @@ Deadline: 23/02 (before next tutored session)
 ## Phase IV - Simulate using Bell scenarios
 ---
 
+# Tasks
+## Phase I
+Inaki: 
+- Generation of random states and projective measurements
+- Overall code integration and software infrastructure
+
+Aido:
+- Classical simulation from Alice's perspective
+
+Tomas:
+- Classical simulation from Bob's perspective
+
+
 # Open Questions
 
 - Using pure states or mixed states
