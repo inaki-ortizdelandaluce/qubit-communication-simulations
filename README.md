@@ -1,6 +1,12 @@
 # qubit-transmission-simulations
 Classical and quantum simulations of qubit transmission. Final Project for Postgraduate Degree in Quantum Engineering by Universitat Politècnica de Catalunya (UPC).
 
+# Reference Paper
+[The classical cost of transmitting a qubit - Renner, Tavakoli and Quintino, 2022 (arXiv2207.02244)](https://arxiv.org/abs/2207.02244)
+
+# Scope
+Prove by classical and quantum computer based experiments that a qubit transmission can be simulated classically with a total cost of 2 qubits for any general measurement, either in a prepare-and-measure or a Bell scenario.
+
 # Roadmap
 
 ## A - Simulate prepare-and-measure PVMs classically
@@ -31,9 +37,9 @@ Classical and quantum simulations of qubit transmission. Final Project for Postg
 
 # Open Questions
 
- - Using pure states or mixed states
- - Random states with Qiskit or uniform distribution over the Bloch sphere
+- Using pure states or mixed states
+- Random states with Qiskit or uniform distribution over the Bloch sphere
  
- # References
-[Qiskit's Random State Vector API](http://qiskit.org/documentation/stubs/qiskit.quantum_info.random_statevector.html)
-Naimark's extension
+ # Other References
+- [Qiskit's Random State Vector API](http://qiskit.org/documentation/stubs/qiskit.quantum_info.random_statevector.html)
+- Naimark's extension
