@@ -27,7 +27,7 @@ Prove by classical and quantum computer based experiments that a qubit transmiss
 
 ### III.a - Generation of POVM measurements
 
-### III.b - Perform Classical and quantum computer simulation (as per Phase B)
+### III.b - Perform classical and quantum computer simulations (as per Phases I and II)
 ---
 ## Phase IV - Simulate using Bell scenarios
 ---
