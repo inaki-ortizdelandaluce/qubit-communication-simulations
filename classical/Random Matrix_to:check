@@ -1,0 +1,9 @@
+import numpy as np
+from scipy.linalg import qr
+
+n = 2
+m = 2
+H = np.random.randn(n, m)
+Q, R = qr(H)
+
+print (Q.dot(Q.T))
