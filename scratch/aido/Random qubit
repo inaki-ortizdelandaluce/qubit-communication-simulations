@@ -1,0 +1,5 @@
+import numpy as np
+from qiskit.quantum_info import random_unitary
+#random_unitary(2**number_of_qubits)
+random_unitary(2**2)
+#What returns is a unitary matrix with dimension (2𝑛𝑢𝑚𝑏𝑒𝑟_𝑜𝑓_𝑞𝑢𝑏𝑖𝑡𝑠,2𝑛𝑢𝑚𝑏𝑒𝑟_𝑜𝑓_𝑞𝑢𝑏𝑖𝑡𝑠)
