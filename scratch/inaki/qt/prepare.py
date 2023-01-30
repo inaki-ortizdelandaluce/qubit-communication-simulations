@@ -17,6 +17,21 @@ def random_qubit():
     return Qubit.from_array(unitary[:, 0])
 
 
+def random_qubit_pvm():
+    """
+    Generates a random projection value measure for a qubit
+
+    Returns
+    -------
+    (ndarray, ndarray)
+            A projection value measure consisting of tuple of projection operators for the first and second
+            random basis elements.
+    """
+    unitary = random_unitary((2, 2))
+    return Qubit.from_array(unitary[:, 0]).to_density_matrix(), \
+        Qubit.from_array(unitary[:, 1]).to_density_matrix()
+
+
 def random_unitary(shape):
     """
     Generates a random unitary matrix with the given shape.

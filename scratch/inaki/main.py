@@ -1,7 +1,9 @@
 import matplotlib.pyplot as plt
 import numpy as np
+import math
 from healpy.pixelfunc import ang2pix
-from qt.prepare import random_qubit
+from qt.prepare import random_qubit, random_unitary, random_qubit_pvm
+from qt.qubit import Qubit
 from qiskit.visualization import plot_bloch_vector
 
 
@@ -21,12 +23,14 @@ def test_random_states():
     return None
 
 
-def test_bloch_sphere():
-    theta, phi = random_qubit().bloch_angles()
-    _ = plot_bloch_vector([1., theta, phi], coord_type='spherical', title="Random state")
-    plt.show()
+def test_random_pvm():
+    p1, p2 = random_qubit_pvm()
+    if np.allclose(p1 + p2, np.identity(2)):
+        print("PVM projectors sum the identity")
+    if np.allclose(np.matmul(p1, p1), p1) and np.allclose(np.matmul(p2, p2), p2):
+        print("PVM projectors are idempotent")
 
 
 if __name__ == "__main__":
-    test_random_states()
-    # test_bloch_sphere()
+    # test_random_states()
+    test_random_pvm()

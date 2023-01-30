@@ -11,18 +11,16 @@ class Qubit:
         Parameters
         ---------
         a : complex
-            The amplitude of the zero state
+            The amplitude of the zero state.
         b : complex
-            The amplitude of the one state
-
-
+            The amplitude of the one state.
         """
         self.zero = complex(a)
         self.one = complex(b)
         self.normalize()
 
     def __repr__(self):
-        return '{}|0> + {}|1>'.format(self.zero, self.one)
+        return '{} |0> + {} |1>'.format(self.zero, self.one)
 
     @classmethod
     def from_array(cls, arr):
@@ -63,6 +61,17 @@ class Qubit:
         phi = phi1 - phi0
 
         return theta, phi
+
+    def to_density_matrix(self):
+        """
+         Return the density matrix corresponding to the qubit in a pure state.
+
+         Returns
+         -------
+         ndarray
+             A 2x2 density matrix corresponding to the qubit in a pure state.
+         """
+        return np.outer(self.to_array(), self.to_array().conj())
 
 
 class TwoQubit:
