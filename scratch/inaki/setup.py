@@ -30,7 +30,7 @@ if __name__ == "__main__":
               "Programming Language :: Python :: 3",
               "License :: OSI Approved :: MIT License",
           ],
-          install_requires=['numpy', 'matplotlib', 'healpy', 'qiskit-terra'],
+          install_requires=['numpy', 'matplotlib', 'healpy',],
           python_requires='>=3.10',
           )
 

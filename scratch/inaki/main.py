@@ -1,10 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
-import math
 from healpy.pixelfunc import ang2pix
-from qt.prepare import random_qubit, random_unitary, random_qubit_pvm
-from qt.qubit import Qubit
-from qiskit.visualization import plot_bloch_vector
+from qt.prepare import random_qubit, random_qubit_pvm
 
 
 def test_random_states():
