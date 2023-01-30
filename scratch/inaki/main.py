@@ -29,5 +29,5 @@ def test_bloch_sphere():
 
 
 if __name__ == "__main__":
-    # test_random_states()
-    test_bloch_sphere()
+    test_random_states()
+    # test_bloch_sphere()

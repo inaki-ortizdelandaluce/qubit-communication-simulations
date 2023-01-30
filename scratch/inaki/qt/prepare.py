@@ -12,9 +12,9 @@ def random_qubit():
         A random Qubit.
     """
     # evolve the zero state with a random unitary matrix
+    # same as returning first column of random unitary matrix
     unitary = random_unitary((2, 2))
-    q = np.matmul(unitary, Qubit().to_array())
-    return Qubit.from_array(q)
+    return Qubit.from_array(unitary[:, 0])
 
 
 def random_unitary(shape):
