@@ -59,7 +59,6 @@ class Qubit:
         """
         r0, phi0 = cmath.polar(self.zero)
         r1, phi1 = cmath.polar(self.one)
-        # theta = 2 * math.atan2(r1, r0)
         theta = 2 * math.acos(r0)
         phi = phi1 - phi0
 

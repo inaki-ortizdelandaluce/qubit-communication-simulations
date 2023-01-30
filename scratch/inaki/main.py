@@ -1,15 +1,15 @@
 import math
 import matplotlib.pyplot as plt
 import numpy as np
-import scipy.stats as stats
 from healpy.pixelfunc import ang2pix
-from qt.__random__ import random_qubit
+from qt.prepare import random_qubit
+from qiskit.visualization import plot_bloch_vector
 
 
 def test_random_states():
     size = 100000
     nside = 4
-    pixels = 12 * nside **2
+    pixels = 12 * nside ** 2
     indexes = np.zeros(size)
     for i in range(size):
         theta, phi = random_qubit().bloch_angles()
@@ -22,6 +22,12 @@ def test_random_states():
     return None
 
 
-if __name__ == "__main__":
-    test_random_states()
+def test_bloch_sphere():
+    theta, phi = random_qubit().bloch_angles()
+    _ = plot_bloch_vector([1., theta, phi], coord_type='spherical', title="Random state")
+    plt.show()
 
+
+if __name__ == "__main__":
+    # test_random_states()
+    test_bloch_sphere()
