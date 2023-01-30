@@ -1,4 +1,3 @@
-import math
 import matplotlib.pyplot as plt
 import numpy as np
 from healpy.pixelfunc import ang2pix
