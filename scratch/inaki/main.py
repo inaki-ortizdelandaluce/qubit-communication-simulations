@@ -20,14 +20,5 @@ def test_random_states():
     return None
 
 
-def test_random_pvm():
-    p1, p2 = random_qubit_pvm()
-    if np.allclose(p1 + p2, np.identity(2)):
-        print("PVM projectors sum the identity")
-    if np.allclose(np.matmul(p1, p1), p1) and np.allclose(np.matmul(p2, p2), p2):
-        print("PVM projectors are idempotent")
-
-
 if __name__ == "__main__":
-    # test_random_states()
-    test_random_pvm()
+    test_random_states()
