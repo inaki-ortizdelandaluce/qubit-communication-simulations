@@ -1,0 +1,21 @@
+import sklearn
+from sklearn.random_projection import GaussianRandomProjection
+import numpy as np
+from matplotlib import pyplot as plt
+
+# Random data and its transformation
+X_random = np.random.RandomState(0).rand(100, 10000)
+gauss_data = GaussianRandomProjection(random_state=0)
+X_transformed = gauss_data.fit_transform(X_random)
+
+# Get the size of the transformed data
+print('Shape of transformed data is: ' + str(X_transformed.shape))
+
+# Set the figure size
+plt.figure(figsize=(7.50, 3.50))
+plt.subplots_adjust(bottom=0.05, top=0.9, left=0.05, right=0.95)
+
+# Histogram for visualizing the elements of the transformation matrix
+plt.hist(gauss_data.components_.flatten())
+plt.title('Histogram of the flattened transformation matrix', size ='18')
+plt.show()
