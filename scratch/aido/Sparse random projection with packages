@@ -1,0 +1,35 @@
+# Importing the necessary packages
+import sklearn
+from sklearn.random_projection import SparseRandomProjection
+import numpy as np
+from matplotlib import pyplot as plt
+
+# Random data and its Sparse transformation
+rng = np.random.RandomState(42)
+X_rand = rng.rand(25, 3000)
+sparse_data = SparseRandomProjection(random_state=0)
+X_transformed = sparse_data.fit_transform(X_rand)
+
+# Get the size of the transformed data
+print('Shape of transformed data is: ' + str(X_transformed.shape))
+
+# Getting data of the transformation matrix and storing it in s.
+s = sparse_data.components_.data
+total_elements = sparse_data.components_.shape[0] *\
+sparse_data.components_.shape[1]
+pos = s[s>0][0]
+neg = s[s<0][0]
+print('Shape of transformation matrix is: '+ str(sparse_data.components_.shape))
+counts = (sum(s==neg), total_elements - len(s), sum(s==pos))
+
+# Set the figure size
+plt.figure(figsize=(7.16, 3.50))
+plt.subplots_adjust(bottom=0.05, top=0.9, left=0.05, right=0.95)
+
+# Histogram for visualizing the elements of the transformation matrix
+plt.bar([neg, 0, pos], counts, width=0.1)
+plt.xticks([neg, 0, pos])
+plt.suptitle('Histogram of flattened transformation matrix, ' +
+   'density = ' +
+   '{:.2f}'.format(sparse_data.density_), size='14')
+plt.show()
