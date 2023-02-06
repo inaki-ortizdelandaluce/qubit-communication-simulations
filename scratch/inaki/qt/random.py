@@ -1,8 +1,26 @@
+import math
+
 import numpy as np
 from qt.qubit import Qubit
 
 
-def random_qubit():
+def vector3():
+    """
+    Generates a normalised vector uniformly distributed on the unit radius sphere
+
+    Returns
+    -------
+    ndarray
+            A normalised vector on the unit radius sphere
+
+    """
+    theta, phi = qubit().bloch_angles()
+    return np.array([math.sin(theta) * math.cos(phi),
+                     math.sin(theta) * math.sin(phi),
+                     math.cos(theta)])
+
+
+def qubit():
     """
     Generates a random qubit.
 
@@ -13,11 +31,11 @@ def random_qubit():
     """
     # evolve the zero state with a random unitary matrix
     # same as returning first column of random unitary matrix
-    unitary = random_unitary((2, 2))
-    return Qubit.from_array(unitary[:, 0])
+    u = unitary((2, 2))
+    return Qubit.from_array(u[:, 0])
 
 
-def random_qubit_pvm():
+def pvm():
     """
     Generates a random projection value measure for a qubit
 
@@ -27,12 +45,12 @@ def random_qubit_pvm():
             A projection value measure consisting of tuple of projection operators for the first and second
             random basis elements.
     """
-    unitary = random_unitary((2, 2))
-    return Qubit.from_array(unitary[:, 0]).to_density_matrix(), \
-        Qubit.from_array(unitary[:, 1]).to_density_matrix()
+    u = unitary((2, 2))
+    return Qubit.from_array(u[:, 0]).to_density_matrix(), \
+        Qubit.from_array(u[:, 1]).to_density_matrix()
 
 
-def random_unitary(shape):
+def unitary(shape):
     """
     Generates a random unitary matrix with the given shape.
 

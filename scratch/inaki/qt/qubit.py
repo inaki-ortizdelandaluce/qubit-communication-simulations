@@ -4,23 +4,23 @@ import math
 
 
 class Qubit:
-    def __init__(self, a=1, b=0):
+    def __init__(self, alpha=1, beta=0):
         """
         Initializes a qubit in the computational basis. If no arguments are provided, it returns the zero state.
 
         Parameters
         ---------
-        a : complex
+        alpha : complex
             The amplitude of the zero state.
-        b : complex
+        beta : complex
             The amplitude of the one state.
         """
-        self.zero = complex(a)
-        self.one = complex(b)
+        self.alpha = complex(alpha)
+        self.beta = complex(beta)
         self.normalize()
 
     def __repr__(self):
-        return '{} |0> + {} |1>'.format(self.zero, self.one)
+        return '{} |0> + {} |1>'.format(self.alpha, self.beta)
 
     @classmethod
     def from_array(cls, arr):
@@ -40,11 +40,11 @@ class Qubit:
         return cls(arr[0], arr[1])
 
     def to_array(self):
-        return np.array([self.zero, self.one], dtype=np.complex_)
+        return np.array([self.alpha, self.beta], dtype=np.complex_)
 
     def normalize(self):
         arr = self.to_array()
-        self.zero, self.one = arr/np.linalg.norm(arr)
+        self.alpha, self.beta = arr/np.linalg.norm(arr)
 
     def bloch_angles(self):
         """
@@ -55,8 +55,8 @@ class Qubit:
         (float, float)
             The Bloch sphere coordinates, first the polar angle and then the azimuthal angle (both in radians).
         """
-        r0, phi0 = cmath.polar(self.zero)
-        r1, phi1 = cmath.polar(self.one)
+        r0, phi0 = cmath.polar(self.alpha)
+        r1, phi1 = cmath.polar(self.beta)
         theta = 2 * math.acos(r0)
         phi = phi1 - phi0
 

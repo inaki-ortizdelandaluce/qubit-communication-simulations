@@ -12,7 +12,7 @@ def test_qubit_to_array():
 def test_qubit_normalize():
     q = Qubit(1., 1.)
     q.normalize()
-    assert np.allclose(np.array([q.zero, q.one]), 1/math.sqrt(2) * np.ones((2,)))
+    assert np.allclose(np.array([q.alpha, q.beta]), 1/math.sqrt(2) * np.ones((2,)))
 
 
 def test_qubit_bloch_angles():
