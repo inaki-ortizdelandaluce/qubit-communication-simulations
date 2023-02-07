@@ -26,6 +26,14 @@ def test_qubit_bloch_angles():
     assert math.degrees(theta2) == approx(120.) and math.degrees(phi2) == approx(45.)
 
 
+def test_qubit_bloch_vector():
+
+    q = Qubit((1.-1.j) / (2 * math.sqrt(2)), math.sqrt(3) / 2)
+    xyz = q.bloch_vector()
+
+    assert np.allclose(np.asarray(xyz), np.array([0.61237, 0.61237, -0.499999]))
+
+
 def test_qubit_to_density_matrix():
     q = Qubit(1., -1.)
     assert np.allclose(q.to_density_matrix(), 0.5 * np.array([[1., -1.], [-1., 1.]]))

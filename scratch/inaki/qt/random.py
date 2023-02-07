@@ -42,12 +42,25 @@ def pvm():
     Returns
     -------
     (ndarray, ndarray)
-            A projection value measure consisting of tuple of projection operators for the first and second
-            random basis elements.
+            A projection value measure consisting of tuple of projection operators.
     """
     u = unitary((2, 2))
     return Qubit.from_array(u[:, 0]).to_density_matrix(), \
         Qubit.from_array(u[:, 1]).to_density_matrix()
+
+
+def pvm_vectors():
+    """
+    Generates a random projection value measure for a qubit in form of orthogonal bloch vectors
+
+    Returns
+    -------
+    (ndarray, ndarray)
+            A projection value measure consisting of tuple of projection operators in the form of bloch vectors.
+    """
+    u = unitary((2, 2))
+    return Qubit.from_array(u[:, 0]).bloch_vector(), \
+        Qubit.from_array(u[:, 1]).bloch_vector()
 
 
 def unitary(shape):

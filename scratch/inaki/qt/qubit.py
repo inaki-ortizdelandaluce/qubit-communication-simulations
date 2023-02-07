@@ -48,7 +48,7 @@ class Qubit:
 
     def bloch_angles(self):
         """
-        Return the Bloch sphere coordinates in a tuple with polar and azimuthal angles in radians.
+        Return the spherical coordinates of the qubit in the Bloch sphere, with polar and azimuthal angles in radians.
 
         Returns
         -------
@@ -61,6 +61,24 @@ class Qubit:
         phi = phi1 - phi0
 
         return theta, phi
+
+    def bloch_vector(self):
+        """
+         Return the cartesian coordinates of the qubit in the Bloch sphere.
+
+         Returns
+         -------
+         (float, float, float)
+             The cartesian coordinates of the qubit in the Bloch sphere (xyz).
+
+         """
+        theta, phi = self.bloch_angles()
+
+        x = math.sin(theta) * math.cos(phi)
+        y = math.sin(theta) * math.sin(phi)
+        z = math.cos(theta)
+
+        return x, y, z
 
     def to_density_matrix(self):
         """
