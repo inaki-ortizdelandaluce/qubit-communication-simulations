@@ -9,31 +9,31 @@ Prove by classical and quantum computer based experiments that a qubit transmiss
 
 # Roadmap
 
-## Phase I - Simulate Prepare-and-Measure PVMs classically 
+## Phase A - Simulate Prepare-and-Measure PVMs classically 
 Deadline: 07/02 (after Quantum Computing sessions are completed)
 
-### I.a - Generation of random states and projection-valued measurements
+### A.1 - Generation of random states and projection-valued measurements
 
-### I.b - Classical simulation using Python
+### A.2 - Classical simulation using Python
 
-### I.c - Generation of multiple-qubit states towards Bell scenarios preparation (see Phase IV)
+### A.3 - Generation of multiple-qubit states towards Bell scenarios preparation (see Phase D)
 ---
-## Phase II - Simulate Prepare-and-Measure PVMs with a quantum computer
+## Phase B - Simulate Prepare-and-Measure PVMs with a quantum computer
 Deadline: 23/02 (before next tutored session)
 
-### II.a - Simulation using Qiskit Quantum Simulator
+### B.1 - Simulation using Qiskit Quantum Simulator
 
-### II.b - Simulation using IBM Quantum Computer. Error correction 
+### B.2 - Simulation using IBM Quantum Computer. Error correction 
 ---
-## Phase III - Simulate Prepare-and-Measure with POVMs
+## Phase C - Simulate Prepare-and-Measure with POVMs
 
-### III.a - Generation of POVM measurements
+### C.1 - Generation of POVM measurements
 
-### III.b - Perform classical and quantum computer simulations (as per Phases I and II)
+### C.2 - Perform classical and quantum computer simulations (as per Phases A and B)
 ---
-## Phase IV - Simulate using Bell scenarios
+## Phase D - Simulate using Bell scenarios
 ---
-## Phase V - Extend analysis to qutrits
+## Phase E - Extend analysis to qutrits
 ---
 
 # Open Questions
