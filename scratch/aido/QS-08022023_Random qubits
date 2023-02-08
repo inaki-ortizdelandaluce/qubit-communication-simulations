@@ -1,0 +1,10 @@
+from qiskit.circuit.random import random_circuit
+
+# random_circuit(num_qubits, depth, max_operands=4, measure=False, conditional=False, reset=False, seed=None)
+
+circ = random_circuit(2, 2, measure=True)
+circ.draw(output='mpl')
+
+# 3 random qubits
+circ = random_circuit(3, 2, measure=True)
+circ.draw(output='mpl')
