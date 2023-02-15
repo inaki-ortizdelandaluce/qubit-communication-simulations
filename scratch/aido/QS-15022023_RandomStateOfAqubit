@@ -1,0 +1,16 @@
+from qiskit.quantum_info import random_statevector, Statevector
+from qiskit import QuantumCircuit
+import numpy as np
+
+vec = random_statevector(2)
+# vec = Statevector([1, 0])
+print('before circuit: {}'.format(vec)) 
+
+qc = QuantumCircuit(1)
+qc.x(0)
+qc.draw()
+
+new_vec = vec.evolve(qc)
+print('after circuit: {}'.format(new_vec))
+
+#In this example the dimension of state vector is 2, so the quantum circuit = 1 qubit.
