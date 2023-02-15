@@ -10,4 +10,4 @@ output = generator.sample(num_raw_bits=1024).block_until_ready()
 
 random_bits = output.extract()
 
-#see reference
+#see reference: https://qiskit-rng.readthedocs.io/en/latest/
