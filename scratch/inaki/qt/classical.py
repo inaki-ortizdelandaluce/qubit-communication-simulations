@@ -1,10 +1,12 @@
-import math
 import numpy as np
 from qt import random as random
 
 
 def heaviside(a):
-    return (a >= 0).astype(int)
+    if isinstance(a, np.ndarray):
+        return (a >= 0).astype(int)
+    else:
+        return int(a >= 0)
 
 
 def theta(a):
@@ -22,7 +24,7 @@ def prepare(lambda1, lambda2):
     #
     x = random.vector3()
     lambdas = np.array([lambda1, lambda2])
-    bits = heaviside(np.multiply(x, lambdas.T))
+    bits = heaviside(np.matmul(x, lambdas.T))
     return bits[0], bits[1]
 
 
@@ -42,17 +44,17 @@ def measure_pvm(lambda1, lambda2, bit1, bit2):
 
     # flip shared randomness
     flip = np.where(bits == 0, -1, 1)
-    lambdas = lambdas * flip
+    lambdas = np.multiply(lambdas, flip)
 
     # generate classical random PVM as vectors
     y = np.asarray(random.pvm_vectors())
 
     # select lambdas for each measurement
-    a = np.abs(np.mathmul(lambdas, y.T))
+    a = np.abs(np.matmul(lambdas, y.T))
     lambdas = lambdas[np.argmax(a, axis=0), :]
 
     # compute probabilities
-    thetas = theta(np.multiply(y, lambdas.T))
+    thetas = theta(np.matmul(y, lambdas.T))
 
     p = np.diag(thetas) / np.sum(thetas, axis=0)
 
