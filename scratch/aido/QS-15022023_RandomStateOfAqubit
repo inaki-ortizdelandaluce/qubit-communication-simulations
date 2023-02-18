@@ -13,4 +13,4 @@ qc.draw()
 new_vec = vec.evolve(qc)
 print('after circuit: {}'.format(new_vec))
 
-#In this example the dimension of state vector is 2, so the quantum circuit = 1 qubit.
+#In this example the dimension of state vector is 2, so the quantum circuit = 1 qubit. Revisar, no es del todo correcto
