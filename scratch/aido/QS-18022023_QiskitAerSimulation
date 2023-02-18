@@ -77,3 +77,35 @@ simulator.set_options(precision='single')
 result = simulator.run(circ).result()
 counts = result.get_counts(circ)
 print(counts)
+
+# Construct quantum circuit without measure
+circ = QuantumCircuit(2)
+circ.h(0)
+circ.cx(0, 1)
+circ.save_statevector()
+
+# Transpile for simulator
+simulator = Aer.get_backend('aer_simulator')
+circ = transpile(circ, simulator)
+
+# Run and get statevector
+result = simulator.run(circ).result()
+statevector = result.get_statevector(circ)
+plot_state_city(statevector, title='Bell state')
+
+# Construct quantum circuit without measure
+circ = QuantumCircuit(2)
+circ.h(0)
+circ.cx(0, 1)
+circ.save_unitary()
+
+# Transpile for simulator
+simulator = Aer.get_backend('aer_simulator')
+circ = transpile(circ, simulator)
+
+# Run and get unitary
+result = simulator.run(circ).result()
+unitary = result.get_unitary(circ)
+print("Circuit unitary:\n", unitary.round(5))
+
+
