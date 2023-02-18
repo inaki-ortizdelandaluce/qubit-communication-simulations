@@ -4,3 +4,7 @@ num_qubits = 4 # number of qubit for this random statevector
 dims = 2**num_qubits # calculate statevector dimension based on the number of qubits
 
 random_state = quantum_info.random_statevector(dims = dims, seed = None) # One can also specify the random seed for this random statevector
+
+print('before circuit: {}'.format(random_state))
+
+
