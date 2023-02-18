@@ -1,0 +1,79 @@
+import numpy as np
+
+from qiskit import QuantumCircuit
+from qiskit import Aer, transpile
+from qiskit.tools.visualization import plot_histogram, plot_state_city
+import qiskit.quantum_info as qi
+
+Aer.backends()
+#[AerSimulator('aer_simulator'),
+ AerSimulator('aer_simulator_statevector'),
+ AerSimulator('aer_simulator_density_matrix'),
+ AerSimulator('aer_simulator_stabilizer'),
+ AerSimulator('aer_simulator_matrix_product_state'),
+ AerSimulator('aer_simulator_extended_stabilizer'),
+ AerSimulator('aer_simulator_unitary'),
+ AerSimulator('aer_simulator_superop'),
+ QasmSimulator('qasm_simulator'),
+ StatevectorSimulator('statevector_simulator'),
+ UnitarySimulator('unitary_simulator'),
+ PulseSimulator('pulse_simulator')]
+
+# Create circuit
+circ = QuantumCircuit(2)
+circ.h(0)
+circ.cx(0, 1)
+circ.measure_all()
+
+# Transpile for simulator
+simulator = Aer.get_backend('aer_simulator')
+circ = transpile(circ, simulator)
+
+# Run and get counts
+result = simulator.run(circ).result()
+counts = result.get_counts(circ)
+plot_histogram(counts, title='Bell-State counts')
+
+# Run and get memory
+result = simulator.run(circ, shots=10, memory=True).result()
+memory = result.get_memory(circ)
+print(memory)
+
+# Increase shots to reduce sampling variance
+shots = 10000
+
+# Stabilizer simulation method
+sim_stabilizer = Aer.get_backend('aer_simulator_stabilizer')
+job_stabilizer = sim_stabilizer.run(circ, shots=shots)
+counts_stabilizer = job_stabilizer.result().get_counts(0)
+
+# Statevector simulation method
+sim_statevector = Aer.get_backend('aer_simulator_statevector')
+job_statevector = sim_statevector.run(circ, shots=shots)
+counts_statevector = job_statevector.result().get_counts(0)
+
+# Density Matrix simulation method
+sim_density = Aer.get_backend('aer_simulator_density_matrix')
+job_density = sim_density.run(circ, shots=shots)
+counts_density = job_density.result().get_counts(0)
+
+# Matrix Product State simulation method
+sim_mps = Aer.get_backend('aer_simulator_matrix_product_state')
+job_mps = sim_mps.run(circ, shots=shots)
+counts_mps = job_mps.result().get_counts(0)
+
+
+plot_histogram([counts_stabilizer, counts_statevector, counts_density, counts_mps],
+               title='Counts for different simulation methods',
+               legend=['stabilizer', 'statevector',
+                       'density_matrix', 'matrix_product_state'])
+
+
+# Configure a single-precision statevector simulator backend
+simulator = Aer.get_backend('aer_simulator_statevector')
+simulator.set_options(precision='single')
+
+# Run and get counts
+result = simulator.run(circ).result()
+counts = result.get_counts(circ)
+print(counts)
