@@ -1,0 +1,51 @@
+# We apply the measure operation and get back a 0 or a 1. The way that this is physically implemented in a quantum computer depends on the details 
+# of how your qubit is built. For some types of qubit, it's possible to rotate the measurement device to do different kinds of measurement, 
+# and see different behavior from the results.For other kinds of qubit, rotating your measurement device will just break it. Nevertheless, there 
+# is a simple way to get the same effect: just rotate the qubit instead! By performing single qubit gates before making a standard measurement,  
+# we reproduce the effects of these alternative forms of measurement. 
+
+# The most common example of this is to simply perform an h gate immediately before measurement. This gives us what is known as an x measurement:
+meas_x = QuantumCircuit(1,1)
+meas_x.h(0)
+meas_x.measure(0,0)
+meas_x.draw()
+
+
+# The standard form of measurement, which is done with just a measure gate, is known as a z measurement in this context:
+meas_z = QuantumCircuit(1,1)
+meas_z.measure(0,0)
+meas_z.draw()
+
+---------------------
+# Now let's look at what happens to certain states when we do these measurements. We'll start with the simple [0> state:
+qc = QuantumCircuit(1,1)
+qc.draw()
+z_meas_counts = backend.run(qc.compose(meas_z)).result().get_counts()
+print('Results from z measurement:', z_meas_counts)
+
+# For an x measurement, however, we'll get completely random results:
+x_meas_counts = backend.run(qc.compose(meas_x)).result().get_counts()
+print('Results from x measurement:', x_meas_counts)
+
+#A similar situation occurs for the [1> state:
+qc = QuantumCircuit(1,1)
+qc.x(0)
+qc.draw()
+
+#The z measurement outputs the expected result with certainty, but the x measurement gives random results.
+for basis,circ in [('z', meas_z), ('x', meas_x)]:
+    print('Results from ' + basis + ' measurement:',
+      backend.run(qc.compose(circ)).result().get_counts())
+      
+#the tables are turned for the  state:
+qc = QuantumCircuit(1,1)
+qc.h(0)
+qc.draw()
+
+#Though the results are random for a z measurement, they produce 0 with certainty for an x measurement.
+for basis,circ in [('z', meas_z), ('x', meas_x)]:
+    print('Results from ' + basis + ' measurement:',
+      backend.run(qc.compose(circ)).result().get_counts())
+      
+      
+      
