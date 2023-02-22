@@ -50,7 +50,8 @@ def measure_pvm(lambdas, bits):
 
     # generate classical random PVM as Bloch vectors
     pvm = random.pvm()
-    y = np.array([Qubit(pvm.basis[0]).bloch_vector(), Qubit(pvm.basis[1]).bloch_vector()])
+    y = np.array([Qubit(pvm.basis[0]).bloch_vector(),
+                  Qubit(pvm.basis[1]).bloch_vector()])
 
     # select lambdas for each measurement
     a = np.abs(np.matmul(lambdas, y.T))
