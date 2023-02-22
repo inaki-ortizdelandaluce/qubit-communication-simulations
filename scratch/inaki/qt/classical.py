@@ -13,34 +13,35 @@ def theta(a):
     return a * heaviside(a)
 
 
-def prepare(lambda1, lambda2):
+def prepare(lambdas):
     """
     Alice prepares and sends two bits to Bob
 
-    :param lambda1: first shared random normalized vector
-    :param lambda2: second shared random normalized vector
-    :return: the two bits to be communicated to Bob
+    :param lambdas: shared randomness as normalized vectors in a numpy 1-d array
+    :return: a dictionary with the shared randomness ('lambdas'), the random qubit prepared by Alice ('qubit')
+     and the bits to be communicated to Bob ('bits')
     """
-    #
-    x = random.vector3()
-    lambdas = np.array([lambda1, lambda2])
+
+    q = random.qubit()
+    x = q.bloch_vector()
     bits = heaviside(np.matmul(x, lambdas.T))
-    return bits[0], bits[1]
+    return {
+        "lambdas": lambdas,
+        "qubit": q,
+        "bits": bits
+    }
 
 
-def measure_pvm(lambda1, lambda2, bit1, bit2):
+def measure_pvm(lambdas, bits):
     """
     Bob receives two bits from Alice and performs a random PVM
 
-    :param lambda1: first shared random normalized vector
-    :param lambda2: second shared random normalized vector
-    :param bit1: first bit communicated by Alice
-    :param bit2: second bit communicated by Alice
-    :return: the probabilities for the random measurement
+    :param lambdas: shared randomness as normalized vectors in a numpy 1-d array
+    :param bits: bits communicated by Alice in a numpy 1-d array
+    :return: a dictionary with the random measurement ('measurement') and
+        the probabilities for each measurement outcome ('probabilities')
     """
-
-    lambdas = np.array([lambda1, lambda2])
-    bits = np.array([[bit1], [bit2]])
+    bits = bits.reshape((bits.size, 1))
 
     # flip shared randomness
     flip = np.where(bits == 0, -1, 1)
@@ -58,16 +59,19 @@ def measure_pvm(lambda1, lambda2, bit1, bit2):
 
     p = np.diag(thetas) / np.sum(thetas, axis=0)
 
-    return p
+    return {
+        "measurement": y,
+        "probabilities": p
+    }
 
 
 def prepare_and_measure():
 
     # Alice and Bob's shared randomness
-    lambda1, lambda2 = random.vector3(), random.vector3()
+    shared_randomness = np.array([random.vector3(), random.vector3()])
 
     # Alice prepares
-    bit1, bit2 = prepare(lambda1, lambda2)
+    alice = prepare(shared_randomness)
 
     # Bob measures
-    measure_pvm(lambda1, lambda2, bit1, bit2)
+    bob = measure_pvm(shared_randomness, alice['bits'])

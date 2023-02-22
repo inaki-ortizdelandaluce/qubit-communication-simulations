@@ -4,47 +4,42 @@ import math
 
 
 class Qubit:
-    def __init__(self, alpha=1, beta=0):
+    def __init__(self, ket=np.array([1, 0])):
         """
         Initializes a qubit in the computational basis. If no arguments are provided, it returns the zero state.
 
         Parameters
         ---------
-        alpha : complex
-            The amplitude of the zero state.
-        beta : complex
-            The amplitude of the one state.
+        ket : ndarray
+            The qubit components in the computational basis in a 1-d complex array.
         """
-        self.alpha = complex(alpha)
-        self.beta = complex(beta)
+        self.alpha = complex(ket[0])
+        self.beta = complex(ket[1])
         self.normalize()
 
     def __repr__(self):
         return '{} |0> + {} |1>'.format(self.alpha, self.beta)
 
-    @classmethod
-    def from_array(cls, arr):
-        """
-        Creates a Qubit instance from a two-dimensional array.
-
-        Parameters
-        ---------
-        arr : ndarray
-            Two-dimensional complex array.
-
-        Returns
-        -------
-        Qubit
-            The Qubit instance.
-        """
-        return cls(arr[0], arr[1])
-
-    def to_array(self):
+    def ket(self):
         return np.array([self.alpha, self.beta], dtype=np.complex_)
 
+    def bra(self):
+        return self.ket().conj()
+
     def normalize(self):
-        arr = self.to_array()
+        arr = self.ket()
         self.alpha, self.beta = arr/np.linalg.norm(arr)
+
+    def rho(self):
+        """
+         Return the density matrix corresponding to the qubit in a pure state.
+
+         Returns
+         -------
+         ndarray
+             A 2x2 density matrix corresponding to the qubit in a pure state.
+         """
+        return np.outer(self.ket(), self.bra())
 
     def bloch_angles(self):
         """
@@ -79,24 +74,3 @@ class Qubit:
         z = math.cos(theta)
 
         return x, y, z
-
-    def to_density_matrix(self):
-        """
-         Return the density matrix corresponding to the qubit in a pure state.
-
-         Returns
-         -------
-         ndarray
-             A 2x2 density matrix corresponding to the qubit in a pure state.
-         """
-        return np.outer(self.to_array(), self.to_array().conj())
-
-
-class TwoQubit:
-    def __init__(self, q1, q2):
-        """
-            Initializes two qubits
-        """
-        self.q1 = q1
-        self.q2 = q2
-

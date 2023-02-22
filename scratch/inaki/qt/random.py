@@ -1,7 +1,7 @@
 import math
-
 import numpy as np
 from qt.qubit import Qubit
+from qt.measurement import PVM
 
 
 def vector3():
@@ -32,7 +32,7 @@ def qubit():
     # evolve the zero state with a random unitary matrix
     # same as returning first column of random unitary matrix
     u = unitary((2, 2))
-    return Qubit.from_array(u[:, 0])
+    return Qubit(u[:, 0])
 
 
 def pvm():
@@ -41,12 +41,14 @@ def pvm():
 
     Returns
     -------
-    (ndarray, ndarray)
-            A projection value measure consisting of tuple of projection operators.
+    PVM
+            A projection value measure instance.
     """
     u = unitary((2, 2))
-    return Qubit.from_array(u[:, 0]).to_density_matrix(), \
-        Qubit.from_array(u[:, 1]).to_density_matrix()
+
+    # each column of the unitary random matrix is an orthogonal vector of a PVM basis
+    measurement = PVM(u.T)
+    return measurement
 
 
 def pvm_vectors():
@@ -58,9 +60,10 @@ def pvm_vectors():
     (ndarray, ndarray)
             A projection value measure consisting of tuple of projection operators in the form of bloch vectors.
     """
+    # FIXME Use PVM class instead
     u = unitary((2, 2))
-    return Qubit.from_array(u[:, 0]).bloch_vector(), \
-        Qubit.from_array(u[:, 1]).bloch_vector()
+    return Qubit(u[:, 0]).bloch_vector(), \
+        Qubit(u[:, 1]).bloch_vector()
 
 
 def unitary(shape):
