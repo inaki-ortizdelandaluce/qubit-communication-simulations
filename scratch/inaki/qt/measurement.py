@@ -1,5 +1,4 @@
 import numpy as np
-from qt.qubit import Qubit
 
 
 class PVM:
