@@ -1,5 +1,6 @@
 import numpy as np
-from qt import random as random
+import qt.random as random
+from qt.qubit import Qubit
 
 
 def heaviside(a):
@@ -47,8 +48,9 @@ def measure_pvm(lambdas, bits):
     flip = np.where(bits == 0, -1, 1)
     lambdas = np.multiply(lambdas, flip)
 
-    # generate classical random PVM as vectors
-    y = np.asarray(random.pvm_vectors())
+    # generate classical random PVM as Bloch vectors
+    pvm = random.pvm()
+    y = np.array([Qubit(pvm.basis[0]).bloch_vector(), Qubit(pvm.basis[1]).bloch_vector()])
 
     # select lambdas for each measurement
     a = np.abs(np.matmul(lambdas, y.T))
@@ -60,7 +62,8 @@ def measure_pvm(lambdas, bits):
     p = np.diag(thetas) / np.sum(thetas, axis=0)
 
     return {
-        "measurement": y,
+        "lambdas": lambdas,
+        "measurement": pvm,
         "probabilities": p
     }
 
@@ -68,7 +71,7 @@ def measure_pvm(lambdas, bits):
 def prepare_and_measure():
 
     # Alice and Bob's shared randomness
-    shared_randomness = np.array([random.vector3(), random.vector3()])
+    shared_randomness = np.array([random.bloch_vector(), random.bloch_vector()])
 
     # Alice prepares
     alice = prepare(shared_randomness)

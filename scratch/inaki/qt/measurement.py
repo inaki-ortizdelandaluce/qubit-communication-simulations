@@ -1,4 +1,5 @@
 import numpy as np
+from qt.qubit import Qubit
 
 
 class PVM:
@@ -19,9 +20,9 @@ class PVM:
         self.basis = np.divide(basis.T, np.linalg.norm(basis, axis=1)).T
 
         # build projectors
-        self.proj = np.zeros((*basis.shape, basis.shape[0]), dtype=np.complex_)
+        self.proj = np.zeros((basis.shape[0], *basis.shape), dtype=np.complex_)
         for i in range(basis.shape[0]):
-            self.proj[:, :, i] = np.outer(basis[i], basis[i].conj())
+            self.proj[i] = np.outer(basis[i], basis[i].conj())
 
     def projector(self, index):
         """
@@ -36,8 +37,5 @@ class PVM:
         ndarray
                 A 2-d array with the corresponding projector.
         """
-        return self.proj[:, :, index]
+        return self.proj[index]
 
-    def bloch_vectors(self):
-        # FIXME Return bloch vectors from projectors: projector -> state -> bloch vector
-        return None

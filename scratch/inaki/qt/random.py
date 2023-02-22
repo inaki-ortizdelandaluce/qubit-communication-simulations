@@ -4,14 +4,14 @@ from qt.qubit import Qubit
 from qt.measurement import PVM
 
 
-def vector3():
+def bloch_vector():
     """
-    Generates a normalised vector uniformly distributed on the unit radius sphere
+    Generates a normalised vector uniformly distributed on the Bloch sphere
 
     Returns
     -------
     ndarray
-            A normalised vector on the unit radius sphere
+            A normalised vector on the Bloch sphere
 
     """
     theta, phi = qubit().bloch_angles()
@@ -49,21 +49,6 @@ def pvm():
     # each column of the unitary random matrix is an orthogonal vector of a PVM basis
     measurement = PVM(u.T)
     return measurement
-
-
-def pvm_vectors():
-    """
-    Generates a random projection value measure for a qubit in form of orthogonal bloch vectors
-
-    Returns
-    -------
-    (ndarray, ndarray)
-            A projection value measure consisting of tuple of projection operators in the form of bloch vectors.
-    """
-    # FIXME Use PVM class instead
-    u = unitary((2, 2))
-    return Qubit(u[:, 0]).bloch_vector(), \
-        Qubit(u[:, 1]).bloch_vector()
 
 
 def unitary(shape):
