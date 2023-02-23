@@ -42,10 +42,8 @@ def measure_pvm(lambdas, bits):
     :return: a dictionary with the random measurement ('measurement') and
         the probabilities for each measurement outcome ('probabilities')
     """
-    bits = bits.reshape((bits.size, 1))
-
     # flip shared randomness
-    flip = np.where(bits == 0, -1, 1)
+    flip = np.where(bits == 0, -1, 1).reshape(2, 1)
     lambdas = np.multiply(lambdas, flip)
 
     # generate classical random PVM as Bloch vectors
@@ -59,6 +57,8 @@ def measure_pvm(lambdas, bits):
 
     # compute probabilities
     thetas = theta(np.matmul(y, lambdas.T))
+
+    print('\nThetas=\n{}'.format(thetas))
 
     p = np.diag(thetas) / np.sum(thetas, axis=0)
 
@@ -79,3 +79,10 @@ def prepare_and_measure():
 
     # Bob measures
     bob = measure_pvm(shared_randomness, alice['bits'])
+
+    print('Shared randomness=\n{}'.format(alice['lambdas']))
+    print('Random state=\n{}'.format(alice['qubit']))
+    print('Random PVM=\n\tBasis:\n\t{}\n\tProjector:\n\t{}'.format(bob['measurement'].basis, bob['measurement'].proj))
+    print('Simulation Probabilities=\n{}'.format(bob['probabilities']))
+    print('Born\'s Rule Probabilities=\n{}'.format(bob['measurement'].probability(alice['qubit'].rho())))
+

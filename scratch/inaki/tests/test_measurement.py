@@ -3,7 +3,7 @@ import math
 import numpy as np
 
 
-def test_measurement_pvm_z():
+def test_pvm_z():
     z = PVM()
     projectors = np.array([[[1, 0],
                             [0, 0]],
@@ -12,7 +12,7 @@ def test_measurement_pvm_z():
     assert np.allclose(z.proj, projectors)
 
 
-def test_measurement_pvm_x():
+def test_pvm_x():
     x = PVM(np.array([[1 / math.sqrt(2), 1 / math.sqrt(2)], [1 / math.sqrt(2), -1 / math.sqrt(2)]]))
     projectors = np.array([[[0.5, 0.5],
                             [0.5, 0.5]],
@@ -21,12 +21,12 @@ def test_measurement_pvm_x():
     assert np.allclose(x.proj, projectors)
 
 
-def test_measurement_pvm_projector():
+def test_pvm_projector():
     z = PVM()
     assert np.allclose(z.projector(1), np.array([[0, 0], [0, 1]]))
 
 
-def test_measurement_pvm_probability():
+def test_pvm_probability():
     plus = np.array([1 / math.sqrt(2), 1 / math.sqrt(2)])
     minus = np.array([1 / math.sqrt(2), -1 / math.sqrt(2)])
     psi = np.array([(3 + 1.j * math.sqrt(3))/4., -0.5])

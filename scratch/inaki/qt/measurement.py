@@ -19,9 +19,9 @@ class PVM:
         self.basis = np.divide(basis.T, np.linalg.norm(basis, axis=1)).T
 
         # build projectors
-        self.proj = np.zeros((basis.shape[0], *basis.shape), dtype=np.complex_)
-        for i in range(basis.shape[0]):
-            self.proj[i] = np.outer(basis[i], basis[i].conj())
+        self.proj = np.zeros((self.basis.shape[0], *self.basis.shape), dtype=np.complex_)
+        for i in range(self.basis.shape[0]):
+            self.proj[i] = np.outer(self.basis[i], self.basis[i].conj())
 
     def projector(self, index):
         """

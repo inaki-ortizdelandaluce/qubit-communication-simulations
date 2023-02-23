@@ -32,8 +32,7 @@ def test_measure_pvm():
     lambdas = np.array([random.bloch_vector(), random.bloch_vector()])
     bob = measure_pvm(lambdas, np.array([1, 0]))
 
-    # print('\n Random PVM = {}'.format(str(bob['measurement'].proj)))
-    # print('\n Probabilities = {}'.format(str(bob['probabilities'])))
-
-    assert True  # TODO
+    # FIXME
+    # assert np.allclose(bob['probabilities'], np.array([0.90891341, 0.09108659]))
+    assert True
 
