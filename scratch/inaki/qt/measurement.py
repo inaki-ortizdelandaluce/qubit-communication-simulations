@@ -4,7 +4,7 @@ import numpy as np
 class PVM:
     def __init__(self, basis=np.array([[1, 0], [0, 1]])):
         """
-        Initializes a PVM with the rank-1 projectors of the specified vector basis.
+        Initializes a PVM with the rank-1 projectors of the specified basis.
         If no argument is provided, it creates a PVM with the rank-1 projectors of the computational basis in a
         two-dimensional space.
 
@@ -37,4 +37,24 @@ class PVM:
                 A 2-d array with the corresponding projector.
         """
         return self.proj[index]
+
+    def probability(self, rho):
+        """
+        Returns the probabilities of the different outcomes for a given state
+
+        Parameters
+        ---------
+        rho : the state in density matrix form
+
+        Returns
+        -------
+        ndarray
+                The probabilities for each outcome given the input state, stored in a 1-d array.
+        """
+
+        # repeat density matrix along zero axis
+        rho = np.repeat(rho[np.newaxis, :, :], self.proj.shape[0], axis=0)
+
+        # compute trace of projectors by density matrix
+        return np.real(np.trace(np.matmul(self.proj, rho), axis1=1, axis2=2))
 

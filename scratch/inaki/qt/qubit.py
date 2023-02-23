@@ -23,9 +23,6 @@ class Qubit:
     def ket(self):
         return np.array([self.alpha, self.beta], dtype=np.complex_)
 
-    def bra(self):
-        return self.ket().conj()
-
     def normalize(self):
         arr = self.ket()
         self.alpha, self.beta = arr/np.linalg.norm(arr)
@@ -39,7 +36,7 @@ class Qubit:
          ndarray
              A 2x2 density matrix corresponding to the qubit in a pure state.
          """
-        return np.outer(self.ket(), self.bra())
+        return np.outer(self.ket(), self.ket().conj())
 
     def bloch_angles(self):
         """

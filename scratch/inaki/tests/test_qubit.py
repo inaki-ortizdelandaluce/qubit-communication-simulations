@@ -1,5 +1,3 @@
-import numpy as np
-
 from qt.qubit import *
 from pytest import approx
 
@@ -7,11 +5,6 @@ from pytest import approx
 def test_qubit_ket():
     q = Qubit(np.array([1., 1.]))
     assert np.allclose(q.ket(), 1/math.sqrt(2) * np.array([[1, 1]]))
-
-
-def test_qubit_bra():
-    q = Qubit(np.array([1, -1.j]))
-    assert np.allclose(q.bra(), 1/math.sqrt(2) * np.array([[1., 1.j]]))
 
 
 def test_qubit_normalize():
