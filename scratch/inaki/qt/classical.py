@@ -63,7 +63,6 @@ def measure_pvm(lambdas, bits):
     p = np.diag(thetas) / np.sum(thetas, axis=0)
 
     return {
-        "lambdas": lambdas,
         "measurement": pvm,
         "probabilities": p
     }
@@ -85,4 +84,6 @@ def prepare_and_measure():
     print('Random PVM=\n\tBasis:\n\t{}\n\tProjector:\n\t{}'.format(bob['measurement'].basis, bob['measurement'].proj))
     print('Simulation Probabilities=\n{}'.format(bob['probabilities']))
     print('Born\'s Rule Probabilities=\n{}'.format(bob['measurement'].probability(alice['qubit'].rho())))
+
+    return {**alice, **bob}
 
