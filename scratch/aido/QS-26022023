@@ -1,0 +1,43 @@
+from qiskit import QuantumCircuit
+from qiskit import transpile
+U =       [[0, 0, 0, 1],
+          [0, 0, 1, 0],
+          [1, 0, 0, 0],
+          [0, 1, 0, 0]]
+          
+qc = QuantumCircuit(2)
+qc.unitary(U, [0,1])
+
+qc.draw()
+
+trans_qc = transpile (qc, basis_gates=['cx','u3'])
+
+#For single qubit gates the transpiler uses Euler decomposition. 
+For two-qubit gates see appendix B of this paper: https://arxiv.org/pdf/1811.12926.pdf, 
+and for more qubits the transpiler uses column-by-column decomposition (see: https://arxiv.org/pdf/1501.06911.pdf).
+
+# Transpile puede que no encuentre el conjunto más eficiente de puertas universales. para ver el numero extra de puertas, 
+probaremos transpile en toffoli gate:
+
+
+from qiskit import QuantumCircuit
+from qiskit import transpile
+Toffoli =       [[1, 0, 0, 0, 0, 0, 0, 0],
+                [0, 1, 0, 0, 0, 0, 0, 0],
+                [0, 0, 1, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 1],
+                [0, 0, 0, 0, 1, 0, 0, 0],
+                [0, 0, 0, 0, 0, 1, 0, 0],
+                [0, 0, 0, 0, 0, 0, 1, 0],
+                [0, 0, 0, 1, 0, 0, 0, 0]]
+
+qc = QuantumCircuit(3)
+qc.unitary(Toffoli, [0,1,2])
+qc.draw()
+trans_qc = transpile (qc, basis_gates=['cx','u3'])
+trans_qc.draw()
+
+
+# transpile descomponiendo toffoli gate, da como resultado 16 cnot gate, cuando el óptimo sería 6
+
+
