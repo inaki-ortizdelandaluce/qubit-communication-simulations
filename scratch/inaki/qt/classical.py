@@ -14,32 +14,53 @@ def theta(a):
     return a * heaviside(a)
 
 
-def prepare(lambdas):
+def prepare(lambdas, qubit):
     """
     Alice prepares and sends two bits to Bob
 
-    :param lambdas: shared randomness as normalized vectors in a numpy 1-d array
-    :return: a dictionary with the shared randomness ('lambdas'), the random qubit prepared by Alice ('qubit')
-     and the bits to be communicated to Bob ('bits')
+    Parameters
+    ---------
+    lambdas : ndarray
+        Shared randomness as two normalized vectors in a numpy 2-d array
+
+    qubit: Qubit
+        A uniformly sampled pure state qubit
+
+    Returns
+    -------
+    dict
+        A dictionary with the shared randomness ('lambdas'), the random qubit ('qubit')
+        and the bits to be communicated to Bob ('bits')
     """
 
-    q = random.qubit()
-    x = q.bloch_vector()
+    x = qubit.bloch_vector()
     bits = heaviside(np.matmul(x, lambdas.T))
     return {
         "lambdas": lambdas,
-        "qubit": q,
+        "qubit": qubit,
         "bits": bits
     }
 
 
-def measure_pvm(lambdas, bits):
+def measure_pvm(lambdas, bits, measurement):
     """
     Bob receives two bits from Alice and performs a random PVM
 
-    :param lambdas: shared randomness as normalized vectors in a numpy 1-d array
-    :param bits: bits communicated by Alice in a numpy 1-d array
-    :return: a dictionary with the random measurement ('measurement') and
+    Parameters
+    ---------
+    lambdas : ndarray
+        Shared randomness as two normalized vectors in a numpy 2-d array
+
+    bits: ndarray
+        Bits communicated by Alice in a numpy 1-d array
+
+    measurement: PVM
+        A uniformly sampled PVM
+
+    Returns
+    -------
+    dict
+        A dictionary with the random measurement ('measurement') and
         the probabilities for each measurement outcome ('probabilities')
     """
     # flip shared randomness
@@ -47,9 +68,8 @@ def measure_pvm(lambdas, bits):
     lambdas = np.multiply(lambdas, flip)
 
     # generate classical random PVM as Bloch vectors
-    pvm = random.pvm()
-    y = np.array([Qubit(pvm.basis[0]).bloch_vector(),
-                  Qubit(pvm.basis[1]).bloch_vector()])
+    y = np.array([Qubit(measurement.basis[0]).bloch_vector(),
+                  Qubit(measurement.basis[1]).bloch_vector()])
 
     # select lambdas for each measurement
     a = np.abs(np.matmul(lambdas, y.T))
@@ -58,32 +78,57 @@ def measure_pvm(lambdas, bits):
     # compute probabilities
     thetas = theta(np.matmul(y, lambdas.T))
 
-    print('\nThetas=\n{}'.format(thetas))
+    # print('\nThetas=\n{}'.format(thetas))
 
     p = np.diag(thetas) / np.sum(thetas, axis=0)
 
     return {
-        "measurement": pvm,
+        "measurement": measurement,
         "probabilities": p
     }
 
 
-def prepare_and_measure():
+def prepare_and_measure(shots):
 
-    # Alice and Bob's shared randomness
-    shared_randomness = np.array([random.bloch_vector(), random.bloch_vector()])
+    # Alice prepares a random qubit
+    qubit = random.qubit()
 
-    # Alice prepares
-    alice = prepare(shared_randomness)
+    # Bob prepares a random measurement
+    measurement = random.pvm()
 
-    # Bob measures
-    bob = measure_pvm(shared_randomness, alice['bits'])
+    experiment = {
+        "qubit": qubit,
+        "measurement": measurement,
+        "probabilities": {
+            "b1": [],
+            "b2": []
+        }
+    }
 
-    print('Shared randomness=\n{}'.format(alice['lambdas']))
-    print('Random state=\n{}'.format(alice['qubit']))
-    print('Random PVM=\n\tBasis:\n\t{}\n\tProjector:\n\t{}'.format(bob['measurement'].basis, bob['measurement'].proj))
-    print('Simulation Probabilities=\n{}'.format(bob['probabilities']))
+    for i in range(shots):
+
+        # Alice and Bob's shared randomness
+        shared_randomness = np.array([random.bloch_vector(), random.bloch_vector()])
+
+        # Alice prepares
+        alice = prepare(shared_randomness, qubit)
+
+        # Bob measures
+        bob = measure_pvm(shared_randomness, alice['bits'], measurement)
+
+        b1 = abs(bob['probabilities'][0])
+        b2 = abs(bob['probabilities'][1])
+
+        experiment['probabilities']['b1'].append(b1)
+        experiment['probabilities']['b2'].append(b2)
+
+
+
+        # print('Shared randomness=\n{}'.format(alice['lambdas']))
+        # print('Random state=\n{}'.format(alice['qubit']))
+        # print('Random PVM=\n\tBasis:\n\t{}\n\tProjector:\n\t{}'.format(bob['measurement'].basis, bob['measurement'].proj))
+        # print('Simulation Probabilities=\n{}'.format(bob['probabilities']))
+        # return {**alice, **bob}
+
     print('Born\'s Rule Probabilities=\n{}'.format(bob['measurement'].probability(alice['qubit'].rho())))
-
-    return {**alice, **bob}
-
+    return experiment

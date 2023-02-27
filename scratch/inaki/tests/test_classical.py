@@ -15,7 +15,9 @@ def test_theta():
 def test_prepare():
     np.random.seed(0)
     lambdas = np.array([random.bloch_vector(), random.bloch_vector()])
-    alice = prepare(lambdas)
+    qubit = random.qubit()
+
+    alice = prepare(lambdas, qubit)
 
     # lamda1 -> array([ 0.82760922, -0.03589592,  0.56015575])
     # lambda2 -> array([ 0.79972854, -0.38493927,  0.46071251]))
@@ -30,9 +32,10 @@ def test_prepare():
 def test_measure_pvm():
     np.random.seed(0)
     lambdas = np.array([random.bloch_vector(), random.bloch_vector()])
-    bob = measure_pvm(lambdas, np.array([1, 0]))
+    measurement = random.pvm()
 
-    # FIXME
-    # assert np.allclose(bob['probabilities'], np.array([0.90891341, 0.09108659]))
+    bob = measure_pvm(lambdas, np.array([1, 0]), measurement)
+
+    assert np.allclose(bob['probabilities'], np.array([1, 0]))
     assert True
 
