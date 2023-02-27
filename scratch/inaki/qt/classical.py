@@ -122,13 +122,5 @@ def prepare_and_measure(shots):
         experiment['probabilities']['b1'].append(b1)
         experiment['probabilities']['b2'].append(b2)
 
-
-
-        # print('Shared randomness=\n{}'.format(alice['lambdas']))
-        # print('Random state=\n{}'.format(alice['qubit']))
-        # print('Random PVM=\n\tBasis:\n\t{}\n\tProjector:\n\t{}'.format(bob['measurement'].basis, bob['measurement'].proj))
-        # print('Simulation Probabilities=\n{}'.format(bob['probabilities']))
-        # return {**alice, **bob}
-
-    print('Born\'s Rule Probabilities=\n{}'.format(bob['measurement'].probability(alice['qubit'].rho())))
+    print('\nBorn\'s Rule Probabilities={}'.format(bob['measurement'].probability(alice['qubit'].rho())))
     return experiment
