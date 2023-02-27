@@ -36,10 +36,6 @@ Deadline: 23/02 (before next tutored session)
 ## Phase E - Extend analysis to qutrits
 ---
 
-# Open Questions
-
-- Project Report
- 
  # Other References
 - [The Communication Cost of Simulating Bell Correlations - Toner and Bacon, 2003](https://arxiv.org/abs/quant-ph/0304076)
 - [Decomposition of any quantum measurement into extremals - Sentis et al., 2013](papers/2013-SentisEtAl-DecompositionOfAnyQuantumMeasurementIntoExtremals.pdf) (POVM decomposition into rank-1 measurements)
