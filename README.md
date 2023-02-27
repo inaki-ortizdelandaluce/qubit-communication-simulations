@@ -5,7 +5,7 @@ Classical and quantum simulations of qubit transmission. Final Project for Postg
 [The classical cost of transmitting a qubit - Renner, Tavakoli and Quintino, 2022 (arXiv2207.02244)](https://arxiv.org/abs/2207.02244)
 
 # Objective
-Prove by classical and quantum computer based experiments that a qubit transmission can be simulated classically with a total cost of 2 qubits for any general measurement, either in a prepare-and-measure or a Bell scenario.
+Prove by classical and quantum computer based experiments that a qubit transmission can be simulated classically with a total cost of 2 bits for any general measurement, either in a prepare-and-measure or a entanglement scenario.
 
 # Roadmap
 
