@@ -88,7 +88,7 @@ def measure_pvm(lambdas, bits, measurement):
     }
 
 
-def prepare_and_measure(shots):
+def prepare_and_measure_pvm(shots):
 
     # Alice prepares a random qubit
     qubit = random.qubit()
@@ -101,8 +101,10 @@ def prepare_and_measure(shots):
         "measurement": measurement,
         "probabilities": {
             "b1": [],
-            "b2": []
+            "b2": [],
+            "born": np.ones((2,))
         }
+
     }
 
     for i in range(shots):
@@ -122,5 +124,6 @@ def prepare_and_measure(shots):
         experiment['probabilities']['b1'].append(b1)
         experiment['probabilities']['b2'].append(b2)
 
-    print('\nBorn\'s Rule Probabilities={}'.format(bob['measurement'].probability(alice['qubit'].rho())))
+    experiment['probabilities']['born'] = bob['measurement'].probability(qubit.rho())
+
     return experiment

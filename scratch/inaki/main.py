@@ -40,6 +40,7 @@ def test_pm_convergence():
     plt.plot(p)
     plt.axhline(y=p1, color='r', linestyle='-')
     plt.show()
+    return None
 
 
 if __name__ == "__main__":
