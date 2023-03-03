@@ -58,6 +58,25 @@ class Qubit:
 
         return theta, phi
 
+    @staticmethod
+    def density2bloch(rho):
+        """
+         Return the cartesian coordinates of the specified qubit state in the Bloch sphere.
+
+        Parameters
+        ---------
+        rho : ndarray
+            The qubit state in density matrix form
+
+         Returns
+         -------
+         (float, float, float)
+             The cartesian coordinates of the qubit in the Bloch sphere (xyz).
+
+        """
+        # cast complex to real to avoid throwing ComplexWarning, imaginary part should always be zero
+        return [np.real(np.trace(np.matmul(rho, sigma))) for sigma in np.array([X, Y, Z])]
+
     def bloch_vector(self):
         """
          Return the cartesian coordinates of the qubit in the Bloch sphere.
@@ -68,10 +87,4 @@ class Qubit:
              The cartesian coordinates of the qubit in the Bloch sphere (xyz).
 
          """
-        # theta, phi = self.bloch_angles()
-        # x = math.sin(theta) * math.cos(phi)
-        # y = math.sin(theta) * math.sin(phi)
-        # z = math.cos(theta)
-        # return x, y, z
-
-        return [np.trace(np.matmul(self.rho(), sigma)) for sigma in np.array([X, Y, Z])]
+        return Qubit.density2bloch(self.rho())

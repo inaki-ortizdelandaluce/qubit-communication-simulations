@@ -1,27 +1,21 @@
 import numpy as np
+from qt.qubit import Qubit
 
 
 class PVM:
-    def __init__(self, basis=np.array([[1, 0], [0, 1]])):
+    def __init__(self, qubit: Qubit):
         """
-        Initializes a PVM with the rank-1 projector of the specified basis.
-        If no argument is provided, it creates a PVM with the rank-1 projectors of the computational basis in a
-        two-dimensional space.
+        Initializes a PVM with the elements corresponding to the specified qubit state.
 
         Parameters
         ---------
-        basis : ndarray
-            The specified vector basis from which the rank-1 projectors are generated. The basis is a (n,n) shaped
-            2-d array with n the dimension of the basis, where each row is an element of the basis.
+        qubit : Qubit
+            The specified qubit state from which the rank-1 projectors are generated.
         """
-
-        # normalise basis
-        self.basis = np.divide(basis.T, np.linalg.norm(basis, axis=1)).T
-
-        # build projectors
-        self.proj = np.zeros((self.basis.shape[0], *self.basis.shape), dtype=np.complex_)
-        for i in range(self.basis.shape[0]):
-            self.proj[i] = np.outer(self.basis[i], self.basis[i].conj())
+        rho = qubit.rho()
+        sigma = np.identity(2) - rho
+        self.bloch = np.array([Qubit.density2bloch(rho), Qubit.density2bloch(sigma)])
+        self.proj = np.array([rho, sigma])
 
     def projector(self, index):
         """
@@ -38,13 +32,13 @@ class PVM:
         """
         return self.proj[index]
 
-    def probability(self, rho):
+    def probability(self, qubit: Qubit):
         """
-        Returns the probabilities of the different outcomes for a given state
+        Returns the probabilities of the different outcomes for a given qubit state
 
         Parameters
         ---------
-        rho : the state in density matrix form
+        qubit : the qubit state
 
         Returns
         -------
@@ -53,6 +47,7 @@ class PVM:
         """
 
         # repeat density matrix along zero axis
+        rho = qubit.rho()
         rho = np.repeat(rho[np.newaxis, :, :], self.proj.shape[0], axis=0)
 
         # compute trace of projectors by density matrix

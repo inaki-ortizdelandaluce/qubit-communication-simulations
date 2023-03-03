@@ -30,7 +30,7 @@ def test_pm_convergence():
     # run experiment
     np.random.seed(0)
     shots = 10 ** 5
-    experiment = qt.classical.prepare_and_measure(shots)
+    experiment = qt.classical.prepare_and_measure_pvm(shots)
 
     # plot probability convergence
     pb1 = experiment['probabilities']['b1']
@@ -67,6 +67,7 @@ def test_random_povm():
 
     eps = np.finfo(np.float32).eps
 
+    _a, _e = lp['x'], np.asarray([q.rho() for q in qubits])
     elements = _e * _a[:, np.newaxis, np.newaxis]
     for i in range(elements.shape[0]):
         # print('\nE{}=\n{}'.format(i, elements[i]))
@@ -76,22 +77,10 @@ def test_random_povm():
     # print('Sum E_i = I -> {}'.format(np.allclose(np.identity(2), np.sum(e * a[:, np.newaxis, np.newaxis], axis=0))))
     print('Sum E_i = I -> {}'.format(np.allclose(np.identity(2), np.tensordot(_e, _a, axes=([0], [0])))))
 
-    return lp['x'], np.asarray([q.rho() for q in qubits])
+    return None
 
 
 if __name__ == "__main__":
     # test_random_states()
     # test_pm_convergence()
-    _a, _e = test_random_povm()
-
-    eps = np.finfo(np.float32).eps
-
-    elements = _e * _a[:, np.newaxis, np.newaxis]
-    for i in range(elements.shape[0]):
-        # print('\nE{}=\n{}'.format(i, elements[i]))
-        # print('\nE{} eigenvalues -> {}'.format(i, np.linalg.eig(elements[i])[0]))
-        print('E{} >=0 > -> {}'.format(i, (np.all(np.linalg.eig(elements[i])[0] >= -eps))))
-
-    # print('Sum E_i = I -> {}'.format(np.allclose(np.identity(2), np.sum(e * a[:, np.newaxis, np.newaxis], axis=0))))
-    print('Sum E_i = I -> {}'.format(np.allclose(np.identity(2), np.tensordot(_e, _a, axes=([0], [0])))))
-
+    test_random_povm()

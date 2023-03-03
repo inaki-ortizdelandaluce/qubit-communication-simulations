@@ -1,10 +1,12 @@
 from qt.measurement import PVM
+from qt.qubit import Qubit
 import math
 import numpy as np
 
 
 def test_pvm_z():
-    z = PVM()
+    q = Qubit(np.array([1, 0]))
+    z = PVM(q)
     projectors = np.array([[[1, 0],
                             [0, 0]],
                            [[0, 0],
@@ -13,36 +15,36 @@ def test_pvm_z():
 
 
 def test_pvm_x():
-    x = PVM(np.array([[1 / math.sqrt(2), 1 / math.sqrt(2)], [1 / math.sqrt(2), -1 / math.sqrt(2)]]))
+    q = Qubit(1 / math.sqrt(2) * np.array([1, 1]))
+    pvm = PVM(q)
     projectors = np.array([[[0.5, 0.5],
                             [0.5, 0.5]],
                            [[0.5, -0.5],
                             [-0.5, 0.5]]], dtype=np.complex_)
-    assert np.allclose(x.proj, projectors)
+    assert np.allclose(pvm.proj, projectors)
 
 
 def test_pvm_projector():
-    z = PVM()
-    assert np.allclose(z.projector(1), np.array([[0, 0], [0, 1]]))
+    q = Qubit(np.array([1, 0]))
+    pvm = PVM(q)
+    assert np.allclose(pvm.projector(1), np.array([[0, 0], [0, 1]]))
 
 
 def test_pvm_probability():
-    plus = np.array([1 / math.sqrt(2), 1 / math.sqrt(2)])
-    minus = np.array([1 / math.sqrt(2), -1 / math.sqrt(2)])
-    psi = np.array([(3 + 1.j * math.sqrt(3))/4., -0.5])
+    zero = Qubit(np.array([1, 0]))
+    plus = Qubit(1 / math.sqrt(2) * np.array([1, 1]))
+    minus = Qubit(1 / math.sqrt(2) * np.array([1, -1]))
+    i = Qubit(1 / math.sqrt(2) * np.array([1, 1j]))
+    psi = Qubit(np.array([(3 + 1.j * math.sqrt(3))/4., -0.5]))
 
-    rho_plus = np.outer(plus, plus.conj())
-    rho_minus = np.outer(minus, minus.conj())
-    rho_psi = np.outer(psi, psi.conj())
+    x = PVM(plus)
+    y = PVM(i)
+    z = PVM(zero)
 
-    x = PVM(np.array([[1 / math.sqrt(2), 1 / math.sqrt(2)], [1 / math.sqrt(2), -1 / math.sqrt(2)]]))
-    y = PVM(np.array([[1 / math.sqrt(2), 1.j / math.sqrt(2)], [1 / math.sqrt(2), -1.j / math.sqrt(2)]]))
-    z = PVM()
-
-    assert np.allclose(z.probability(rho_plus), np.array([0.5, 0.5])) \
-           and np.allclose(z.probability(rho_minus), np.array([0.5, 0.5])) \
-           and np.allclose(x.probability(rho_minus), np.array([0., 1.])) \
-           and np.allclose(x.probability(rho_plus), np.array([1., 0.])) \
-           and np.allclose(z.probability(rho_psi), np.array([0.75, 0.25])) \
-           and np.allclose(x.probability(rho_psi), np.array([0.125, 0.875])) \
-           and np.allclose(y.probability(rho_psi), np.array([0.71650635, 0.28349365]))
+    assert np.allclose(z.probability(plus), np.array([0.5, 0.5]))
+    assert np.allclose(z.probability(minus), np.array([0.5, 0.5]))
+    assert np.allclose(x.probability(minus), np.array([0., 1.]))
+    assert np.allclose(x.probability(plus), np.array([1., 0.]))
+    assert np.allclose(z.probability(psi), np.array([0.75, 0.25]))
+    assert np.allclose(x.probability(psi), np.array([0.125, 0.875]))
+    assert np.allclose(y.probability(psi), np.array([0.71650635, 0.28349365]))

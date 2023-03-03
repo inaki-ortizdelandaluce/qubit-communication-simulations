@@ -56,4 +56,3 @@ def test_prepare_and_measure_pvm():
 
     assert np.allclose(experiment['probabilities']['born'], np.array([0.96687561, 0.03312439]))
     assert np.allclose(np.array([p1, p2]), np.array([0.96687561, 0.03312439]), rtol=1e-2, atol=1e-2)
-

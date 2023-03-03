@@ -68,8 +68,7 @@ def measure_pvm(lambdas, bits, measurement):
     lambdas = np.multiply(lambdas, flip)
 
     # generate classical random PVM as Bloch vectors
-    y = np.array([Qubit(measurement.basis[0]).bloch_vector(),
-                  Qubit(measurement.basis[1]).bloch_vector()])
+    y = measurement.bloch
 
     # select lambdas for each measurement
     a = np.abs(np.matmul(lambdas, y.T))
@@ -124,6 +123,6 @@ def prepare_and_measure_pvm(shots):
         experiment['probabilities']['b1'].append(b1)
         experiment['probabilities']['b2'].append(b2)
 
-    experiment['probabilities']['born'] = bob['measurement'].probability(qubit.rho())
+    experiment['probabilities']['born'] = bob['measurement'].probability(qubit)
 
     return experiment

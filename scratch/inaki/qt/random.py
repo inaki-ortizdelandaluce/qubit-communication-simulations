@@ -47,7 +47,8 @@ def pvm():
     u = unitary((2, 2))
 
     # each column of the unitary random matrix is an orthogonal vector of a PVM basis
-    measurement = PVM(u.T)
+    q = Qubit(u[:, 0])
+    measurement = PVM(q)
     return measurement
 
 
