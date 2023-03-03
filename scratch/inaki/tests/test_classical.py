@@ -52,7 +52,7 @@ def test_prepare_and_measure_pvm():
     p1 = np.sum(pb1) / len(pb1)
     p2 = np.sum(pb2) / len(pb2)
 
-    print('p1={},p2={},pt={}'.format(p1, p2, p1 + p2))
+    # print('p1={},p2={},pt={}'.format(p1, p2, p1 + p2))
 
     assert np.allclose(experiment['probabilities']['born'], np.array([0.96687561, 0.03312439]))
     assert np.allclose(np.array([p1, p2]), np.array([0.96687561, 0.03312439]), rtol=1e-2, atol=1e-2)

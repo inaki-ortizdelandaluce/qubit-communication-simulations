@@ -2,6 +2,10 @@ import numpy as np
 import cmath
 import math
 
+X = np.array([[0, 1], [1, 0]])
+Y = np.array([[0, -1.j], [1j, 0]])
+Z = np.array([[1, 0], [0, -1]])
+
 
 class Qubit:
     def __init__(self, ket=np.array([1, 0])):
@@ -64,10 +68,10 @@ class Qubit:
              The cartesian coordinates of the qubit in the Bloch sphere (xyz).
 
          """
-        theta, phi = self.bloch_angles()
+        # theta, phi = self.bloch_angles()
+        # x = math.sin(theta) * math.cos(phi)
+        # y = math.sin(theta) * math.sin(phi)
+        # z = math.cos(theta)
+        # return x, y, z
 
-        x = math.sin(theta) * math.cos(phi)
-        y = math.sin(theta) * math.sin(phi)
-        z = math.cos(theta)
-
-        return x, y, z
+        return [np.trace(np.matmul(self.rho(), sigma)) for sigma in np.array([X, Y, Z])]
