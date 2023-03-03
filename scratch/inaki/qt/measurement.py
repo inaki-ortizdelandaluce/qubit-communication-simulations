@@ -4,7 +4,7 @@ import numpy as np
 class PVM:
     def __init__(self, basis=np.array([[1, 0], [0, 1]])):
         """
-        Initializes a PVM with the rank-1 projectors of the specified basis.
+        Initializes a PVM with the rank-1 projector of the specified basis.
         If no argument is provided, it creates a PVM with the rank-1 projectors of the computational basis in a
         two-dimensional space.
 
@@ -57,4 +57,3 @@ class PVM:
 
         # compute trace of projectors by density matrix
         return np.real(np.trace(np.matmul(self.proj, rho), axis1=1, axis2=2))
-

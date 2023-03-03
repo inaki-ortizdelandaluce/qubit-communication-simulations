@@ -1,8 +1,13 @@
+import bisect
+
 import matplotlib.pyplot as plt
+import math
 import numpy as np
+import scipy
 from healpy.pixelfunc import ang2pix
-import qt.random
 import qt.classical
+import qt.qubit
+import qt.random
 
 
 def test_random_states():
@@ -43,6 +48,50 @@ def test_pm_convergence():
     return None
 
 
+def test_random_povm():
+
+    q1 = qt.random.qubit()
+    q2 = qt.random.qubit()
+
+    e3 = np.identity(2) - q1.rho() - q2.rho()
+    _, w = np.linalg.eig(e3)
+    q3 = qt.qubit.Qubit(w[:, 0])
+    q4 = qt.qubit.Qubit(w[:, 1])
+
+    qubits = np.array([q1, q2, q3, q4])
+    v = np.asarray([q.bloch_vector() for q in qubits])
+
+    a = np.vstack((np.ones((4,)), v.T))
+    b = np.array([2, 0, 0, 0])
+    lp = scipy.optimize.linprog(np.ones(4, ), A_eq=a, b_eq=b, bounds=(0.01, 1), method='highs')
+
+    eps = np.finfo(np.float32).eps
+
+    elements = _e * _a[:, np.newaxis, np.newaxis]
+    for i in range(elements.shape[0]):
+        # print('\nE{}=\n{}'.format(i, elements[i]))
+        # print('\nE{} eigenvalues -> {}'.format(i, np.linalg.eig(elements[i])[0]))
+        print('E{} >=0 > -> {}'.format(i, (np.all(np.linalg.eig(elements[i])[0] >= -eps))))
+
+    # print('Sum E_i = I -> {}'.format(np.allclose(np.identity(2), np.sum(e * a[:, np.newaxis, np.newaxis], axis=0))))
+    print('Sum E_i = I -> {}'.format(np.allclose(np.identity(2), np.tensordot(_e, _a, axes=([0], [0])))))
+
+    return lp['x'], np.asarray([q.rho() for q in qubits])
+
+
 if __name__ == "__main__":
     # test_random_states()
-    test_pm_convergence()
+    # test_pm_convergence()
+    _a, _e = test_random_povm()
+
+    eps = np.finfo(np.float32).eps
+
+    elements = _e * _a[:, np.newaxis, np.newaxis]
+    for i in range(elements.shape[0]):
+        # print('\nE{}=\n{}'.format(i, elements[i]))
+        # print('\nE{} eigenvalues -> {}'.format(i, np.linalg.eig(elements[i])[0]))
+        print('E{} >=0 > -> {}'.format(i, (np.all(np.linalg.eig(elements[i])[0] >= -eps))))
+
+    # print('Sum E_i = I -> {}'.format(np.allclose(np.identity(2), np.sum(e * a[:, np.newaxis, np.newaxis], axis=0))))
+    print('Sum E_i = I -> {}'.format(np.allclose(np.identity(2), np.tensordot(_e, _a, axes=([0], [0])))))
+
