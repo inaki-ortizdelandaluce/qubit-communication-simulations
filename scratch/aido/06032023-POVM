@@ -1,0 +1,31 @@
+from qiskit import QuantumCircuit
+from qiskit import transpile
+from qiskit.visualization import plot_histogram
+from qiskit.providers.aer import QasmSimulator
+simulator = QasmSimulator()
+
+
+U =       [[0, 0, 0, 1],
+          [0, 0, 1, 0],
+          [1, 0, 0, 0],
+          [0, 1, 0, 0]]
+
+qc = QuantumCircuit(2)
+
+qc.unitary(U, [0,1])
+qc.draw()
+
+trans_qc = transpile (qc, basis_gates=['cx','u3'])
+trans_qc.draw()
+
+trans_qc.h(1)
+trans_qc.draw()
+
+trans_qc.s(1)
+trans_qc.draw()
+
+trans_qc.cx(0,1)
+trans_qc.draw()
+
+trans_qc.t(1)
+trans_qc.draw()
