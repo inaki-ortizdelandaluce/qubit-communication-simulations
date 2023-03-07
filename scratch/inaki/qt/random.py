@@ -1,7 +1,7 @@
 import math
 import numpy as np
 from qt.qubit import Qubit
-from qt.measurement import PVM
+from qt.measurement import PVM, POVM
 
 
 def bloch_vector():
@@ -44,11 +44,27 @@ def pvm():
     PVM
             A projection value measure instance.
     """
-    u = unitary((2, 2))
-
-    # each column of the unitary random matrix is an orthogonal vector of a PVM basis
-    q = Qubit(u[:, 0])
+    q = qubit()
     measurement = PVM(q)
+    return measurement
+
+
+def povm(n):
+    """
+    Generates a random positive operator value measure for a qubit
+
+    Parameters
+    ---------
+    n : int
+        Number of POVM elements.
+
+    Returns
+    -------
+    PVM
+            A positive operator value measure instance.
+    """
+    qubits = [qubit() for _ in range(n)]
+    measurement = POVM(qubits)
     return measurement
 
 

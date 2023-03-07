@@ -1,13 +1,10 @@
-import bisect
-
 import matplotlib.pyplot as plt
-import math
 import numpy as np
-import scipy
 from healpy.pixelfunc import ang2pix
 import qt.classical
 import qt.qubit
 import qt.random
+from qt.measurement import POVM
 
 
 def test_random_states():
@@ -49,33 +46,21 @@ def test_pm_convergence():
 
 
 def test_random_povm():
-
+    np.random.seed(0)
     q1 = qt.random.qubit()
     q2 = qt.random.qubit()
 
-    e3 = np.identity(2) - q1.rho() - q2.rho()
-    _, w = np.linalg.eig(e3)
-    q3 = qt.qubit.Qubit(w[:, 0])
-    q4 = qt.qubit.Qubit(w[:, 1])
+    povm = POVM(qubits=np.array([q1, q2]))
+    elements = povm.proj
 
-    qubits = np.array([q1, q2, q3, q4])
-    v = np.asarray([q.bloch_vector() for q in qubits])
-
-    a = np.vstack((np.ones((4,)), v.T))
-    b = np.array([2, 0, 0, 0])
-    lp = scipy.optimize.linprog(np.ones(4, ), A_eq=a, b_eq=b, bounds=(0.01, 1), method='highs')
-
-    eps = np.finfo(np.float32).eps
-
-    _a, _e = lp['x'], np.asarray([q.rho() for q in qubits])
-    elements = _e * _a[:, np.newaxis, np.newaxis]
     for i in range(elements.shape[0]):
-        # print('\nE{}=\n{}'.format(i, elements[i]))
         # print('\nE{} eigenvalues -> {}'.format(i, np.linalg.eig(elements[i])[0]))
-        print('E{} >=0 > -> {}'.format(i, (np.all(np.linalg.eig(elements[i])[0] >= -eps))))
+        print('\nE{}=\n{}'.format(i, elements[i]))
+        print('E{} >=0 > -> {}'.format(i, (np.all(np.linalg.eig(elements[i])[0] >= -np.finfo(np.float32).eps))))
 
     # print('Sum E_i = I -> {}'.format(np.allclose(np.identity(2), np.sum(e * a[:, np.newaxis, np.newaxis], axis=0))))
-    print('Sum E_i = I -> {}'.format(np.allclose(np.identity(2), np.tensordot(_e, _a, axes=([0], [0])))))
+    # print('Sum E_i = I -> {}'.format(np.allclose(np.identity(2), np.tensordot(_e, _a, axes=([0], [0])))))
+    print('Sum E_i = I -> {}'.format(np.allclose(np.identity(2), np.sum(elements, axis=0))))
 
     return None
 
