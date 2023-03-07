@@ -6,7 +6,7 @@ from qt.qubit import Qubit
 class PVM:
     def __init__(self, qubit: Qubit):
         """
-        Initializes a PVM with the elements corresponding to the specified qubit state.
+        Creates a PVM with the elements corresponding to the specified qubit state.
 
         Parameters
         ---------
@@ -59,7 +59,7 @@ class POVM:
 
     def __init__(self, qubits):
         """
-        Initializes a POVM with the rank-1 projectors corresponding to the specified qubit states.
+        Creates a POVM with the rank-1 projectors corresponding to the specified qubit states.
 
         Parameters
         ---------
