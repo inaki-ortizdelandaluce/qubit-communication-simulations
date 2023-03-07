@@ -67,7 +67,7 @@ def povm(n):
         raise ValueError('Number of POVM elements must be greater thant two')
 
     qubits = [qubit() for _ in range(n - 2)]
-    measurement = POVM(qubits)
+    measurement = POVM.new(qubits)
     return measurement
 
 

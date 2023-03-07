@@ -16,7 +16,7 @@ def test_pvm():
 def test_povm():
     # np.random.seed(0)
     povm = qt.random.povm(4)
-    elements = povm.proj
+    elements = povm.elements
     n = elements.shape[0]
 
     assert n == 4

@@ -11,7 +11,7 @@ class PVM:
         Parameters
         ---------
         qubit : Qubit
-            The specified qubit state from which the two rank-1 projectors are generated.
+            The specified qubit state from which the two pb1[0]rank-1 projectors are generated.
         """
         rho = qubit.rho()
         sigma = np.identity(2) - rho
@@ -57,13 +57,31 @@ class PVM:
 
 class POVM:
 
-    def __init__(self, qubits):
+    def __init__(self, weights, proj):
         """
-        Creates a POVM with the rank-1 projectors corresponding to the specified qubit states.
+         Creates a POVM with the specified weights and rank-1 projectors.
 
-        Parameters
-        ---------
-        qubits : ndarray
+         Parameters
+         ---------
+         weights : ndarray
+            The positive coefficients of the constituting rank-1 projectors.
+
+         proj : ndarray
+            A 3-d array with the constituting rank-1 projectors.
+
+        """
+        self.weights = weights
+        self.elements = proj * weights[:, np.newaxis, np.newaxis]
+        self.bloch = v = np.asarray([Qubit.density2bloch(p) for p in proj])
+
+    @classmethod
+    def new(cls, qubits):
+        """
+         Creates a POVM with the rank-1 projectors corresponding to the specified qubit states.
+
+         Parameters
+         ---------
+         qubits : ndarray
             The specified array of N-2 qubit states from which the N rank-1 POVM projectors are generated.
         """
         # last element normalizes all POVM elements
@@ -86,24 +104,22 @@ class POVM:
         lp = scipy.optimize.linprog(np.ones(n, ), A_eq=a, b_eq=b, bounds=(0.01, 1), method='highs')
         _a, _e = lp['x'], np.asarray([q.rho() for q in qubits])
 
-        self.bloch = v
-        self.weights = _a
-        self.proj = _e * _a[:, np.newaxis, np.newaxis]
+        return cls(_a, _e)
 
-    def projector(self, index):
+    def element(self, index):
         """
-        Returns rank-1 projector for the corresponding index
+        Returns the POVM element for the corresponding index
 
         Parameters
         ---------
-        index : the projector index
+        index : the POVM element index
 
         Returns
         -------
         ndarray
-                A 2-d array with the corresponding projector.
+                A 2-d array with the corresponding POVM element.
         """
-        return self.proj[index]
+        return self.element[index]
 
     def probability(self, qubit: Qubit):
         """
@@ -121,7 +137,7 @@ class POVM:
 
         # repeat density matrix along zero axis
         rho = qubit.rho()
-        rho = np.repeat(rho[np.newaxis, :, :], self.proj.shape[0], axis=0)
+        rho = np.repeat(rho[np.newaxis, :, :], self.elements.shape[0], axis=0)
 
         # compute trace of projectors by density matrix
-        return np.real(np.trace(np.matmul(self.proj, rho), axis1=1, axis2=2))
+        return np.real(np.trace(np.matmul(self.elements, rho), axis1=1, axis2=2))

@@ -50,8 +50,8 @@ def test_random_povm():
     q1 = qt.random.qubit()
     q2 = qt.random.qubit()
 
-    povm = POVM(qubits=np.array([q1, q2]))
-    elements = povm.proj
+    povm = POVM.new(np.array([q1, q2]))
+    elements = povm.elements
 
     for i in range(elements.shape[0]):
         print('\nE{} eigenvalues -> {}'.format(i, np.linalg.eig(elements[i])[0]))

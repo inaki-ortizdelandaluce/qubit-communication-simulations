@@ -79,7 +79,6 @@ def measure_pvm(lambdas, bits, measurement: PVM):
     thetas = theta(np.matmul(y, lambdas.T))
 
     # print('\nThetas=\n{}'.format(thetas))
-
     p = np.diag(thetas) / np.sum(thetas, axis=0)
 
     return {
@@ -117,15 +116,18 @@ def measure_povm(lambdas, bits, measurement: POVM):
     y = measurement.bloch
     w = measurement.weights / 2.
 
-    # select lambdas for each measurement
+    # select lambda for first outcome
     a = np.abs(np.matmul(lambdas, y.T))
-    lambdas = lambdas[np.argmax(a, axis=0), :]
+    _lambda = lambdas[np.argmax(a, axis=0)[0]]
 
     # compute probabilities
-    thetas = theta(np.matmul(y, lambdas.T))
+    thetas = theta(np.matmul(y, _lambda.reshape(-1, 1)))
     weighted_thetas = np.multiply(thetas, w.reshape(-1, 1))
 
-    p = np.diag(weighted_thetas) / np.sum(weighted_thetas, axis=0)
+    # print('\nThetas=\n{}'.format(thetas))
+    # print('\nWeighted Thetas=\n{}'.format(weighted_thetas))
+
+    p = weighted_thetas[:, 0] / np.sum(weighted_thetas, axis=0)
 
     return {
         "measurement": measurement,

@@ -56,3 +56,19 @@ def test_prepare_and_measure_pvm():
 
     assert np.allclose(experiment['probabilities']['born'], np.array([0.96687561, 0.03312439]))
     assert np.allclose(np.array([p1, p2]), np.array([0.96687561, 0.03312439]), rtol=1e-2, atol=1e-2)
+
+
+def test_measure_povm():
+    np.random.seed(0)
+    lambdas = np.array([random.bloch_vector(), random.bloch_vector()])
+
+    zero = np.array([[1, 0], [0, 0]])
+    one = np.array([[0, 0], [0, 1]])
+    plus = 0.5 * np.array([[1, 1], [1, 1]])
+    minus = 0.5 * np.array([[1, -1], [-1, 1]])
+    measurement = POVM(weights=0.5 * np.array([1, 1, 1, 1]), proj=np.array([zero, one, plus, minus]))
+
+    bob = measure_povm(lambdas, np.array([1, 0]), measurement)
+
+    # FIXME
+    assert True
