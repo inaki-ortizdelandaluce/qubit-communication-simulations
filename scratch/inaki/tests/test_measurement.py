@@ -1,4 +1,4 @@
-from qt.measurement import PVM
+from qt.measurement import PVM, POVM
 from qt.qubit import Qubit
 import math
 import numpy as np
@@ -48,3 +48,28 @@ def test_pvm_probability():
     assert np.allclose(z.probability(psi), np.array([0.75, 0.25]))
     assert np.allclose(x.probability(psi), np.array([0.125, 0.875]))
     assert np.allclose(y.probability(psi), np.array([0.71650635, 0.28349365]))
+
+
+def test_povm_z():
+    q1 = Qubit(([1, 0]))
+    q2 = Qubit(([0, 1]))
+    povm = POVM(np.array([q1, q2]))
+    projectors = np.array([[[0.01, 0],
+                            [0, 0]],
+                           [[0, 0],
+                            [0, 0.01]],
+                           [[0.99, 0],
+                            [0, 0]],
+                           [[0, 0],
+                            [0, 0.99]]
+                           ], dtype=np.complex_)
+    assert np.allclose(povm.proj, projectors)
+
+
+def test_povm_probability():
+    zero = Qubit(([1, 0]))
+    one = Qubit(([0, 1]))
+    povm = POVM(np.array([zero, one]))
+    psi = Qubit(np.array([(3 + 1.j * math.sqrt(3)) / 4., -0.5]))
+    assert np.allclose(povm.probability(psi), np.array([0.0075, 0.0025, 0.7424999, 0.2475]))
+
