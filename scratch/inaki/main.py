@@ -54,7 +54,7 @@ def test_random_povm():
     elements = povm.proj
 
     for i in range(elements.shape[0]):
-        # print('\nE{} eigenvalues -> {}'.format(i, np.linalg.eig(elements[i])[0]))
+        print('\nE{} eigenvalues -> {}'.format(i, np.linalg.eig(elements[i])[0]))
         print('\nE{}=\n{}'.format(i, elements[i]))
         print('E{} >=0 > -> {}'.format(i, (np.all(np.linalg.eig(elements[i])[0] >= -np.finfo(np.float32).eps))))
 
