@@ -1,6 +1,7 @@
 import numpy as np
 import qt.random as random
 from qt.qubit import Qubit
+from qt.measurement import PVM, POVM
 
 
 def heaviside(a):
@@ -42,7 +43,7 @@ def prepare(lambdas, qubit):
     }
 
 
-def measure_pvm(lambdas, bits, measurement):
+def measure_pvm(lambdas, bits, measurement: PVM):
     """
     Bob receives two bits from Alice and performs a random PVM
 
@@ -87,6 +88,51 @@ def measure_pvm(lambdas, bits, measurement):
     }
 
 
+def measure_povm(lambdas, bits, measurement: POVM):
+    """
+    Bob receives two bits from Alice and performs a random POVM
+
+    Parameters
+    ---------
+    lambdas : ndarray
+        Shared randomness as two normalized vectors in a numpy 2-d array
+
+    bits: ndarray
+        Bits communicated by Alice in a numpy 1-d array
+
+    measurement: POVM
+        A uniformly sampled POVM
+
+    Returns
+    -------
+    dict
+        A dictionary with the random measurement ('measurement') and
+        the probabilities for each measurement outcome ('probabilities')
+    """
+    # flip shared randomness
+    flip = np.where(bits == 0, -1, 1).reshape(2, 1)
+    lambdas = np.multiply(lambdas, flip)
+
+    # generate classical random POVM as rank-1 projectors
+    y = measurement.bloch
+    w = measurement.weights / 2.
+
+    # select lambdas for each measurement
+    a = np.abs(np.matmul(lambdas, y.T))
+    lambdas = lambdas[np.argmax(a, axis=0), :]
+
+    # compute probabilities
+    thetas = theta(np.matmul(y, lambdas.T))
+    weighted_thetas = np.multiply(thetas, w.reshape(-1, 1))
+
+    p = np.diag(weighted_thetas) / np.sum(weighted_thetas, axis=0)
+
+    return {
+        "measurement": measurement,
+        "probabilities": p
+    }
+
+
 def prepare_and_measure_pvm(shots):
 
     # Alice prepares a random qubit
@@ -103,7 +149,6 @@ def prepare_and_measure_pvm(shots):
             "b2": [],
             "born": np.ones((2,))
         }
-
     }
 
     for i in range(shots):
@@ -122,6 +167,52 @@ def prepare_and_measure_pvm(shots):
 
         experiment['probabilities']['b1'].append(b1)
         experiment['probabilities']['b2'].append(b2)
+
+    experiment['probabilities']['born'] = bob['measurement'].probability(qubit)
+
+    return experiment
+
+
+def prepare_and_measure_povm(shots):
+
+    # Alice prepares a random qubit
+    qubit = random.qubit()
+
+    # Bob prepares a random measurement
+    measurement = random.povm(4)
+
+    experiment = {
+        "qubit": qubit,
+        "measurement": measurement,
+        "probabilities": {
+            "b1": [],
+            "b2": [],
+            "b3": [],
+            "b4": [],
+            "born": np.ones((4,))
+        }
+    }
+
+    for i in range(shots):
+
+        # Alice and Bob's shared randomness
+        shared_randomness = np.array([random.bloch_vector(), random.bloch_vector()])
+
+        # Alice prepares
+        alice = prepare(shared_randomness, qubit)
+
+        # Bob measures
+        bob = measure_povm(shared_randomness, alice['bits'], measurement)
+
+        b1 = abs(bob['probabilities'][0])
+        b2 = abs(bob['probabilities'][1])
+        b3 = abs(bob['probabilities'][2])
+        b4 = abs(bob['probabilities'][3])
+
+        experiment['probabilities']['b1'].append(b1)
+        experiment['probabilities']['b2'].append(b2)
+        experiment['probabilities']['b3'].append(b3)
+        experiment['probabilities']['b4'].append(b4)
 
     experiment['probabilities']['born'] = bob['measurement'].probability(qubit)
 
