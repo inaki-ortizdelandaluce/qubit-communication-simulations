@@ -56,14 +56,17 @@ def povm(n):
     Parameters
     ---------
     n : int
-        Number of POVM elements.
+        Number of POVM elements. Must be greater than two.
 
     Returns
     -------
     PVM
             A positive operator value measure instance.
     """
-    qubits = [qubit() for _ in range(n)]
+    if n <= 2:
+        raise ValueError('Number of POVM elements must be greater thant two')
+
+    qubits = [qubit() for _ in range(n - 2)]
     measurement = POVM(qubits)
     return measurement
 
