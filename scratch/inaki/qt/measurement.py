@@ -11,7 +11,7 @@ class PVM:
         Parameters
         ---------
         qubit : Qubit
-            The specified qubit state from which the rank-1 projectors are generated.
+            The specified qubit state from which the two rank-1 projectors are generated.
         """
         rho = qubit.rho()
         sigma = np.identity(2) - rho
@@ -64,7 +64,7 @@ class POVM:
         Parameters
         ---------
         qubits : ndarray
-            The specified array of qubit states from which the rank-1 POVM projectors are generated.
+            The specified array of N-2 qubit states from which the N rank-1 POVM projectors are generated.
         """
         # last element normalizes all POVM elements
         rhos = np.asarray([q.rho() for q in qubits])
