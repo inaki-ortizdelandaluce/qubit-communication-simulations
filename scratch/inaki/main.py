@@ -26,18 +26,20 @@ def test_random_states():
 def test_pm_convergence():
     # run experiment
     np.random.seed(0)
-    shots = 10 ** 5
+    shots = 10 ** 7
     experiment = qt.classical.prepare_and_measure_pvm(shots)
 
     # plot probability convergence
     p = experiment['probabilities']['p']
     stats = experiment['probabilities']['stats']
-    print('p1={},p2={},pt={}'.format(stats[0], stats[1], np.sum(stats)))
+    born = experiment['probabilities']['born']
+    print('Stats:\np1={},p2={},pt={}'.format(stats[0], stats[1], np.sum(stats)))
+    print('Born:\np1={},p2={},pt={}'.format(born[0], born[1], np.sum(born)))
 
     p = np.cumsum(p[:, 0]) / (np.arange(len(p[:, 0])) + 1)
 
     plt.plot(p)
-    plt.axhline(y=stats[0], color='r', linestyle='-')
+    plt.axhline(y=born[0], color='r', linestyle='-')
     plt.show()
     return None
 
