@@ -30,17 +30,14 @@ def test_pm_convergence():
     experiment = qt.classical.prepare_and_measure_pvm(shots)
 
     # plot probability convergence
-    pb1 = experiment['probabilities']['b1']
-    pb2 = experiment['probabilities']['b2']
+    p = experiment['probabilities']['p']
+    stats = experiment['probabilities']['stats']
+    print('p1={},p2={},pt={}'.format(stats[0], stats[1], np.sum(stats)))
 
-    p1 = np.sum(pb1) / len(pb1)
-    p2 = np.sum(pb2) / len(pb2)
-    print('p1={},p2={},pt={}'.format(p1, p2, p1 + p2))
-
-    p = np.cumsum(pb1) / (np.arange(len(pb1)) + 1)
+    p = np.cumsum(p[:, 0]) / (np.arange(len(p[:, 0])) + 1)
 
     plt.plot(p)
-    plt.axhline(y=p1, color='r', linestyle='-')
+    plt.axhline(y=stats[0], color='r', linestyle='-')
     plt.show()
     return None
 
@@ -67,5 +64,5 @@ def test_random_povm():
 
 if __name__ == "__main__":
     # test_random_states()
-    # test_pm_convergence()
-    test_random_povm()
+    test_pm_convergence()
+    # test_random_povm()

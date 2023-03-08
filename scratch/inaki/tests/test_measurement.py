@@ -90,3 +90,13 @@ def test_povm_init_probability():
 
     assert np.allclose(np.array([0.375, 0.125, 0.0625, 0.4375]), povm.probability(psi))
 
+
+def test_povm_len():
+    zero = np.array([[1, 0], [0, 0]])
+    one = np.array([[0, 0], [0, 1]])
+    plus = 0.5 * np.array([[1, 1], [1, 1]])
+    minus = 0.5 * np.array([[1, -1], [-1, 1]])
+
+    povm = POVM(weights=0.5 * np.array([1, 1, 1, 1]), proj=np.array([zero, one, plus, minus]))
+
+    assert povm.size() == 4

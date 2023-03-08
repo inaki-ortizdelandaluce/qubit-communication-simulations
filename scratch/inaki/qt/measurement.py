@@ -29,7 +29,7 @@ class PVM:
         Returns
         -------
         ndarray
-                A 2-d array with the corresponding projector.
+            A 2-d array with the corresponding projector.
         """
         return self.proj[index]
 
@@ -44,7 +44,7 @@ class PVM:
         Returns
         -------
         ndarray
-                The probabilities for each outcome given the input state, stored in a 1-d array.
+            The probabilities for each outcome given the input state, stored in a 1-d array.
         """
 
         # repeat density matrix along zero axis
@@ -59,16 +59,15 @@ class POVM:
 
     def __init__(self, weights, proj):
         """
-         Creates a POVM with the specified weights and rank-1 projectors.
+        Creates a POVM with the specified weights and rank-1 projectors.
 
-         Parameters
-         ---------
-         weights : ndarray
+        Parameters
+        ---------
+        weights : ndarray
             The positive coefficients of the constituting rank-1 projectors.
 
-         proj : ndarray
+        proj : ndarray
             A 3-d array with the constituting rank-1 projectors.
-
         """
         self.weights = weights
         self.elements = proj * weights[:, np.newaxis, np.newaxis]
@@ -77,12 +76,12 @@ class POVM:
     @classmethod
     def new(cls, qubits):
         """
-         Creates a POVM with the rank-1 projectors corresponding to the specified qubit states.
+        Creates a POVM with the rank-1 projectors corresponding to the specified qubit states.
 
-         Parameters
-         ---------
-         qubits : ndarray
-            The specified array of N-2 qubit states from which the N rank-1 POVM projectors are generated.
+        Parameters
+        ---------
+        qubits : ndarray
+           The specified array of N-2 qubit states from which the N rank-1 POVM projectors are generated.
         """
         # last element normalizes all POVM elements
         rhos = np.asarray([q.rho() for q in qubits])
@@ -117,7 +116,7 @@ class POVM:
         Returns
         -------
         ndarray
-                A 2-d array with the corresponding POVM element.
+            A 2-d array with the corresponding POVM element.
         """
         return self.element[index]
 
@@ -132,7 +131,7 @@ class POVM:
         Returns
         -------
         ndarray
-                The probabilities for each outcome given the input state, stored in a 1-d array.
+            The probabilities for each outcome given the input state, stored in a 1-d array.
         """
 
         # repeat density matrix along zero axis
@@ -141,3 +140,14 @@ class POVM:
 
         # compute trace of projectors by density matrix
         return np.real(np.trace(np.matmul(self.elements, rho), axis1=1, axis2=2))
+
+    def size(self):
+        """
+        Returns the number of POVM elements
+
+        Returns
+        -------
+        int
+            The number of POVM elements.
+        """
+        return np.size(self.elements, axis=0)
