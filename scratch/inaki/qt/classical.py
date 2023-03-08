@@ -125,7 +125,7 @@ def prepare_and_measure_pvm(shots):
         index = random.choices(range(0, 2), cum_weights=np.cumsum(p), k=1)[0]
         experiment['probabilities']['stats'][index] = experiment['probabilities']['stats'][index] + 1
 
-    experiment['probabilities']['stats'] = 1 / shots * experiment['probabilities']['stats']
+    experiment['probabilities']['stats'] = experiment['probabilities']['stats'] / shots
     experiment['probabilities']['born'] = bob['measurement'].probability(qubit)
 
     return experiment
@@ -196,6 +196,7 @@ def prepare_and_measure_povm(shots):
         "qubit": qubit,
         "measurement": measurement,
         "probabilities": {
+            "p": np.zeros((shots, n)),
             "stats": np.zeros((n,)),
             "born": np.ones((n,))
         }
@@ -212,9 +213,12 @@ def prepare_and_measure_povm(shots):
         # Bob measures
         bob = measure_povm(shared_randomness, alice['bits'], measurement)
 
-        # accumulate counts according to Bob's probabilities
+        # save probabilities
         p = np.abs(bob['probabilities'])
-        index = random.choices(range(0, measurement.size()), cum_weights=np.cumsum(p), k=1)[0]
+        experiment['probabilities']['p'][i, :] = p
+
+        # accumulate counts according to Bob's probabilities
+        index = random.choices(range(0, n), cum_weights=np.cumsum(p), k=1)[0]
         experiment['probabilities']['stats'][index] = experiment['probabilities']['stats'][index] + 1
 
     experiment['probabilities']['stats'] = experiment['probabilities']['stats'] / shots
