@@ -54,10 +54,9 @@ def test_measure_povm():
     lambdas = np.array([random.bloch_vector(), random.bloch_vector()])
 
     # P4 = {1/2|0x0|, 1/2|1x1|, 1/2|+x+|, 1/2|-x-|}
-    proj = np.array([[[1, 0], [0, 0]], [[0, 0], [0, 1]], [[.5, .5], [.5, .5]], [[.5, -.5], [-.5, -.5]]])
+    proj = np.array([[[1, 0], [0, 0]], [[0, 0], [0, 1]], [[.5, .5], [.5, .5]], [[.5, -.5], [-.5, .5]]])
     measurement = POVM(weights=0.5 * np.array([1, 1, 1, 1]), proj=proj)
 
     bob = measure_povm(lambdas, np.array([1, 0]), measurement)
 
-    # FIXME assert np.allclose(bob['probabilities'], np.array([0.403638773, 0, 0.59636123, 0]))
-    assert True
+    assert np.allclose(bob['probabilities'], np.array([0.403638773, 0, 0.59636123, 0]))
