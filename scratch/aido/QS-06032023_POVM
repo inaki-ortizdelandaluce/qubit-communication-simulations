@@ -20,9 +20,11 @@ qc = QuantumCircuit(2)
 qc.unitary(U, [0,1])
 qc.draw()
 
+#descomponer unitaria
 trans_qc = transpile (qc, basis_gates=['cx','u3'])
 trans_qc.draw()
 
+#Nielsen and Chuang, QUANTUM COMPUTATION AND QUANTUM INFORMATION. 1ST SET: HADAMARD + PHASE + CNOT + PI/8
 trans_qc.h(1)
 trans_qc.draw()
 
@@ -35,10 +37,12 @@ trans_qc.draw()
 trans_qc.t(1)
 trans_qc.draw()
 
-
+#measure
 trans_qc.measure([0,1], [0,1])
 trans_qc.draw()
 
+
+#counts e histograma
 job = simulator.run(trans_qc, shots=100000)
 result = job.result()
 counts = result.get_counts(trans_qc)
