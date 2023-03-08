@@ -188,7 +188,7 @@ def prepare_and_measure_povm(shots):
     # measurement = qt.random.povm(4)
 
     # P4 = {1/2|0x0|, 1/2|1x1|, 1/2|+x+|, 1/2|-x-|}
-    proj = np.array([[[1, 0], [0, 0]], [[0, 0], [0, 1]], [[.5, .5], [.5, .5]], [[.5, -.5], [-.5, -.5]]])
+    proj = np.array([[[1, 0], [0, 0]], [[0, 0], [0, 1]], [[.5, .5], [.5, .5]], [[.5, -.5], [-.5, .5]]])
     measurement = POVM(weights=0.5 * np.array([1, 1, 1, 1]), proj=proj)
     n = measurement.size()
 
