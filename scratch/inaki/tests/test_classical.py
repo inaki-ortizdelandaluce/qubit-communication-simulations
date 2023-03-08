@@ -70,5 +70,4 @@ def test_measure_povm():
 
     bob = measure_povm(lambdas, np.array([1, 0]), measurement)
 
-    # FIXME
-    assert True
+    assert np.allclose(bob['probabilities'], np.array([0.403638773, 0, 0.59636123, 0]))

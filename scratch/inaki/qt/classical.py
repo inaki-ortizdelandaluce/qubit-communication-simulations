@@ -116,18 +116,22 @@ def measure_povm(lambdas, bits, measurement: POVM):
     y = measurement.bloch
     w = measurement.weights / 2.
 
-    # select lambda for first outcome
+    # TODO pick block vector according to the measurement weights
+    # select lambda for each outcome
     a = np.abs(np.matmul(lambdas, y.T))
-    _lambda = lambdas[np.argmax(a, axis=0)[0]]
+    lambdas = lambdas[np.argmax(a, axis=0), :]
+    # _lambda = lambdas[np.argmax(a, axis=0)[0]]
 
     # compute probabilities
-    thetas = theta(np.matmul(y, _lambda.reshape(-1, 1)))
+    thetas = theta(np.matmul(y, lambdas.T))
+    # thetas = theta(np.matmul(y, _lambda.reshape(-1, 1)))
     weighted_thetas = np.multiply(thetas, w.reshape(-1, 1))
 
     # print('\nThetas=\n{}'.format(thetas))
     # print('\nWeighted Thetas=\n{}'.format(weighted_thetas))
 
-    p = weighted_thetas[:, 0] / np.sum(weighted_thetas, axis=0)
+    p = np.diag(weighted_thetas) / np.sum(weighted_thetas, axis=0)
+    # p = weighted_thetas[:, 0] / np.sum(weighted_thetas, axis=0)
 
     return {
         "measurement": measurement,
@@ -178,10 +182,17 @@ def prepare_and_measure_pvm(shots):
 def prepare_and_measure_povm(shots):
 
     # Alice prepares a random qubit
-    qubit = random.qubit()
+    # qubit = random.qubit()
+    import math
+    qubit = Qubit(np.array([(3 + 1.j * math.sqrt(3)) / 4., -0.5]))
 
     # Bob prepares a random measurement
-    measurement = random.povm(4)
+    # measurement = random.povm(4)
+    zero = np.array([[1, 0], [0, 0]])
+    one = np.array([[0, 0], [0, 1]])
+    plus = 0.5 * np.array([[1, 1], [1, 1]])
+    minus = 0.5 * np.array([[1, -1], [-1, 1]])
+    measurement = POVM(weights=0.5 * np.array([1, 1, 1, 1]), proj=np.array([zero, one, plus, minus]))
 
     experiment = {
         "qubit": qubit,
@@ -215,6 +226,10 @@ def prepare_and_measure_povm(shots):
         experiment['probabilities']['b2'].append(b2)
         experiment['probabilities']['b3'].append(b3)
         experiment['probabilities']['b4'].append(b4)
+
+        # n = np.random.randint(0, 4)
+        # bn = 'b{}'.format(str(n + 1))
+        # experiment['probabilities'][bn].append(abs(bob['probabilities'][n]))
 
     experiment['probabilities']['born'] = bob['measurement'].probability(qubit)
 
