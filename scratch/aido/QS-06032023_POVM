@@ -1,7 +1,12 @@
+from qiskit import transpile, assemble
 from qiskit import QuantumCircuit
-from qiskit import transpile
-from qiskit.visualization import plot_histogram
+from qiskit import execute, Aer, IBMQ, QuantumRegister, ClassicalRegister
+from qiskit.visualization import plot_histogram,plot_bloch_vector
 from qiskit.providers.aer import QasmSimulator
+from qiskit.tools.jupyter import *
+from qiskit.visualization import *
+from ibm_quantum_widgets import *
+import math
 simulator = QasmSimulator()
 
 
@@ -29,3 +34,15 @@ trans_qc.draw()
 
 trans_qc.t(1)
 trans_qc.draw()
+
+
+trans_qc.measure([0,1], [0,1])
+trans_qc.draw()
+
+job = simulator.run(trans_qc, shots=100000)
+result = job.result()
+counts = result.get_counts(trans_qc)
+print (counts)
+plot_histogram(counts)
+
+
