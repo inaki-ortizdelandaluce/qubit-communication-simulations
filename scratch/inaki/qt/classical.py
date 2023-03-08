@@ -116,7 +116,7 @@ def prepare_and_measure_pvm(shots):
         alice = prepare(shared_randomness, qubit)
 
         # Bob measures
-        bob = measure_pvm2(shared_randomness, alice['bits'], measurement)
+        bob = measure_pvm(shared_randomness, alice['bits'], measurement)
 
         # save Bob probabilities
         p = np.abs(bob['probabilities'])
