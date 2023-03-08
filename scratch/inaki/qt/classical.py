@@ -116,7 +116,8 @@ def measure_povm(lambdas, bits, measurement: POVM):
     y = measurement.bloch
     w = measurement.weights / 2.
 
-    # TODO pick block vector according to the measurement weights
+    # TODO pick bloch vector according to the measurement weights
+    # n = random.choices(range(0, 4), cum_weights=np.cumsum(w), k=1)[0]
     # select lambda for each outcome
     a = np.abs(np.matmul(lambdas, y.T))
     lambdas = lambdas[np.argmax(a, axis=0), :]
