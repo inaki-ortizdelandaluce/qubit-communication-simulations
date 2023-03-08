@@ -9,7 +9,7 @@ from ibm_quantum_widgets import *
 import math
 simulator = QasmSimulator()
 
-
+#crear matriz unitaria:
 U =       [[0, 0, 0, 1],
           [0, 0, 1, 0],
           [1, 0, 0, 0],
@@ -17,6 +17,7 @@ U =       [[0, 0, 0, 1],
 
 qc = QuantumCircuit(2)
 
+#crear unitary gate a partir de matriz unitaria:
 qc.unitary(U, [0,1])
 qc.draw()
 
