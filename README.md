@@ -9,11 +9,11 @@ Prove by classical and quantum computer based experiments that a qubit transmiss
 
 # Roadmap
 
-## &#9989; Simulate Prepare-and-Measure PVMs classically 
+## Simulate Prepare-and-Measure PVMs classically 
 
-### &#10003; Generation of random states and projection-valued measurements
+### Generation of random states and projection-valued measurements
 
-### &#10003; Classical simulation using Python
+### Classical simulation using Python
 
 ---
 ## Simulate Prepare-and-Measure PVMs with a quantum computer
@@ -24,9 +24,9 @@ Prove by classical and quantum computer based experiments that a qubit transmiss
 ---
 ## Simulate Prepare-and-Measure with POVMs
 
-### Generation of POVM measurements
+### &#10003; Generation of POVM measurements
 
-### Perform classical and quantum computer simulations
+### Classical simulations
 ---
 ## Simulate using Bell scenarios
 
