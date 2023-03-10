@@ -45,7 +45,7 @@ def pvm():
             A projection value measure instance.
     """
     q = qubit()
-    measurement = PVM(q)
+    measurement = PVM.new(q)
     return measurement
 
 

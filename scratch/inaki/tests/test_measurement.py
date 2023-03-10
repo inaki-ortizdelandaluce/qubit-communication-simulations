@@ -6,7 +6,7 @@ import numpy as np
 
 def test_pvm_z():
     q = Qubit(np.array([1, 0]))
-    z = PVM(q)
+    z = PVM.new(q)
     projectors = np.array([[[1, 0],
                             [0, 0]],
                            [[0, 0],
@@ -16,7 +16,7 @@ def test_pvm_z():
 
 def test_pvm_x():
     q = Qubit(1 / math.sqrt(2) * np.array([1, 1]))
-    pvm = PVM(q)
+    pvm = PVM.new(q)
     projectors = np.array([[[0.5, 0.5],
                             [0.5, 0.5]],
                            [[0.5, -0.5],
@@ -26,7 +26,7 @@ def test_pvm_x():
 
 def test_pvm_projector():
     q = Qubit(np.array([1, 0]))
-    pvm = PVM(q)
+    pvm = PVM.new(q)
     assert np.allclose(pvm.projector(1), np.array([[0, 0], [0, 1]]))
 
 
@@ -37,9 +37,9 @@ def test_pvm_probability():
     i = Qubit(1 / math.sqrt(2) * np.array([1, 1j]))
     psi = Qubit(np.array([(3 + 1.j * math.sqrt(3))/4., -0.5]))
 
-    x = PVM(plus)
-    y = PVM(i)
-    z = PVM(zero)
+    x = PVM.new(plus)
+    y = PVM.new(i)
+    z = PVM.new(zero)
 
     assert np.allclose(z.probability(plus), np.array([0.5, 0.5]))
     assert np.allclose(z.probability(minus), np.array([0.5, 0.5]))

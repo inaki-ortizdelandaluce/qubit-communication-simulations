@@ -4,19 +4,36 @@ from qt.qubit import Qubit
 
 
 class PVM:
-    def __init__(self, qubit: Qubit):
+    def __init__(self, proj):
         """
-        Creates a PVM with the elements corresponding to the specified qubit state.
+        Creates a PVM with the specified rank-1 projectors.
+
+        Parameters
+        ---------
+        proj : ndarray
+            A 3-d array with the constituting rank-1 projectors.
+       """
+        # check input
+        if not np.allclose(np.identity(2), np.sum(proj, axis=0)):
+            raise ValueError('PVM projectors do not sum up the identity')
+
+        self.proj = proj
+        self.bloch = np.asarray([Qubit.density2bloch(p) for p in proj])
+
+    @classmethod
+    def new(cls, qubit: Qubit):
+        """
+        Creates a PVM with the rank-1 projectors corresponding to the specified qubit state.
 
         Parameters
         ---------
         qubit : Qubit
-            The specified qubit state from which the two pb1[0]rank-1 projectors are generated.
+            The specified qubit state from which the two rank-1 projectors are generated.
         """
         rho = qubit.rho()
         sigma = np.identity(2) - rho
-        self.bloch = np.array([Qubit.density2bloch(rho), Qubit.density2bloch(sigma)])
-        self.proj = np.array([rho, sigma])
+        proj = np.array([rho, sigma])
+        return cls(proj)
 
     def projector(self, index):
         """
@@ -71,7 +88,17 @@ class POVM:
         """
         self.weights = weights
         self.elements = proj * weights[:, np.newaxis, np.newaxis]
+
+        # check input
+        if not np.allclose(np.identity(2), np.sum(self.elements, axis=0)):
+            raise ValueError('POVM elements do not sum up the identity')
+
+        positive = [np.all(np.linalg.eig(element)[0] >= -np.finfo(np.float32).eps) for element in self.elements]
+        if not np.all(positive):
+            raise ValueError('Some POVM elements are not definite positive')
+
         self.bloch = v = np.asarray([Qubit.density2bloch(p) for p in proj])
+
 
     @classmethod
     def new(cls, qubits):

@@ -97,7 +97,6 @@ def test_povm_convergence():
 
 def test_povm_convergence_3d():
     # run experiment
-    np.random.seed(0)
     shots = 10 ** 5
     experiment = qt.classical.prepare_and_measure_povm(shots, 4)
 
@@ -126,6 +125,7 @@ def test_povm_convergence_3d():
 
     colors = ["#dc267f", "#648fff", "#fe6100", "#785ef0", "#ffb000"]
 
+    ax.set_ylim([0, 1.0])
     ax.plot(p1, color=colors[0], linewidth=1)
     ax.plot(p2, color=colors[1], linewidth=1)
     ax.plot(p3, color=colors[2], linewidth=1)

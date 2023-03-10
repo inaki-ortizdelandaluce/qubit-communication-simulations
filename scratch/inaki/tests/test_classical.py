@@ -60,3 +60,13 @@ def test_measure_povm():
     bob = measure_povm(lambdas, np.array([1, 0]), measurement)
 
     assert np.allclose(bob['probabilities'], np.array([0.403638773, 0, 0.59636123, 0]))
+
+
+def test_prepare_and_measure_povm():
+    np.random.seed(0)
+
+    shots = 10**2
+    experiment = prepare_and_measure_povm(shots, 4)
+
+    assert np.allclose(experiment['probabilities']['born'], np.array([0.0096687, 0.0057291, 0.8824570, 0.1021452]))
+    assert np.allclose(experiment['probabilities']['stats'], np.array([0, 0.01, 0.91, 0.08]), rtol=1e-2, atol=1e-2)
