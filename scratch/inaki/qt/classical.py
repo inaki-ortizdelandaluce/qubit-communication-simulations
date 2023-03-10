@@ -90,6 +90,21 @@ def measure_pvm(lambdas, bits, measurement: PVM):
 
 
 def prepare_and_measure_pvm(shots):
+    """
+    Runs a prepare-and-measure classical simulation with a random PVM measurement
+
+    Parameters
+    ---------
+    shots : int
+        Number of shots the simulation is run with
+
+    Returns
+    -------
+    dict
+        A dictionary with the random state ('qubit'), random PVM measurement ('measurement') and
+        the probabilities for each measurement outcome ('probabilities') in a nested structure including the
+        theoretical probability ('born'), the execution runs ('runs') and the probability statistics ('stats')
+    """
 
     # Alice prepares a random qubit
     qubit = qt.random.qubit()
@@ -101,7 +116,7 @@ def prepare_and_measure_pvm(shots):
         "qubit": qubit,
         "measurement": measurement,
         "probabilities": {
-            "p": np.zeros((shots, 2)),
+            "runs": np.zeros((shots, 2)),
             "stats": np.zeros((2,)),
             "born": np.ones((2,))
         }
@@ -118,10 +133,11 @@ def prepare_and_measure_pvm(shots):
         # Bob measures
         bob = measure_pvm(shared_randomness, alice['bits'], measurement)
 
-        # save Bob probabilities
+        # save simulation runs
         p = np.abs(bob['probabilities'])
-        experiment['probabilities']['p'][i, :] = p
+        experiment['probabilities']['runs'][i, :] = p
 
+        # accumulate counts according to Bob's probabilities
         index = random.choices(range(0, 2), cum_weights=np.cumsum(p), k=1)[0]
         experiment['probabilities']['stats'][index] = experiment['probabilities']['stats'][index] + 1
 
@@ -176,17 +192,34 @@ def measure_povm(lambdas, bits, measurement: POVM):
     }
 
 
-def prepare_and_measure_povm(shots):
+def prepare_and_measure_povm(shots, n):
+    """
+    Runs a prepare-and-measure classical simulation with a random POVM measurement
+
+    Parameters
+    ---------
+    shots : int
+        Number of shots the simulation is run with
+    n: int
+        Number of POVM random elements
+
+    Returns
+    -------
+    dict
+        A dictionary with the random state ('qubit'), random POVM measurement ('measurement') and
+        the probabilities for each measurement outcome ('probabilities') in a nested structure including the
+        theoretical probability ('born'), the execution runs ('runs') and the probability statistics ('stats')
+    """
 
     # Alice prepares a random qubit
     # qubit = qt.random.qubit()
-
+    # FIXME
     import math
     qubit = Qubit(np.array([(3 + 1.j * math.sqrt(3)) / 4., -0.5]))
 
     # Bob prepares a random measurement
-    # measurement = qt.random.povm(4)
-
+    # measurement = qt.random.povm(n)
+    # FIXME
     # P4 = {1/2|0x0|, 1/2|1x1|, 1/2|+x+|, 1/2|-x-|}
     proj = np.array([[[1, 0], [0, 0]], [[0, 0], [0, 1]], [[.5, .5], [.5, .5]], [[.5, -.5], [-.5, .5]]])
     measurement = POVM(weights=0.5 * np.array([1, 1, 1, 1]), proj=proj)
@@ -196,7 +229,7 @@ def prepare_and_measure_povm(shots):
         "qubit": qubit,
         "measurement": measurement,
         "probabilities": {
-            "p": np.zeros((shots, n)),
+            "runs": np.zeros((shots, n)),
             "stats": np.zeros((n,)),
             "born": np.ones((n,))
         }
@@ -213,9 +246,9 @@ def prepare_and_measure_povm(shots):
         # Bob measures
         bob = measure_povm(shared_randomness, alice['bits'], measurement)
 
-        # save probabilities
+        # save simulation runs
         p = np.abs(bob['probabilities'])
-        experiment['probabilities']['p'][i, :] = p
+        experiment['probabilities']['runs'][i, :] = p
 
         # accumulate counts according to Bob's probabilities
         index = random.choices(range(0, n), cum_weights=np.cumsum(p), k=1)[0]

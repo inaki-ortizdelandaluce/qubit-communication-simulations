@@ -5,6 +5,7 @@ import qt.classical
 import qt.qubit
 import qt.random
 from qt.measurement import POVM
+from qt.visualization import *
 
 
 def test_random_states():
@@ -18,28 +19,7 @@ def test_random_states():
         indexes[i] = pix
 
     count, bins, ignored = plt.hist(indexes, bins=range(pixels + 1), density=True)
-    plt.plot(bins, np.ones_like(bins)/pixels, linewidth=2, color='r')
-    plt.show()
-    return None
-
-
-def test_pm_convergence():
-    # run experiment
-    np.random.seed(0)
-    shots = 10 ** 7
-    experiment = qt.classical.prepare_and_measure_pvm(shots)
-
-    # plot probability convergence
-    p = experiment['probabilities']['p']
-    stats = experiment['probabilities']['stats']
-    born = experiment['probabilities']['born']
-    print('Stats:\np1={},p2={},pt={}'.format(stats[0], stats[1], np.sum(stats)))
-    print('Born:\np1={},p2={},pt={}'.format(born[0], born[1], np.sum(born)))
-
-    p = np.cumsum(p[:, 0]) / (np.arange(len(p[:, 0])) + 1)
-
-    plt.plot(p)
-    plt.axhline(y=born[0], color='r', linestyle='-')
+    plt.plot(bins, np.ones_like(bins) / pixels, linewidth=2, color='r')
     plt.show()
     return None
 
@@ -64,7 +44,107 @@ def test_random_povm():
     return None
 
 
+def test_pvm_convergence():
+    # run experiment
+    np.random.seed(0)
+    shots = 10 ** 7
+    experiment = qt.classical.prepare_and_measure_pvm(shots)
+
+    # plot probability convergence
+    runs = experiment['probabilities']['runs']
+    stats = experiment['probabilities']['stats']
+    born = experiment['probabilities']['born']
+    print('Stats:\np1={},p2={},pt={}'.format(stats[0], stats[1], np.sum(stats)))
+    print('Born:\np1={},p2={},pt={}'.format(born[0], born[1], np.sum(born)))
+
+    p = np.cumsum(runs[:, 0]) / (np.arange(len(runs[:, 0])) + 1)
+
+    plt.plot(p)
+    plt.axhline(y=born[0], color='r', linestyle='-')
+    plt.show()
+    return None
+
+
+def test_povm_convergence():
+    # run experiment
+    np.random.seed(0)
+    shots = 10 ** 5
+    experiment = qt.classical.prepare_and_measure_povm(shots, 4)
+
+    # plot probability convergence
+    runs = experiment['probabilities']['runs']
+    stats = experiment['probabilities']['stats']
+    born = experiment['probabilities']['born']
+    print('Stats:\np1={}, p2={}, p3={}, p4={}, pt={}'.format(stats[0], stats[1], stats[2], stats[3], np.sum(stats)))
+    print('Born:\np1={}, p2={}, p3={}, p4={}, pt={}'.format(born[0], born[1], born[2], born[3], np.sum(born)))
+
+    p1 = np.cumsum(runs[:, 0]) / (np.arange(len(runs[:, 0])) + 1)
+    p2 = np.cumsum(runs[:, 1]) / (np.arange(len(runs[:, 1])) + 1)
+    p3 = np.cumsum(runs[:, 2]) / (np.arange(len(runs[:, 2])) + 1)
+    p4 = np.cumsum(runs[:, 3]) / (np.arange(len(runs[:, 3])) + 1)
+
+    plt.plot(p1, color='r')
+    plt.plot(p2, color='g')
+    plt.plot(p3, color='b')
+    plt.plot(p4, color='y')
+    plt.axhline(y=born[0], color='r', linestyle='-')
+    plt.axhline(y=born[1], color='g', linestyle='-')
+    plt.axhline(y=born[2], color='b', linestyle='-')
+    plt.axhline(y=born[3], color='y', linestyle='-')
+    plt.show()
+    return None
+
+
+def test_povm_convergence_3d():
+    # run experiment
+    np.random.seed(0)
+    shots = 10 ** 5
+    experiment = qt.classical.prepare_and_measure_povm(shots, 4)
+
+    # plot probability convergence
+    runs = experiment['probabilities']['runs']
+    stats = experiment['probabilities']['stats']
+    born = experiment['probabilities']['born']
+    print('Stats:\np1={}, p2={}, p3={}, p4={}, pt={}'.format(stats[0], stats[1], stats[2], stats[3], np.sum(stats)))
+    print('Born:\np1={}, p2={}, p3={}, p4={}, pt={}'.format(born[0], born[1], born[2], born[3], np.sum(born)))
+
+    p1 = np.cumsum(runs[:, 0]) / (np.arange(len(runs[:, 0])) + 1)
+    p2 = np.cumsum(runs[:, 1]) / (np.arange(len(runs[:, 1])) + 1)
+    p3 = np.cumsum(runs[:, 2]) / (np.arange(len(runs[:, 2])) + 1)
+    p4 = np.cumsum(runs[:, 3]) / (np.arange(len(runs[:, 3])) + 1)
+
+    fig = plt.figure(figsize=(10, 7))
+    rect = [80000, 0.43, 20000, 0.20]  # left, bottom, width, height
+
+    # main axes
+    ax = fig.add_subplot(111)
+    title = r'$|q\rangle = \frac{3 + i\sqrt{3}}{4}\;|0\rangle - \frac{1}{2}\;|1\rangle \quad P_{4}=\{\frac{1}{2}|0\rangle\langle0|,\;\frac{1}{2}|1\rangle\langle1|,\;\frac{1}{2}|+\rangle\langle+|,\;\frac{1}{2}|-\rangle\langle-|\}$'
+    plt.title(title, fontsize='small')
+
+    colors = ["#dc267f", "#648fff", "#fe6100", "#785ef0", "#ffb000"]
+
+    ax.plot(p1, color=colors[0], linewidth=1)
+    ax.plot(p2, color=colors[1], linewidth=1)
+    ax.plot(p3, color=colors[2], linewidth=1)
+    ax.plot(p4, color=colors[3], linewidth=1)
+    ax.axhline(y=born[0], color=colors[0], linestyle='--', linewidth=1, alpha=0.5)
+    ax.axhline(y=born[1], color=colors[1], linestyle='--', linewidth=1, alpha=0.5)
+    ax.axhline(y=born[2], color=colors[2], linestyle='--', linewidth=1, alpha=0.5)
+    ax.axhline(y=born[3], color=colors[3], linestyle='--', linewidth=1, alpha=0.5)
+
+    # inset axes
+    ax_inset = add_inset_axes(rect, units="ax", ax_target=ax, projection="3d")
+    state = np.array([[-0.75, 0.43, 0.5]])
+    measurements = np.array([[0, 0, 1.0], [0, 0, -1.0], [1.0, 0, 0], [-1.0, 0, 0]])
+    plot_bloch_sphere(ax_inset, state, measurements)
+
+    plt.show()
+    return None
+
+
 if __name__ == "__main__":
     # test_random_states()
-    test_pm_convergence()
+    # test_pvm_convergence()
     # test_random_povm()
+    # test_povm_convergence()
+    test_povm_convergence_3d()
