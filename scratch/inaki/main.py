@@ -120,6 +120,9 @@ def test_povm_convergence_3d():
     ax = fig.add_subplot(111)
     title = r'$|q\rangle = \frac{3 + i\sqrt{3}}{4}\;|0\rangle - \frac{1}{2}\;|1\rangle \quad P_{4}=\{\frac{1}{2}|0\rangle\langle0|,\;\frac{1}{2}|1\rangle\langle1|,\;\frac{1}{2}|+\rangle\langle+|,\;\frac{1}{2}|-\rangle\langle-|\}$'
     plt.title(title, fontsize='small')
+    plt.xlabel('shots')
+    plt.ylabel('probability')
+    plt.ticklabel_format(style='sci', axis='x', scilimits=(0, 0))
 
     colors = ["#dc267f", "#648fff", "#fe6100", "#785ef0", "#ffb000"]
 

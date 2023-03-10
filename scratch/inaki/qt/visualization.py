@@ -263,8 +263,8 @@ def plot_bloch_sphere(axes, state, measurements,
     axes.set_box_aspect((1, 1, 1))
     axes.grid(False)
     plot_sphere_back(axes)
-    plot_vectors(axes, measurements, vector_color=vector_color)
-    plot_vectors(axes, state, vector_color=["#000000"])
+    plot_vectors(axes, measurements, vector_color=vector_color, vector_width=2)
+    plot_vectors(axes, state, vector_color=["#000000"], vector_width=2)
     plot_sphere_front(axes)
     plot_axes_labels(axes, font_size=10)
     annotations = []
