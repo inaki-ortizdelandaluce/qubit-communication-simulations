@@ -24,7 +24,7 @@ Prove by classical and quantum computer based experiments that a qubit transmiss
 ---
 ## Simulate Prepare-and-Measure with POVMs
 
-### &#10003; Generation of POVM measurements
+### Generation of POVM measurements
 
 ### Classical simulations
 ---
