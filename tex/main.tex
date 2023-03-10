@@ -1,0 +1,35 @@
+\documentclass{article}
+\usepackage{graphicx} % Required for inserting images
+\usepackage[backend=biber,style=alphabetic,sorting=ynt]{biblatex}
+\usepackage{authblk}
+\usepackage{float}
+\addbibresource{bibliography.bib}
+
+\begin{document}
+
+\input{title.tex}
+\newpage
+\input{abstract.tex}
+\newpage
+\tableofcontents
+
+\section{Introduction}
+\section{Methodology}
+\subsection{Random state preparation}
+\subsection{Random measurement preparation}
+\subsection{Prepare-and-measure scenario}
+\subsubsection{Classical simulation}
+\subsubsection{Quantum computer simulation}
+\subsection{Bell scenario}
+\subsubsection{Classical simulation}
+\subsubsection{Quantum computer simulation}
+\section{Results}
+\subsection{Classical and quantum simulations}
+\subsection{Benchmarking}
+\section{Discussion}
+\section{Conclusion}
+\section{Acknowledgements}
+\input{acknowledgments.tex}
+
+\printbibliography
+\end{document}
