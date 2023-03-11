@@ -1,5 +1,5 @@
-# The classical cost of transmitting a qubit 
-Classical and quantum simulations of qubit transmission. Final Project for Postgraduate Degree in Quantum Engineering by Universitat Politècnica de Catalunya (UPC).
+# Simulation of qubit communication in prepare-and-measure and entanglement scenarios 
+Final Project for Postgraduate Degree in Quantum Engineering by Universitat Politècnica de Catalunya (UPC).
 
 # Reference Paper
 [The classical cost of transmitting a qubit - Renner, Tavakoli and Quintino, 2022 (arXiv2207.02244)](https://arxiv.org/abs/2207.02244)
