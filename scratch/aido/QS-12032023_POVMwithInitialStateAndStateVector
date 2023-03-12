@@ -1,10 +1,9 @@
-from qiskit import transpile, assemble
+from qiskit import transpile, assemble, QuantumCircuit
 from qiskit import execute, Aer, IBMQ, QuantumRegister, ClassicalRegister
 from qiskit.visualization import plot_histogram, plot_bloch_multivector
-from qiskit import QuantumCircuit
 from qiskit.extensions import UnitaryGate
-from qiskit.quantum_info import random_unitary
 from qiskit.providers.aer import QasmSimulator
+from qiskit.quantum_info import DensityMatrix, Statevector, random_unitary
 from qiskit.tools.jupyter import *
 from qiskit.visualization import *
 from ibm_quantum_widgets import *
@@ -40,13 +39,30 @@ trans_qc.draw()
 trans_qc.t(1)
 trans_qc.draw()
 
+#inicializar el state vector a cero en los dos qubit.
+sv = Statevector.from_label('00')
+
+#statevector objects:
+sv
+
+#Evolucionar statevector a partir del circuito creado
+sv= sv.evolve(trans_qc)
+
+#statevector del circuito
+sv
+
+#matriz statevector
+sv.data
+
 trans_qc.measure([0,1],[0,1])
 trans_qc.draw()
+#no cambia el resultado si medimos alice y bob, o solo bob
+# modelo no funciona si solo tenemos medición en un bit clasico, mínimo 2
 
 job = sim.run(trans_qc, shots=100000)
 result = job.result()
 counts = result.get_counts(trans_qc)
 
-print(counts)
-
+print (counts)
+print (result)
 plot_histogram(counts)
