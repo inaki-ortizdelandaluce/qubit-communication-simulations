@@ -99,7 +99,6 @@ class POVM:
 
         self.bloch = v = np.asarray([Qubit.density2bloch(p) for p in proj])
 
-
     @classmethod
     def new(cls, qubits):
         """
@@ -178,3 +177,44 @@ class POVM:
             The number of POVM elements.
         """
         return np.size(self.elements, axis=0)
+
+    def unitary(self):
+        """
+        Returns the associated unitary matrix in the extended Hilbert space according to Neumark's theorem
+
+        Returns
+        -------
+        ndarray
+            The nxn unitary matrix where n is the number of POVM elements.
+
+        """
+        d = 2
+        n = self.size()
+        u = np.zeros((n, n), dtype=np.complex_)
+
+        # compute the kets of the rank-1 POVM projectors
+        v, _, _ = np.linalg.svd(self.elements, full_matrices=True, compute_uv=True, hermitian=False)
+        # assign kets to first d columns
+        u[:, 0:d] = v[:, :, 0] / np.linalg.norm(v[:, :, 0], axis=0)
+
+        # remaining n-d columns should correspond to orthogonal projectors in extended space
+        # TODO sum over i=1,d
+        p = (
+                np.eye(n, dtype=np.complex_)
+                - np.outer(u[:, 0], u[:, 0].conj())
+                - np.outer(u[:, 1], u[:, 1].conj())
+        )
+        dim = 0
+        for b in np.eye(n, dtype=np.complex_):
+            w = np.matmul(p, b)
+            if not np.isclose(w, 0.0).all():
+                w /= np.linalg.norm(w)
+                u[:, dim + d] = w
+                p -= np.outer(w, w.conj())
+                dim += 1
+            if dim == (n - d):
+                break
+        if not np.allclose(np.matmul(u, u.conj().T), np.eye(n)):
+            raise ValueError('Neumark\'s square matrix is not unitary')
+
+        return u

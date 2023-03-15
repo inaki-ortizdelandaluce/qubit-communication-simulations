@@ -33,7 +33,7 @@ class Qubit:
 
     def rho(self):
         """
-         Return the density matrix corresponding to the qubit in a pure state.
+         Returns the density matrix corresponding to the qubit in a pure state.
 
          Returns
          -------
@@ -44,7 +44,7 @@ class Qubit:
 
     def bloch_angles(self):
         """
-        Return the spherical coordinates of the qubit in the Bloch sphere, with polar and azimuthal angles in radians.
+        Returns the spherical coordinates of the qubit in the Bloch sphere, with polar and azimuthal angles in radians.
 
         Returns
         -------
@@ -61,7 +61,7 @@ class Qubit:
     @staticmethod
     def density2bloch(rho):
         """
-         Return the cartesian coordinates of the specified qubit state in the Bloch sphere.
+        Returns the cartesian coordinates of the specified qubit state in the Bloch sphere.
 
         Parameters
         ---------
@@ -79,7 +79,7 @@ class Qubit:
 
     def bloch_vector(self):
         """
-         Return the cartesian coordinates of the qubit in the Bloch sphere.
+         Returns the cartesian coordinates of the qubit in the Bloch sphere.
 
          Returns
          -------

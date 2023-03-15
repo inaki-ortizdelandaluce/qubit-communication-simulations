@@ -1,3 +1,5 @@
+import numpy as np
+
 from qt.qubit import *
 from pytest import approx
 
