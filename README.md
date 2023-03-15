@@ -13,26 +13,29 @@ Prove by classical and quantum computer based experiments that a qubit transmiss
 
 ### Generation of random states and projection-valued measurements
 
-### Classical simulation using Python
+### Classical simulation 
 
----
-## Simulate Prepare-and-Measure PVMs with a quantum computer
-
-### Simulation using Qiskit Quantum Simulator
-
-### Simulation using IBM Quantum Computer. Error correction 
----
 ## Simulate Prepare-and-Measure with POVMs
 
 ### Generation of POVM measurements
 
-### Classical simulations
+### Classical simulation
+
+### Simulation using Qiskit Quantum Simulator
+
 ---
 ## Simulate using Bell scenarios
 
 ### Generation of multiple-qubit states towards Bell scenarios preparation
+
+### Classical and Quantum simulations
+
 ---
-## Extend analysis to qutrits
+## Extensions
+
+### Simulation using IBM Quantum Computer. Error correction
+
+### Extend analysis to qutrits
 ---
 
  # Other References
