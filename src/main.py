@@ -2,10 +2,12 @@ import math
 import matplotlib.pyplot as plt
 from healpy.pixelfunc import ang2pix
 import qt.classical
+import qt.quantum
 import qt.qubit
 import qt.random
 from qt.measurement import POVM
 from qt.visualization import *
+
 
 
 def test_random_states():
@@ -160,10 +162,26 @@ def test_neumark():
     return None
 
 
+def test_povm_circuit():
+    qubit = qt.qubit.Qubit(np.array([(3 + 1.j * math.sqrt(3)) / 4., -0.5]))
+
+    zero = np.array([[1, 0], [0, 0]])
+    one = np.array([[0, 0], [0, 1]])
+    plus = 0.5 * np.array([[1, 1], [1, 1]])
+    minus = 0.5 * np.array([[1, -1], [-1, 1]])
+    povm = POVM(weights=0.5 * np.array([1, 1, 1, 1]), proj=np.array([zero, one, plus, minus], dtype=complex))
+
+    counts = qt.quantum.prepare_and_measure_povm(1000000, qubit, povm)
+    p = np.array([counts['00'], counts['01'], counts['10'], counts['11']])
+    p = p / np.sum(p)
+    print('Probabilities={}'.format(p))
+
+
 if __name__ == "__main__":
     # test_random_states()
     # test_pvm_convergence()
     # test_random_povm()
     # test_povm_convergence()
     # test_povm_convergence_3d()
-    test_neumark()
+    # test_neumark()
+    test_povm_circuit()
