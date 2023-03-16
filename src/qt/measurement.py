@@ -199,18 +199,21 @@ class POVM:
         u[:, 0:d] = v[:, :, 0] / np.linalg.norm(v[:, :, 0], axis=0)
 
         # remaining n-d columns should correspond to orthogonal projectors in extended space
-        # TODO sum over i=1,d
-        p = np.eye(n, dtype=np.complex_) - np.outer(u[:, 0], u[:, 0].conj()) - np.outer(u[:, 1], u[:, 1].conj())
-        dim = 0
+        p = np.eye(n, dtype=np.complex_)
+        for idx in range(d):
+            p -= np.outer(u[:, idx], u[:, idx].conj())
+
+        counter = 0
         for b in np.eye(n, dtype=np.complex_):
             w = np.matmul(p, b)
             if not np.isclose(w, 0.0).all():
                 w /= np.linalg.norm(w)
-                u[:, dim + d] = w
+                u[:, counter + d] = w
                 p -= np.outer(w, w.conj())
-                dim += 1
-            if dim == (n - d):
+                counter += 1
+            if counter == (n - d):
                 break
+
         if not np.allclose(np.matmul(u, u.conj().T), np.eye(n)):
             raise ValueError('Neumark\'s square matrix is not unitary')
 
