@@ -192,11 +192,12 @@ class POVM:
         n = self.size()
         u = np.zeros((n, n), dtype=np.complex_)
 
-        # compute the kets of the rank-1 POVM projectors
-        # TODO eigenvectors vs svd
-        v, _, _ = np.linalg.svd(self.elements, full_matrices=True, compute_uv=True, hermitian=False)
-        # assign kets to first d columns
-        u[:, 0:d] = v[:, :, 0] / np.linalg.norm(v[:, :, 0], axis=0)
+        # compute the kets of the rank-1 POVM projectors and assign to first d columns
+        # v, _, _ = np.linalg.svd(self.elements, full_matrices=True, compute_uv=True, hermitian=False)
+        # u[:, 0:d] = v[:, :, 0] / np.linalg.norm(v[:, :, 0], axis=0)
+        w, v = np.linalg.eig(self.elements)
+        v = v[np.where(w != 0)]
+        u[:, 0:d] = v / np.linalg.norm(v, axis=0)
 
         # remaining n-d columns should correspond to orthogonal projectors in extended space
         p = np.eye(n, dtype=np.complex_)
