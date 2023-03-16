@@ -1,3 +1,4 @@
+import numpy as np
 from qiskit import QuantumCircuit, transpile, Aer, IBMQ
 from qt.qubit import Qubit
 from qt.measurement import POVM
@@ -19,4 +20,7 @@ def prepare_and_measure_povm(shots, qubit: Qubit, povm: POVM):
     result = job.result()
     counts = result.get_counts(qc_transpiled)
 
-    return counts
+    p = np.array([counts['00'], counts['01'], counts['10'], counts['11']])
+    p = p / np.sum(p)
+
+    return p

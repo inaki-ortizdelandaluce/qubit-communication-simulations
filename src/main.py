@@ -171,9 +171,8 @@ def test_povm_circuit():
     minus = 0.5 * np.array([[1, -1], [-1, 1]])
     povm = POVM(weights=0.5 * np.array([1, 1, 1, 1]), proj=np.array([zero, one, plus, minus], dtype=complex))
 
-    counts = qt.quantum.prepare_and_measure_povm(1000000, qubit, povm)
-    p = np.array([counts['00'], counts['01'], counts['10'], counts['11']])
-    p = p / np.sum(p)
+    shots = 10**7
+    p = qt.quantum.prepare_and_measure_povm(shots, qubit, povm)
     print('Probabilities={}'.format(p))
 
 
