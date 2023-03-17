@@ -1,8 +1,12 @@
 \documentclass{article}
-\usepackage{graphicx} % Required for inserting images
-\usepackage[backend=biber,style=alphabetic,sorting=ynt]{biblatex}
+\usepackage{amssymb}
 \usepackage{authblk}
+\usepackage{bbold}
+\usepackage[backend=biber,style=alphabetic,sorting=ynt]{biblatex}
 \usepackage{float}
+\usepackage{graphicx}
+\usepackage[skip=7pt plus1pt, indent=20pt]{parskip}
+\usepackage{physics}
 \addbibresource{bibliography.bib}
 
 \begin{document}
@@ -13,16 +17,18 @@
 \newpage
 \tableofcontents
 
+\newpage
 \section{Introduction}
+\input{introduction}
+
 \section{Methodology}
-\subsection{Random state preparation}
-\subsection{Random measurement preparation}
-\subsection{Prepare-and-measure scenario}
+\subsection{State preparation}
+\subsection{Positive operator valued measurement}
+\subsection{Prepare-and-Measure scenario}
 \subsubsection{Classical simulation}
-\subsubsection{Quantum computer simulation}
-\subsection{Bell scenario}
-\subsubsection{Classical simulation}
-\subsubsection{Quantum computer simulation}
+\subsubsection{Quantum circuit simulation}
+\input{quantum.tex}
+\subsection{Entanglement scenario}
 \section{Results}
 \subsection{Classical and quantum simulations}
 \subsection{Benchmarking}

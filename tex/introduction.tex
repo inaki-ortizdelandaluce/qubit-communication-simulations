@@ -1,0 +1,39 @@
+Quantum information theory provides a framework to quantify the power of quantum theory compared to classical communication theory. Over the last decades, the field has also flourished compelled to set realistic boundaries to the promises of quantum advantages in fields like quantum communication and computing. Exploring the fundamental limits of quantum over classical advantages is crucial in this scenario, and this is the primary objective of this work.
+\par
+An important feature of quantum theory lies in the statistical correlations produced by local measurements of a quantum system. The simplest example of quantum correlations are the ones produced by projective measurements on a maximally-entangled state of two qubits, also known as a Bell pair state. Such correlations are the basic resource of bipartite quantum information theory, where various equivalences are known: one shared Bell pair plus two bits of classical information can be used to teleport one  qubit and, conversely, one shared Bell pair state plus a single qubit can be used to send two bits of classical information via superdense coding.
+\par
+In this context, a breakthrough was made by Ben Toner and David Bacon when they proved that any prediction based on projective measurements on an entangled Bell pair state could be simulated by communicating only two classical bits \cite{toner2003}. Very recently, Martin Renner, Armin Tavakoli and Marco Tulio Quintino, have extended such result to a most generalised set of measurements, the positive operator-valued measures \cite{renner2022}.
+Following up such generalisation, we will prove by classical and quantum computer based experiments that a qubit transmission can be simulated classically with a total cost of two bits for any general measurement, either in a prepare-and-measure or an entanglement scenario.
+
+\textit{Explain POVM, prepare and measure and the classical protocol}
+
+\begin{equation}
+p_Q(b|\rho,\{B_b\}) = tr(\rho B_b)
+\end{equation}
+
+\begin{equation}
+p_C(b|\rho,\{B_b\}) = \int_{\lambda} d\lambda\ \pi(\lambda) \sum_{c=1}^{d_C} p_A(c|\rho, \lambda) p_B(b|\{B_b\}, c, \lambda)
+\end{equation}
+
+\begin{equation}
+\forall \rho, \{B_b\}:\quad p_C(b|\rho,\{B_b\}) = p_Q(b|\rho,\{B_b\})
+\end{equation}
+
+\begin{equation}
+tr(\rho B_b) = p_b(1 + \vec{x} \cdot \vec{y}_b) 
+\end{equation}
+
+\begin{equation}
+B_b = 2p_b\ket{\vec{y}_b}\bra{\vec{y}_b}
+\end{equation}
+
+\begin{equation}
+\ket{\vec{y}_b}\bra{\vec{y}_b} = \frac{\mathbb{1} + \vec{y}_b \cdot \vec{\sigma}}{2}
+\end{equation}
+
+\begin{equation}
+p_B(b|\{B_b\},\vec{\lambda}) = \frac{p_b\ \Theta(\vec{y}_b \cdot \vec{\lambda})}{\sum_{j}^{N}p_j\ \Theta(\vec{y}_j \cdot \vec{\lambda})}
+\end{equation}
+
+\[\vec{y}_b \in \mathbb{R}^{3}\]
+
