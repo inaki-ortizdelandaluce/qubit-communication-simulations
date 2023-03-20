@@ -1,0 +1,52 @@
+# This CITATION.cff file was generated with cffinit.
+# Visit https://bit.ly/cffinit to generate yours today!
+
+cff-version: 1.2.0
+title: >-
+  Simulations of qubit communication in prepare-and-measure
+  and entanglement scenarios
+message: >-
+  If you use this software, please cite it using the
+  metadata from this file.
+type: software
+authors:
+  - given-names: Inaki
+    family-names: Ortiz de Landaluce
+    orcid: 'https://orcid.org/0000-0003-4899-1184'
+    email: inaki.ortizdelandaluce@gmail.com
+  - given-names: Aido
+    family-names: Cortes Alcaraz
+  - given-names: Tomas Albert
+    family-names: Pastor Juro
+repository-code: >-
+  https://github.com/inaki-ortizdelandaluce/qubit-communication-simulations/
+abstract: >-
+  In the early years of the current century, a breakthrough
+  was made in Quantum Information Theory by David Bacon and
+  Ben Toner, who developed a quantum communication protocol
+  showing that any prediction based on projective
+  measurements (PVMs) on a qubit could be simulated by
+  communicating only two classical bits. This result has
+  been very recently extended by Martin Renner, Armin
+  Tavakoli and Marco Tulio Quintino to positive
+  operator-valued measures (POVMs) without any loss of
+  generalisation and classical cost of a qubit transmission,
+  still two bits. In this project we have simulated such
+  extended protocol both classically and using a quantum
+  computing framework, to show how two bits of communication
+  are enough to reproduce all quantum correlations
+  associated to arbitrary POVMs applied to any
+  prepare-and-measure scenario and also to any entangled
+  two-qubit state. With this investigation we give rise to
+  explore and understand computationally the fundamental
+  limits of quantum over classical advantages.
+keywords:
+  - Quantum Information
+  - Quantum Communication
+  - Entanglement
+  - Qubit
+  - Prepare-and-measure
+license: MIT
+commit: a54d085ba63049da57cb225a4ca3508ecd91dfeb
+version: '1.0'
+date-released: '2023-05-31'
