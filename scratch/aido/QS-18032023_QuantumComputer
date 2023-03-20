@@ -5,6 +5,15 @@ X = np.array([[0, 1], [1, 0]])
 Y = np.array([[0, -1.j], [1j, 0]])
 Z = np.array([[1, 0], [0, -1]])
 
+import numpy as np
+import cmath
+import math
+
+X = np.array([[0, 1], [1, 0]])
+Y = np.array([[0, -1.j], [1j, 0]])
+Z = np.array([[1, 0], [0, -1]])
+
+
 
 class Qubit:
     def __init__(self, ket=np.array([1, 0])):
@@ -81,6 +90,8 @@ class Qubit:
         return Qubit.density2bloch(self.rho())
         
         
+        import numpy as np
+import scipy
 
 
 class PVM:
@@ -286,36 +297,29 @@ class POVM:
         
         
         
-        
-import numpy as np
+        import numpy as np
 from qiskit import QuantumCircuit, transpile, Aer, IBMQ
 from qiskit.tools.monitor import job_monitor
-import qiskit as qk
-qk.IBMQ.load_account()
-from qiskit.providers.ibmq import least_busy
+
+IBMQ.load_account()
+provider = IBMQ.get_provider(hub = 'ibm-q',group = 'open', project = 'main' )
+qcomp = provider.get_backend ('ibm_nairobi')
 
 def prepare_and_measure_povm(shots, Qubit,POVM):
-    # TODO extend usage to any POVM of N elements (currently N =4)
-    # quito shots en el programa qiskit al no estar definida como class.
+    
     qc = QuantumCircuit(2, 2)
-    u = povm.unitary()
-
-    qc.initialize(qubit.ket(), 0)
+    u = POVM.unitary()
+    qc.initialize(Qubit.ket(), 0)
     qc.unitary(u, [0, 1])
     qc.measure([0, 1], [0, 1])
-    qc_transpiled = transpile (qc, backend) # pruebo cambiar backend y backend quantum computer
     
-    IBM.load_account()
-    provider = IBMQ.get_provider(hub = 'ibm-q',group = 'open', project = 'main' )
-    qcomp = provider.get_backend ('least_busy')
+    qc_transpiled = transpile (qc, backend=qcomp)
     job = execute (qc_transpiled, backend=qcomp)
-    
     job_monitor(job)                             
     result = job.result()
     plot_histogram(result.get_counts(qc_transpiled))
-
-
+    
     return result
     
     
-    
+    #no da error pero no carga en qcomp
