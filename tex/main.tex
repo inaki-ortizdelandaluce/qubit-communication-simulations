@@ -7,6 +7,10 @@
 \usepackage{graphicx}
 \usepackage[skip=7pt plus1pt, indent=20pt]{parskip}
 \usepackage{physics}
+\usepackage{tikz}
+\usepackage{tikz-3dplot}
+\usetikzlibrary{3d}          
+\usetikzlibrary{perspective} 
 \addbibresource{bibliography.bib}
 
 \begin{document}
@@ -19,16 +23,19 @@
 
 \newpage
 \section{Introduction}
-\input{introduction}
+\input{introduction.tex}
 
 \section{Methodology}
 \subsection{State preparation}
-\subsection{Positive operator valued measurement}
-\subsection{Prepare-and-Measure scenario}
-\subsubsection{Classical simulation}
-\subsubsection{Quantum circuit simulation}
+\input{state.tex}
+\subsection{Rank-1 POVMs implementation}
+\subsubsection{Measurement in classical simulation protocols}
+\subsubsection{Measurement in quantum circuits}
+\subsection{Prepare-and-Measure simulations}
+\subsubsection{Classical}
+\subsubsection{Quantum circuit}
+\subsection{Entanglement simulations}
 \input{quantum.tex}
-\subsection{Entanglement scenario}
 \section{Results}
 \subsection{Classical and quantum simulations}
 \subsection{Benchmarking}
@@ -36,6 +43,6 @@
 \section{Conclusion}
 \section{Acknowledgements}
 \input{acknowledgments.tex}
-
+\newpage
 \printbibliography
 \end{document}
