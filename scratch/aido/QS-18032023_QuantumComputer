@@ -89,9 +89,6 @@ class Qubit:
          """
         return Qubit.density2bloch(self.rho())
         
-        
-        import numpy as np
-import scipy
 
 
 class PVM:
