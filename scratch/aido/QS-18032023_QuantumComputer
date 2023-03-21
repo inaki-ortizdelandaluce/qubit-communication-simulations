@@ -297,7 +297,7 @@ class POVM:
         
         
         
-        import numpy as np
+import numpy as np
 from qiskit import QuantumCircuit, transpile, Aer, IBMQ
 from qiskit.tools.monitor import job_monitor
 
