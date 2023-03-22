@@ -26,16 +26,10 @@ Prove by classical and quantum computer based experiments that a qubit transmiss
 ---
 ## Simulate using Bell scenarios
 
-### Generation of multiple-qubit states towards Bell scenarios preparation
+### Bell's singlet and local projective measurements
 
-### Classical and Quantum simulations
+### CHSH inequality
 
----
-## Optional
-
-### Simulation using IBM Quantum Computer. Error correction
-
-### Extend analysis to qutrits
 ---
 
  # Other References
