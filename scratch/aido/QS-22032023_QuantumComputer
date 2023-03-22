@@ -1,0 +1,29 @@
+import numpy as np
+from qiskit import QuantumCircuit, transpile, Aer, IBMQ
+from qiskit.tools.monitor import job_monitor
+from qiskit.providers.ibmq import least_busy
+from qiskit.visualization import plot_histogram
+
+###CODIGO QUANTUM AQUI:
+    
+    
+# Load our saved IBMQ accounts and get the least busy backend device with greater than or equal to (n+1) qubits:
+IBMQ.load_account()
+provider = IBMQ.get_provider(hub='ibm-q')
+backend = least_busy(provider.backends(filters=lambda x: x.configuration().n_qubits >= (n+1) and
+                                   not x.configuration().simulator and x.status().operational==True))
+print("least busy backend: ", backend)
+
+
+
+# Run our circuit on the least busy backend. Monitor the execution of the job in the queue:
+from qiskit.tools.monitor import job_monitor
+
+trans_qc = transpile (qc, backend, optimization_level=3)
+job = backend.run(trans_qc)
+job_monitor(job, interval=2)
+
+
+results = job.result()
+answer = results.get_counts()
+plot_histogram(answer)
