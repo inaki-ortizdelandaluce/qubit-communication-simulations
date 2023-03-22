@@ -8,9 +8,10 @@
 \usepackage[skip=7pt plus1pt, indent=20pt]{parskip}
 \usepackage{physics}
 \usepackage{tikz}
-\usepackage{tikz-3dplot}
-\usetikzlibrary{3d}          
-\usetikzlibrary{perspective} 
+%\usepackage{tikz-3dplot}
+%\usetikzlibrary{3d}          
+%\usetikzlibrary{perspective} 
+\usepackage{xurl}
 \addbibresource{bibliography.bib}
 
 \begin{document}
@@ -25,20 +26,27 @@
 \section{Introduction}
 \input{introduction.tex}
 
+\newpage
 \section{Methodology}
 \subsection{State preparation}
 \input{state.tex}
 \subsection{Rank-1 POVMs implementation}
-\subsubsection{Measurement in classical simulation protocols}
-\subsubsection{Measurement in quantum circuits}
-\subsection{Prepare-and-Measure simulations}
-\subsubsection{Classical}
-\subsubsection{Quantum circuit}
-\subsection{Entanglement simulations}
+\subsubsection{Measurement in classical simulation protocol}
+\subsubsection{Measurement in quantum circuit model}
+\subsection{Prepare-and-measure simulations}
+\subsubsection{Classical transmission of one qubit}
+\subsubsection{Quantum circuit counterpart}
 \input{quantum.tex}
+\subsection{Entanglement simulations}
+\subsubsection{Bell singlet state with projective measurements}
+\subsubsection{CHSH inequality}
+
+\newpage
 \section{Results}
+\input{results.tex}
 \subsection{Classical and quantum simulations}
 \subsection{Benchmarking}
+\newpage
 \section{Discussion}
 \section{Conclusion}
 \section{Acknowledgements}
