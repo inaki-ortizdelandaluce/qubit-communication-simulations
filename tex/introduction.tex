@@ -40,7 +40,7 @@ In addition to this, we will discuss in the next sections other Bell scenarios w
 
 
 \subsection{Classical simulation protocols}
-\subsubsection{Prepare-and-measure with one qubit}
+\subsubsection{Prepare-and-measure with one qubit}\label{section:protocol_pm}
 The classical prepare-and-measure protocol proposed by Renner, Tavakoli and Quintino \cite{renner2022} is restricted to qubits ($d_Q=2$), and makes an extensive use of the geometrical properties of a qubit state in the Bloch sphere. Since mixed qubit states are convex combinations of pure states, the protocol is also restricted to the usage of pure states only. Toner and Bacon proved that making a further restriction to projective measurements, i.e. $B_b^{2} = B_b$, the classical simulation cost was upper bounded by two classical bits ($d_C=2$) \cite{toner2003}, but \cite{renner2022} generalizes the results to positive operator-valued measures with a minimal and therefore necessary classical cost of two qubits. Finally, the protocol is also restricted without any loss of generality to POVMs proportional to rank-1 projectors, following results in \cite{barrett2002}.
 
 In Bloch notation, qubit states $\rho$ are represented by three-dimensional real normalized vectors $\vec{x} \in \mathbb{R}^{3}$, and rank-1 POVM projectors as $B_b = 2p_b\ket{\vec{y}_b}\bra{\vec{y}_b}$, where $p_b\ge0,\ \sum_{b=1}^{N}p_b=1$ and $\ket{\vec{y}_b}\bra{\vec{y}_b} = \frac{\mathbb{1} + \vec{y}_b \cdot \vec{\sigma}}{2}$ for some normalized vector $\vec{y}_b \in \mathbb{R}^{3}$, such that
@@ -49,7 +49,7 @@ In Bloch notation, qubit states $\rho$ are represented by three-dimensional real
 tr(\rho B_b) = p_b(1 + \vec{x} \cdot \vec{y}_b) 
 \end{equation}
 
-Two additional functions need to be defined prior to make the classical protocol explicit, these are the Heaviside function
+Two additional functions need to be defined prior to make the classical protocol steps explicit, these are the Heaviside function
 \begin{equation}
 H(z) =
     \begin{cases}
@@ -110,10 +110,10 @@ p_B(b|\{B_b\},\vec{\lambda}) = \frac{p_b\ \Theta(\vec{y}_b \cdot \vec{\lambda})}
 %    }{}{}{}
 %\end{tikzpicture}
 
-\subsubsection{Bell with singlet state}
-Toner a Bacon showed that only a single bit was required to classically simulate local projective measurements on a qubit pair in a singlet state $\ket{\psi^{-}}=\frac{1}{\sqrt{2}}(\ket{01} - \ket{10})$, see \cite{toner2003}. Renner, Tavakoli and Quintino again extended such result being Alice restricted to local projective measurements with outcomes $a=\pm 1$, and Bob allowed to perform any arbitrary POVM measure \cite{renner2022}. The steps for this protocol, sketched in Fig. \ref{fig:msc_bell}, are the following:
+\subsubsection{Bell with singlet state}\label{section:protocol_bell}
+Toner a Bacon showed in \cite{toner2003} that only a single bit was required to classically simulate local projective measurements on a qubit pair in a singlet state $\ket{\psi^{-}}=\frac{1}{\sqrt{2}}(\ket{01} - \ket{10})$. Renner, Tavakoli and Quintino again extended such result being Alice restricted to local projective measurements with outcomes $a=\pm 1$, and Bob allowed to perform any arbitrary POVM measure \cite{renner2022}. The steps for this protocol, sketched in Fig. \ref{fig:msc_bell}, are the following:
 \begin{enumerate}
- \item Alice and Bob share two normalized vectors $\vec{\lambda}_1, \vec{\lambda}_2 \in \mathbb{R}^{3}$, which are uniformly and independently distributed on the unit radus sphere $S_2$.
+ \item Alice and Bob share two normalized vectors $\vec{\lambda}_1^{\prime}, \vec{\lambda}_2 \in \mathbb{R}^{3}$, which are uniformly and independently distributed on the unit radus sphere $S_2$.
  \item Instead of performing a measurement with projectors $\ket{\pm\vec{x}}\bra{\pm\vec{x}} = (\mathbb{1} + \vec{x} \cdot \vec{\sigma})/2$, Alice outputs $a = -sgn(\vec{x} \cdot \vec{\lambda}^{\prime}_1)$ and sends the bit $c = sgn(\vec{x} \cdot \vec{\lambda}^{\prime}_1) \cdot sgn(\vec{x} \cdot \vec{\lambda}_2)$ to Bob, where 
  \begin{equation}
 sgn(z) =
@@ -128,21 +128,23 @@ sgn(z) =
 
 \begin{figure}[tb]
 \begin{center}
-\begin{msc}[msc keyword=, instance width=3.6 cm]{Bell with singlet state classical protocol}
+\begin{msc}[msc keyword=, instance width=4.6cm]{Bell with singlet state classical protocol}
 \declinst{alice}{}{Alice}
 \declinst{bob}{}{Bob}
-\condition*{shared randomness $\vec{\lambda}_1, \vec{\lambda}_2$}{alice,bob}
+\condition*{shared randomness $\vec{\lambda}_1^{\prime}, \vec{\lambda}_2$}{alice,bob}
 \nextlevel[3]
-\action*{$c_i = H(\vec{x} \cdot \vec{\lambda_i})$}{alice}
+\action*{$c = sgn(\vec{x} \cdot \vec{\lambda}^{\prime}_1) \cdot sgn(\vec{x} \cdot \vec{\lambda}_2)$}{alice}
 \nextlevel[3]
-\mess{$c_1, c_2 \in \{0,1\}$}{alice}{bob}
+\mess{$c \in \{-1,1\}$}{alice}{bob}
 \nextlevel[1]
-\action*{$\vec{\lambda}^{\prime}_i = (-1)^{1 + c_i} \vec{\lambda_i}$}{bob}
+\action*{$\vec{\lambda}^{\prime}_2 = c \vec{\lambda_2}$}{bob}
 \nextlevel[3]
 \action*{$p_B(b|\{B_b\},\vec{\lambda})$}{bob}
 \nextlevel[2]
 \end{msc}
 \end{center}
-\caption{Classical Bell with singlet state protocol sequence: Alice sends two bits $c_1, c_2$ resulting from projecting the quantum state's Bloch vector $\vec{x}$ with respect to the shared random vectors $\vec{\lambda}_1, \vec{\lambda}_2$ through a classical channel, Bob flips the shared random vectors when necessary, and finally computes classical probability outcomes according to equation (\ref{eq:prob_classic_bob}).}
+\caption{Classical Bell with singlet state protocol sequence: Alice sends one bit $c$ resulting from projecting the associated projective measurement's Bloch vector $\vec{x}$ with respect to the shared random vectors $\vec{\lambda}_1, \vec{\lambda}_2$ through a classical channel, Bob flips the shared random vectors when necessary, and finally computes classical probability outcomes according to the response function from the prepare-and measure protocol (Eq. \ref{eq:prob_classic_bob}).}
 \label{fig:msc_bell}
 \end{figure}
+
+It can be proved that when Alice outputs $a=+1$, $\vec{\lambda}^{\prime}_1$ and $\vec{\lambda}^{\prime}_2$ are distributed on $S_2$ according to $\rho(\vec{\lambda}^{\prime}_i) = H(-\vec{x} \cdot \vec{\lambda}^{\prime}_i)/(2\pi)$, which corresponds to a classical description of Bob's post-measurement state $-\vec{x}$ and, conversely, when Alice outputs $a=-1$, the random vectors are distributed according to a distribution corresponding to Bob's post-measurement state $\vec{x}$, and therefore Bob can apply the same response function as in the prepare-and-measure protocol described in \ref{section:protocol_pm}. 
