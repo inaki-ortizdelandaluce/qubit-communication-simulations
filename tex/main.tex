@@ -1,9 +1,11 @@
 \documentclass{article}
+\usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{authblk}
 \usepackage{bbold}
 \usepackage[backend=biber,style=alphabetic,sorting=ynt]{biblatex}
 \usepackage{float}
+\usepackage{msc}
 \usepackage{graphicx}
 \usepackage[skip=7pt plus1pt, indent=20pt]{parskip}
 \usepackage{physics}
@@ -13,6 +15,7 @@
 %\usetikzlibrary{perspective} 
 \usepackage{xurl}
 \addbibresource{bibliography.bib}
+
 
 \begin{document}
 
@@ -28,18 +31,7 @@
 
 \newpage
 \section{Methodology}
-\subsection{State preparation}
-\input{state.tex}
-\subsection{Rank-1 POVMs implementation}
-\subsubsection{Measurement in classical simulation protocol}
-\subsubsection{Measurement in quantum circuit model}
-\subsection{Prepare-and-measure simulations}
-\subsubsection{Classical transmission of one qubit}
-\subsubsection{Quantum circuit counterpart}
-\input{quantum.tex}
-\subsection{Entanglement simulations}
-\subsubsection{Bell singlet state with projective measurements}
-\subsubsection{CHSH inequality}
+\input{methodology.tex}
 
 \newpage
 \section{Results}
