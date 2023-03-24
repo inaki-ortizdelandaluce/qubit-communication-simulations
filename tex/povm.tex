@@ -1,2 +1,41 @@
 \subsubsection{Measurement in classical simulation protocols}
+Sent\'is \cite{sentis2013}
 \subsubsection{Measurement in quantum circuit model}
+Peres \cite{peres1995}
+
+\begin{equation}
+B_{\mu} = \ket{v_{\mu}} \bra{v_{\mu}}
+\end{equation}
+
+\begin{equation}
+\ket{w_{\mu}} := \ket{v_{\mu}} + \sum_{s=d_{Q}+1}^{N} c_{\mu s} \ket{u_{\mu}}
+\end{equation}
+
+\begin{equation}
+\bra{w_{\lambda}} \ket{w_{\mu}} := \bra{v_{\lambda}} \ket{v_{\mu}} + \sum_{s=d_{Q}+1}^{N} c_{\lambda s}^{\star} c_{\mu s} = \delta_{\lambda \mu}
+\end{equation}
+
+\begin{equation}
+\sum_{i=1}^{n} v_{\lambda i}^{\star} v_{\mu i} + \sum_{s=d_{Q}+1}^{N} c_{\lambda s}^{\star} c_{\mu s} = \delta_{\lambda \mu}
+\end{equation}
+
+\begin{equation}
+\sum_{\mu=1}^{N}\ket{v_{\mu}}\bra{v_{\mu}} = \sum_{\mu=1}^{N} B_{b,\mu} = \mathbb{1}
+\end{equation}
+
+
+\begin{equation}
+\sum_{\mu=1}^{N}v_{\mu i}^{\star} v_{\mu j} = \delta_{ij}
+\end{equation}
+
+\begin{equation}
+M = 
+\begin{pmatrix}
+v_{\alpha 1} & \dots & v_{\alpha d_{Q}} & c_{\alpha,d_{Q}+1} & \dots & c_{\alpha N} \\
+v_{\beta 1} & \dots & v_{\beta d_{Q}} & c_{\beta,d_{Q}+1} & \dots & c_{\beta N} \\
+\vdots &  & \vdots & \vdots &  & \vdots \\
+v_{N1} & \dots & v_{Nd_{Q}} & c_{N,d_Q+1} & \dots & c_{NN}
+\end{pmatrix}    
+\end{equation}
+
+\[\mathcal{H}^{d_Q}\ \mathcal{K}^{N}\]
