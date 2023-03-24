@@ -86,7 +86,7 @@ p_B(b|\{B_b\},\vec{\lambda}) = \frac{p_b\ \Theta(\vec{y}_b \cdot \vec{\lambda})}
 \nextlevel[2]
 \end{msc}
 \end{center}
-\caption{Classical prepare-and-measure protocol sequence: Alice sends two bits $c_1, c_2$ resulting from projecting the quantum state's Bloch vector $\vec{x}$ with respect to the shared random vectors $\vec{\lambda}_1, \vec{\lambda}_2$ through a classical channel, Bob flips the shared random vectors when necessary, and finally computes classical probability outcomes according to equation (\ref{eq:prob_classic_bob}).}
+\caption{Classical prepare-and-measure protocol sequence: Alice sends two bits $c_1, c_2$ resulting from projecting the qubit state's Bloch vector $\vec{x}$ with respect to the shared random vectors $\vec{\lambda}_1, \vec{\lambda}_2$ through a classical channel, Bob flips the shared random vectors when necessary, and finally computes classical probability outcomes according to equation (\ref{eq:prob_classic_bob}).}
 \label{fig:msc_pm}
 \end{figure}
 
@@ -111,8 +111,38 @@ p_B(b|\{B_b\},\vec{\lambda}) = \frac{p_b\ \Theta(\vec{y}_b \cdot \vec{\lambda})}
 %\end{tikzpicture}
 
 \subsubsection{Bell with singlet state}
-%In a Bell scenario, there is a bipartite quantum system of two entangled and separated qubits, one with Alice and another one with Bob. The global state of the system is the entangled Bell singlet state $\ket{\psi^{-}}=\frac{1}{\sqrt{2}}(\ket{01} - \ket{10})$. Alice and Bob measure their own qubits along different basis and, while both outcomes appear random, their joint probabilities are correlated.
+Toner a Bacon showed that only a single bit was required to classically simulate local projective measurements on a qubit pair in a singlet state $\ket{\psi^{-}}=\frac{1}{\sqrt{2}}(\ket{01} - \ket{10})$, see \cite{toner2003}. Renner, Tavakoli and Quintino again extended such result being Alice restricted to local projective measurements with outcomes $a=\pm 1$, and Bob allowed to perform any arbitrary POVM measure \cite{renner2022}. The steps for this protocol, sketched in Fig. \ref{fig:msc_bell}, are the following:
+\begin{enumerate}
+ \item Alice and Bob share two normalized vectors $\vec{\lambda}_1, \vec{\lambda}_2 \in \mathbb{R}^{3}$, which are uniformly and independently distributed on the unit radus sphere $S_2$.
+ \item Instead of performing a measurement with projectors $\ket{\pm\vec{x}}\bra{\pm\vec{x}} = (\mathbb{1} + \vec{x} \cdot \vec{\sigma})/2$, Alice outputs $a = -sgn(\vec{x} \cdot \vec{\lambda}^{\prime}_1)$ and sends the bit $c = sgn(\vec{x} \cdot \vec{\lambda}^{\prime}_1) \cdot sgn(\vec{x} \cdot \vec{\lambda}_2)$ to Bob, where 
+ \begin{equation}
+sgn(z) =
+    \begin{cases}
+      1 & \text{when $z \ge 0$}\\
+      -1 & \text{when $z<0$}
+    \end{cases} 
+\end{equation}
+ \item Bob flips the vector $\vec{\lambda}_2$ if and only if $c=-1$, i.e. he sets $\vec{\lambda}^{\prime}_{2} := c \vec{\lambda}_{2}$.
+ \item Same as step 4 in the previous prepare-and-measure protocol.
+\end{enumerate}
 
-%The entanglement scenario is a straight-forward adaptation of the previously discussed prepare-and-measure scenario on any entangled qudit-qubit state. In this case, Alice chooses a random local POVM on a $d_Q$-dimensional quantum system, and produces an output according to the marginal distribution of her POVM elements. Based on her output, she computes Bob's entangled qubit post-measurement state, which is sent to Bob using the classical protocol for the prepare-and-measure scenario. Given that Bob's post-measurement qubit state is communicated by Alice using the existing prepare-and-measure classical protocol, the classical cost of the qubit transmission will be exactly the same.
-
-%Similarly to the prepare-and-measure scenario described in section \ref{section:pm}, it is not possible to reproduce the correlations using a classical protocol with shared random variables without allowing classical communication among Alice and Bob once they have selected their measurements \cite{bell1964}. 
+\begin{figure}[tb]
+\begin{center}
+\begin{msc}[msc keyword=, instance width=3.6 cm]{Bell with singlet state classical protocol}
+\declinst{alice}{}{Alice}
+\declinst{bob}{}{Bob}
+\condition*{shared randomness $\vec{\lambda}_1, \vec{\lambda}_2$}{alice,bob}
+\nextlevel[3]
+\action*{$c_i = H(\vec{x} \cdot \vec{\lambda_i})$}{alice}
+\nextlevel[3]
+\mess{$c_1, c_2 \in \{0,1\}$}{alice}{bob}
+\nextlevel[1]
+\action*{$\vec{\lambda}^{\prime}_i = (-1)^{1 + c_i} \vec{\lambda_i}$}{bob}
+\nextlevel[3]
+\action*{$p_B(b|\{B_b\},\vec{\lambda})$}{bob}
+\nextlevel[2]
+\end{msc}
+\end{center}
+\caption{Classical Bell with singlet state protocol sequence: Alice sends two bits $c_1, c_2$ resulting from projecting the quantum state's Bloch vector $\vec{x}$ with respect to the shared random vectors $\vec{\lambda}_1, \vec{\lambda}_2$ through a classical channel, Bob flips the shared random vectors when necessary, and finally computes classical probability outcomes according to equation (\ref{eq:prob_classic_bob}).}
+\label{fig:msc_bell}
+\end{figure}
