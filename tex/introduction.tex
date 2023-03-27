@@ -7,25 +7,25 @@ Following up such generalization, we will show via classical and quantum compute
 Before starting to describe the different computational experiments we have carried out to achieve such goal, it is worth spending next sections to introduce some preliminary concepts and notations that have been used extensively throughout this work, specifically the definition of positive operator-valued measures, the set-up of both the prepare-and-measure and Bell scenarios and the particular details of the classical simulation protocols applied to such scenarios.
 \par
 \subsection{Positive operator-valued measures}\label{section:povms}
-Even when most of the introductory textbooks on quantum mechanics describe the measurement postulates using projective measurements only, there exists a more general and less restrictive set of measurements called Positive Operator-Valued Measures or POVMs, see \cite{nielsen2000}\cite{peres1995}. The underlying formalism behind POVMs is uniquely well adapted for some applications where the main focus is on describing the probabilities of the different measurement outcomes rather than on the post-measurement state of the system. This is of particular interest in quantum communication and quantum information, where a more comprehensive formalism for the description of the measurements is needed, and highlights how important are the results from \cite{renner2022}, where all the results are extended to POVMs without any loss of generalisation regarding the the classical simulation cost of the protocol. For reference, we define explicitely a POVM as a set $\mathbb{P}_N=\{B_b\}$ of $b=1,...,N$ positive semidefinite operators acting on a Hilbert space $\mathcal{H}$ of dimension $d_{Q}$, which satisfies the closure property $\sum_{b=1}^{N} B_{b} = \mathbb{1}$. The operator $B_{b}$ is called a POVM element, and it is associated to the outcome $b$ of the POVM. In this work we will use extensively the property which states that every qubit POVM can be written as a coarse graining of rank-1 projectors \cite{barrett2002}, such that we will restrict our POVM calculations to the case of rank-1 projectors.
+Even when most of the introductory textbooks on quantum mechanics describe the measurement postulates using projective measurements only, there exists a more general and less restrictive set of measurements called Positive Operator-Valued Measures or POVMs, see \cite{nielsen2000}\cite{peres1995}. The underlying formalism behind POVMs is uniquely well adapted for some applications where the main focus is on describing the probabilities of the different measurement outcomes rather than on the post-measurement state of the system. This is of particular interest in quantum communication and quantum information, where a more comprehensive formalism for the description of the measurements is needed, and highlights how important are the results from \cite{renner2022}, where all the results are extended to POVMs without any loss of generalisation regarding the the classical simulation cost of the protocol. For reference, we define explicitely a POVM as a set $\mathbb{P}=\{B_{k}\}$ of $k=1,...,N$ positive semidefinite operators acting on a Hilbert space $\mathcal{H}$ of dimension $d_{Q}$, which satisfies the closure property $\sum_{k=1}^{N} B_{k} = \mathbb{1}$. The operator $B_{k}$ is called a POVM element, and it is associated to the outcome $k$ of the POVM. In this work we will use extensively the property which states that every qubit POVM can be written as a coarse graining of rank-1 projectors \cite{barrett2002}, such that we will restrict our POVM calculations to the case of rank-1 projectors.
 
 \subsection{Prepare-and-measure scenario}\label{section:pm}
-As for many other communication protocols we have two well-known characters playing different roles in the quantum prepare-and-measure set-up: Alice and Bob. The prepare-and-measure scenario starts with Alice preparing a random quantum state and sending it to Bob. In a general set-up, i.e. not restricted to single qubit communication, the state prepared by Alice is a state of dimension $d_Q$ described by a positive semidefinite density matrix $\rho \in \mathcal{L}( \mathbb{C}_{d_Q}), \rho \ge 0$ with unit trace $tr(\rho)=1$. Once the state is prepared and communicated by Alice, Bob then receives it and performs a random quantum measurement on it, obtaining an outcome $b$. In the case of general POVM measurements $\mathbb P=\{B_b\}$ as described in Section \ref{section:povms}, the probability of outcome $b$ when performing the measurement on the state $\rho$ is given by Born's rule,
+As for many other communication protocols we have two well-known characters playing different roles in the quantum prepare-and-measure set-up: Alice and Bob. The prepare-and-measure scenario starts with Alice preparing a random quantum state and sending it to Bob. In a general set-up, i.e. not restricted to single qubit communication, the state prepared by Alice is a state of dimension $d_Q$ described by a positive semidefinite density matrix $\rho \in \mathcal{L}( \mathbb{C}_{d_Q}), \rho \ge 0$ with unit trace $tr(\rho)=1$. Once the state is prepared and communicated by Alice, Bob then receives it and performs a random quantum measurement on it, obtaining an outcome $k$. In the case of general POVM measurements $\mathbb P=\{B_{k}\}$ as described in Section \ref{section:povms}, the probability of outcome $k$ when performing the measurement on the state $\rho$ is given by Born's rule,
 
 \begin{equation}\label{eq:prob_quantum}
-p_Q(b|\rho,\{B_b\}) = tr(\rho B_b)
+p_Q(k|\rho,\{B_{k}\}) = tr(\rho B_{k})
 \end{equation}
 
-In the context of this work, we are interested in the classical counterpart of the quantum prepare-and-measure scenario, where the probability distributions predicted by the quantum theory (\ref{eq:prob_quantum}) are reproduced classically. All these classical counterparts of existing quantum protocols, see examples in \cite{cerf2000}, \cite{toner2003} and \cite{renner2022}, require a shared randomness $\lambda$ among Alice and Bob subject to some probability function $\pi(\lambda)$ to correlate their classical communication strategies. As it is not possible to reproduce these correlations without communication, a classical message $c$ which encodes classically the quantum state $\rho$ taking its value from a $d_C$-valued alphabet $\{1,...,d_C\}$ is also required. Alice's actions are therefore described by the conditional probability $p_A(c|\rho,\lambda)$, whereas Bob's actions are similarly described by the conditional probability $p_B(b|\{B_b\},c,\lambda)$. If we consider both probabilities, the correlations from the classical counterpart become
+In the context of this work, we are interested in the classical counterpart of the quantum prepare-and-measure scenario, where the probability distributions predicted by the quantum theory (\ref{eq:prob_quantum}) are reproduced classically. All these classical counterparts of existing quantum protocols, see examples in \cite{cerf2000}, \cite{toner2003} and \cite{renner2022}, require a shared randomness $\lambda$ among Alice and Bob subject to some probability function $\pi(\lambda)$ to correlate their classical communication strategies. As it is not possible to reproduce these correlations without communication, a classical message $c$ which encodes classically the quantum state $\rho$ taking its value from a $d_C$-valued alphabet $\{1,...,d_C\}$ is also required. Alice's actions are therefore described by the conditional probability $p_A(c|\rho,\lambda)$, whereas Bob's actions are similarly described by the conditional probability $p_B(k|\{B_{k}\},c,\lambda)$. If we consider both probabilities, the correlations from the classical counterpart become
 
 \begin{equation}\label{eq:prob_classic}
-p_C(b|\rho,\{B_b\}) = \int_{\lambda} d\lambda\ \pi(\lambda) \sum_{c=1}^{d_C} p_A(c|\rho, \lambda) p_B(b|\{B_b\}, c, \lambda)
+p_C(k|\rho,\{B_{k}\}) = \int_{\lambda} d\lambda\ \pi(\lambda) \sum_{c=1}^{d_C} p_A(c|\rho, \lambda)\ p_B(k|\{B_{k}\}, c, \lambda)
 \end{equation}
 
 Given Equation (\ref{eq:prob_quantum}) and (\ref{eq:prob_classic}), the classical simulation would be considered successful when, for every random state and POVM, the classical probability distribution reproduces the quantum predictions, i.e.
 
 \begin{equation}\label{eq:prob_classic_quantum}
-\forall \rho, \{B_b\}:\quad p_C(b|\rho,\{B_b\}) = p_Q(b|\rho,\{B_b\})
+\forall \rho, \{B_{k}\}:\quad p_C(k|\rho,\{B_{k}\}) = p_Q(k|\rho,\{B_{k}\})
 \end{equation}
 
 \subsection{Bell scenario}
@@ -41,12 +41,16 @@ In addition to this, we will discuss in the next sections other Bell scenarios w
 
 \subsection{Classical simulation protocols}\label{section:protocols}
 \subsubsection{Prepare-and-measure with one qubit}\label{section:protocol_pm}
-The classical prepare-and-measure protocol proposed by Renner, Tavakoli and Quintino \cite{renner2022} is restricted to qubits ($d_Q=2$), and makes an extensive use of the geometrical properties of a qubit state in the Bloch sphere. Since mixed qubit states are convex combinations of pure states, the protocol is also restricted to the usage of pure states only. Toner and Bacon proved that making a further restriction to projective measurements, i.e. $B_b^{2} = B_b$, the classical simulation cost was upper bounded by two classical bits ($d_C=2$) \cite{toner2003}, but \cite{renner2022} generalizes the results to positive operator-valued measures with a minimal and therefore necessary classical cost of two qubits. Finally, the protocol is also restricted without any loss of generality to POVMs proportional to rank-1 projectors, following results in \cite{barrett2002}.
+The classical prepare-and-measure protocol proposed by Renner, Tavakoli and Quintino \cite{renner2022} is restricted to qubits ($d_Q=2$), and makes an extensive use of the geometrical properties of a qubit state in the Bloch sphere. Since mixed qubit states are convex combinations of pure states, the protocol is also restricted to the usage of pure states only. Toner and Bacon proved that making a further restriction to projective measurements, i.e. $B_{k}^{2} = B_{k}$, the classical simulation cost was upper bounded by two classical bits ($d_C=2$) \cite{toner2003}, but \cite{renner2022} generalizes the results to positive operator-valued measures with a minimal and therefore necessary classical cost of two qubits. Finally, the protocol is also restricted without any loss of generality to POVMs proportional to rank-1 projectors, following results in \cite{barrett2002}.
 
-In Bloch notation, qubit states $\rho$ are represented by three-dimensional real normalized vectors $\vec{x} \in \mathbb{R}^{3}$, and rank-1 POVM projectors as $B_b = 2p_b\ket{\vec{y}_b}\bra{\vec{y}_b}$, where $p_b\ge0,\ \sum_{b=1}^{N}p_b=1$ and $\ket{\vec{y}_b}\bra{\vec{y}_b} = \frac{\mathbb{1} + \vec{y}_b \cdot \vec{\sigma}}{2}$ for some normalized vector $\vec{y}_b \in \mathbb{R}^{3}$, such that
+In Bloch notation, qubit states $\rho$ are represented by three-dimensional real normalized vectors $\vec{x} \in \mathbb{R}^{3}$, and rank-1 POVM projectors as 
+\begin{equation}\label{eq:rank1_povm}
+B_{k} = 2p_{k}\ket{\vec{y}_{k}}\bra{\vec{y}_{k}}
+\end{equation}
+where $p_{k}\ge0,\ \sum_{k=1}^{N}p_{k}=1$ and $\ket{\vec{y}_{k}}\bra{\vec{y}_{k}} = (\mathbb{1} + \vec{y}_{k} \cdot \vec{\sigma})/2$ for some normalized vector $\vec{y}_{k} \in \mathbb{R}^{3}$, such that
 
 \begin{equation}
-tr(\rho B_b) = p_b(1 + \vec{x} \cdot \vec{y}_b) 
+tr(\rho B_{k}) = p_{k}(1 + \vec{x} \cdot \vec{y}_{k}) 
 \end{equation}
 
 Two additional functions need to be defined prior to make the classical protocol steps explicit, these are the Heaviside function
@@ -62,11 +66,11 @@ and $\Theta(z) := z \cdot H(z)$. Under all these considerations, the protocol, a
  \item Alice and Bob share two normalized vectors $\vec{\lambda}_1, \vec{\lambda}_2 \in \mathbb{R}^{3}$, which are uniformly and independently distributed on the unit radius sphere $S_2$.
  \item Instead of sending a pure qubit $\rho = (\mathbb{1} + \vec{x} \cdot \vec{\sigma})/2$, Alice prepares two bits via the formula $c_1= H(\vec{x} \cdot \vec{\lambda}_1)$ and $c_2= H(\vec{x} \cdot \vec{\lambda}_2)$ and sends them to Bob.
  \item Bob flips each vector $\vec{\lambda}_i$ when the corresponding bit $c_i$ is zero. This is equivalent to set $\vec{\lambda}^{\prime}_{i} := (-1)^{1 + c_i} \vec{\lambda}_{i}$.
- \item Instead of performing a POVM with elements $B_b = 2p_b\ket{\vec{y}_b}\bra{\vec{y}_b}$, Bob picks one vector $\vec{y}_b$ from the set $\{\vec{y}_b\}$ according to the probabilities $\{p_b\}$. Then he sets $\vec{\lambda} := \vec{\lambda}^{\prime}_1$ if $\lvert \vec{\lambda}^{\prime}_1 \cdot \vec{y}_b \rvert \ge \lvert \vec{\lambda}^{\prime}_2 \cdot \vec{y}_b \rvert$ and $\vec{\lambda} := \vec{\lambda}^{\prime}_2$ otherwise. Finally, Bob outputs $b$ with probability
+ \item Instead of performing a POVM with elements $B_{k} = 2p_{k}\ket{\vec{y}_{k}}\bra{\vec{y}_{k}}$, Bob picks one vector $\vec{y}_{k}$ from the set $\{\vec{y}_{k}\}$ according to the probabilities $\{p_{k}\}$. Then he sets $\vec{\lambda} := \vec{\lambda}^{\prime}_1$ if $\lvert \vec{\lambda}^{\prime}_1 \cdot \vec{y}_{k} \rvert \ge \lvert \vec{\lambda}^{\prime}_2 \cdot \vec{y}_{k} \rvert$ and $\vec{\lambda} := \vec{\lambda}^{\prime}_2$ otherwise. Finally, Bob outputs $k$ with probability
 \end{enumerate}
 
 \begin{equation}\label{eq:prob_classic_bob}
-p_B(b|\{B_b\},\vec{\lambda}) = \frac{p_b\ \Theta(\vec{y}_b \cdot \vec{\lambda})}{\sum_{j}^{N}p_j\ \Theta(\vec{y}_j \cdot \vec{\lambda})}
+p_B(k|\{B_{k}\},\vec{\lambda}) = \frac{p_{k}\ \Theta(\vec{y}_{k} \cdot \vec{\lambda})}{\sum_{j}^{N}p_j\ \Theta(\vec{y}_j \cdot \vec{\lambda})}
 \end{equation}
 
 \begin{figure}[tb]
@@ -82,7 +86,7 @@ p_B(b|\{B_b\},\vec{\lambda}) = \frac{p_b\ \Theta(\vec{y}_b \cdot \vec{\lambda})}
 \nextlevel[1]
 \action*{$\vec{\lambda}^{\prime}_i = (-1)^{1 + c_i} \vec{\lambda_i}$}{bob}
 \nextlevel[3]
-\action*{$p_B(b|\{B_b\},\vec{\lambda})$}{bob}
+\action*{$p_B(k|\{B_{k}\},\vec{\lambda})$}{bob}
 \nextlevel[2]
 \end{msc}
 \end{center}
@@ -139,7 +143,7 @@ sgn(z) =
 \nextlevel[1]
 \action*{$\vec{\lambda}^{\prime}_2 = c \vec{\lambda_2}$}{bob}
 \nextlevel[3]
-\action*{$p_B(b|\{B_b\},\vec{\lambda})$}{bob}
+\action*{$p_B(k|\{B_{k}\},\vec{\lambda})$}{bob}
 \nextlevel[2]
 \end{msc}
 \end{center}

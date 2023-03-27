@@ -25,14 +25,14 @@ In the Bloch sphere representation of a qubit, the states of a SIC-POVM form a r
 \end{figure}
 
 \subsubsection{Measurement in classical simulation protocols}
-As described by Sent\'is et al. \cite{sentis2013}, the conditions under which a set of N arbitrary rank-1 operators $\{E_{k}\}$ comprises a qubit POVM with $N$ outcomes, $\mathbb{P}_N=\{B_{k}\}$, such that $\sum_{k=1}^{N} B_{k} = \sum_{k=1}^{N} a_{k} E_{k} = \mathbb{1}$, can be equivalently written in a system of four linear equations
+As described by Sent\'is et al.\ \cite{sentis2013}, the conditions under which a set of $N$ arbitrary rank-1 operators $\{E_{k}\}$ comprises a qubit POVM, such that $\sum_{k=1}^{N} a_{k} E_{k} = \mathbb{1}$, can be equivalently written in a system of four linear equations
 \begin{equation}
     \sum_{k=1}^{N} a_{k} = 2
 \end{equation}
 \begin{equation}
     \sum_{k=1}^{N} a_{k} \vec{y}_{k} = \vec{0}
 \end{equation}
-where $\vec{y}_{k} \in \mathbb{R}^3$ is the Bloch vector corresponding to the qubit pure state $\ket{v_{k}}$. The existence of the set $\{a_{k}\}$ has a direct translation into a linear programming feasibility problem we would have to solve computationally.
+where $\vec{y}_{k} \in \mathbb{R}^3$ are the Bloch vectors corresponding to the qubit pure states $\ket{v_{k}}$. The existence of the set $\{a_{k}\}$ has a direct translation into a linear programming feasibility problem we would have to solve computationally.
 
 As an example, to build a random POVM set of $N=4$ elements, we could apply the following procedure:
 \begin{enumerate}
@@ -43,6 +43,14 @@ As an example, to build a random POVM set of $N=4$ elements, we could apply the 
 \item Solve the linear programming feasibility problem
 \end{enumerate}
 
+Once the rank-1 operators $\{E_k\}$ and the weights $\{a_k\}$ conforming the POVM set elements $B_k=a_k E_k$ are obtained, we can use Equation  \ref{eq:rank1_povm} to perform the following assignment
+\begin{equation}
+    p_k = \frac{a_k}{2}
+\end{equation}
+\begin{equation}
+    \ket{\vec{y}_k}\bra{\vec{y}_k} = E_k
+\end{equation}
+which will implement the POVMs in the form required by the classical simulation protocols, i.e. $B_{k} = 2p_{k}\ket{\vec{y}_{k}}\bra{\vec{y}_{k}}$.
 
 \subsubsection{Measurement in quantum circuit model}
 Peres \cite{peres1995}
