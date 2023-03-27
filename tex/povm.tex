@@ -1,22 +1,23 @@
-We have already discussed how every qubit POVM can be written as a coarse graining of rank-1 projectors \cite{barrett2002}, such that the protocol implementation can restrict without any loss in generality to POVMs proportional to rank-1 projectors. The strategies to build the POVMs and perform the measurement however differ in the classical simulation protocol and in a quantum circuit model as we will see later.
+We have already discussed how every qubit POVM can be written as a coarse graining of rank-1 projectors \cite{barrett2002}, such that the protocol implementation can restrict without any loss in generality to POVMs proportional to rank-1 projectors. 
 
-Even if the final goal is to build random POVMs to test how the classical protocol converges with the quantum theory for any random state and measurement, we will also discuss some general POVMs with interesting properties, for example, 
-\begin{itemize}
-    \item the measure needed in the eavesdropping  of the BB84 protocol \cite{nielsen2000}
+Even if the final goal is to build POVMs to test how the classical protocol converges with the quantum theory for any random state and measurement, we will also discuss some general rank-1 POVMs with interesting properties, for example, 
+\begin{enumerate}
+    \item The measure needed in the eavesdropping  of the BB84 protocol \cite{nielsen2000}
 \begin{equation}
     \mathbb{P}_4 = \{\frac{1}{2}\ket{0}\bra{0}, \frac{1}{2}\ket{1}\bra{1}, \frac{1}{2}\ket{+}\bra{+}, \frac{1}{2}\ket{-}\bra{-} \}
 \end{equation}
-    \item the Trine-POVM, consisting of POVM elements uniformly distributed on an equatorial plane of the Bloch sphere
+    \item The Trine-POVM, consisting of POVM elements uniformly distributed on an equatorial plane of the Bloch sphere
 \begin{equation}
 \{\ket{\Psi_1}=\ket{0},\ \ket{\Psi_2}=\frac{1}{2}\ket{0} + \frac{\sqrt{3}}{2} \ket{1},\ \ket{\Psi_3}=\frac{1}{2}\ket{0} - \frac{\sqrt{3}}{2} \ket{1}\}
 \end{equation}
-    \item the SIC-POVMs, a well-known family of symmetric informationally complete positive operator-valued measures, which are proven to be very relevant in quantum state tomography and quantum cryptography fields among others \cite{renes2004}. The simplest SIC-POVM is the one with states the vertices of a regular tetrahedron in the Bloch sphere, see Figure \ref{fig:sic_povm}.
-\end{itemize}
+    \item The SIC-POVMs, a well-known family of symmetric informationally complete positive operator-valued measures, which are proven to be very relevant in quantum state tomography and quantum cryptography fields among others \cite{renes2004}. The simplest SIC-POVM is the one with states the vertices of a regular tetrahedron in the Bloch sphere, see Figure \ref{fig:sic_povm}.
+\end{enumerate}
 
+The strategies to build the rank-1 POVMs and perform the measurement are different in the classical simulation protocol and in the quantum circuit model, as we will see later, so next sections will go through the methodologies applied for each case.
 
 \begin{figure}[!ht]
 \begin{center}
-\centerline{\includesvg[height=4.5cm]{images/sic_povm.svg}}
+\centerline{\includesvg[height=4cm]{images/sic_povm.svg}}
 \caption[SIC-POVM as tetrahedron in Bloch sphere]%
 {\label{fig:sic_povm}%
 In the Bloch sphere representation of a qubit, the states of a SIC-POVM form a regular tetrahedron with vertices $\ket{\Psi_1}=\ket{0}$, $\ket{\Psi_2}=1/{\sqrt{3}}\ket{0} + \sqrt{2/3} \ket{1}$, $\ket{\Psi_3}=1/{\sqrt{3}}\ket{0} + \sqrt{2/3} \ e^{i\frac{2\pi}{3}} \ket{1}$ and $\ket{\Psi_4}=1/{\sqrt{3}}\ket{0} + \sqrt{2/3}\ e^{i\frac{4\pi}{3}} \ket{1}$.}
