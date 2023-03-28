@@ -13,7 +13,7 @@ Even if the final goal is to build POVMs to test how the classical protocol conv
     \item The SIC-POVMs, a well-known family of symmetric informationally complete positive operator-valued measures, which are proven to be very relevant in quantum state tomography and quantum cryptography fields among others \cite{renes2004}. The simplest SIC-POVM is the one with states the vertices of a regular tetrahedron in the Bloch sphere, see Figure \ref{fig:sic_povm}.
 \end{enumerate}
 
-The strategies to build the rank-1 POVMs and perform the measurement are different in the classical simulation protocol and in the quantum circuit model, as we will see later, so next sections will go through the methodologies applied for each case.
+The strategies to build the rank-1 POVMs and perform the measurement are different in the classical simulation protocol and in the quantum circuit model, as we will see later, so next sections will describe the methodologies applied for each case.
 
 \begin{figure}[!ht]
 \begin{center}
@@ -60,42 +60,35 @@ Provided the optimization problem is feasible, we obtain the weights $\{a_k\}$ a
 which will implement the POVMs in the form required by the classical simulation protocols, i.e. $B_{k} = 2p_{k}\ket{\vec{y}_{k}}\bra{\vec{y}_{k}}$.
 
 \subsubsection{Measurement in quantum circuit model}
-One of the objectives of this project is to compare the probability distributions obtained with the classical simulation protocols, against the distributions derived when performing generalized measurements on either quantum simulators or noisy intermediate-scale quantum computers. For the sake of such comparison, we must devise a method to encode positive operator-valued measures in a quantum circuit model.
-Peres \cite{peres1995}
+To compare the probability distributions obtained from classical protocols with those from quantum simulators or noisy quantum computers, we must develop a technique for encoding positive operator-valued measures in a quantum circuit model. For a POVM of $N$ elements, such technique requires to create a $N\times N$ unitary matrix $M$ representing the measurement process.
 
-\begin{equation}
-B_{k} = \ket{v_{k}} \bra{v_{k}}
+Neumark's theorem \cite{neumark1940} asserts that one can extend the Hilbert space of states $\mathcal{H}$ in which the rank-1 POVM elements 
+\begin{equation}\label{eq:neumark_povm}
+B_k = \ket{v_{k}} \bra{v_{k}},\ \text{where}\ \sum_{k=1}^{N} B_{k} = \mathbb{1}
 \end{equation}
-
+ are defined, in such a way that there exists in the extended space $\mathcal{K}$ a set of orthogonal projectors $\Pi_{k}$ such that $B_k$
+ is the result of projecting $\Pi_{k}$ from $\mathcal{K}$ into $\mathcal{H}$. Following Peres \cite{peres1995}, we can add $N-2$ extra dimensions to $\mathcal{H}$ by introducing unit vectors $\ket{u_{k}}$ othogonal to each other and to all $\ket{v_{k}}$ in Eq. (\ref{eq:neumark_povm}). Then we can build a complete orthonormal basis $\ket{w_{k}}$ in the enlarged space $\mathcal{K}$ such that
 \begin{equation}
-\ket{w_{k}} := \ket{v_{k}} + \sum_{s=d_{Q}+1}^{N} c_{k s} \ket{u_{k}}
+\ket{w_{k}} := \ket{v_{k}} + \sum_{s=3}^{N} c_{k s} \ket{u_{k}}
 \end{equation}
-
-\begin{equation}
-\bra{w_{j}} \ket{w_{k}} := \bra{v_{j}} \ket{v_{k}} + \sum_{s=d_{Q}+1}^{N} c_{j s}^{\star} c_{k s} = \delta_{j k}
+\begin{equation}\label{eq:neumark_orthonormal}
+\bra{w_{j}} \ket{w_{k}} := \bra{v_{j}} \ket{v_{k}} + \sum_{s=3}^{N} c_{j s}^{\star} c_{k s} = \delta_{j k}
 \end{equation}
-
-\begin{equation}
-\sum_{i=1}^{n} v_{j i}^{\star} v_{k i} + \sum_{s=d_{Q}+1}^{N} c_{j s}^{\star} c_{k s} = \delta_{j k}
-\end{equation}
-
-\begin{equation}
-\sum_{k=1}^{N}\ket{v_{k}}\bra{v_{k}} = \sum_{k=1}^{N} B_{k} = \mathbb{1}
-\end{equation}
-
-
-\begin{equation}
+where $c_{ks}$ are the complex coefficients to be determined. Eqs. (\ref{eq:neumark_povm}) and (\ref{eq:neumark_orthonormal}) can be rewritten in index notation as 
+\begin{equation}\label{eq:neumark_closure_index}
 \sum_{k=1}^{N}v_{k i}^{\star} v_{k j} = \delta_{ij}
 \end{equation}
-
+\begin{equation}\label{eq:neumark_orthonormal_index}
+\sum_{i=1}^{2} v_{j i}^{\star} v_{k i} + \sum_{s=3}^{N} c_{j s}^{\star} c_{k s} = \delta_{j k}
+\end{equation}
+According to Eq. (\ref{eq:neumark_orthonormal_index}) the following matrix $M$ is a unitary matrix which satisfies the closure property in Eq. (\ref{eq:neumark_closure_index}) and encapsulates orthonormal states in the enlarged space $\mathcal{K}$ 
 \begin{equation}
 M = 
 \begin{pmatrix}
-v_{1 1} & \dots & v_{1 d_{Q}} & c_{1,d_{Q}+1} & \dots & c_{1 N} \\
-v_{2 1} & \dots & v_{2 d_{Q}} & c_{2,d_{Q}+1} & \dots & c_{2 N} \\
-\vdots &  & \vdots & \vdots &  & \vdots \\
-v_{N1} & \dots & v_{Nd_{Q}} & c_{N,d_Q+1} & \dots & c_{NN}
-\end{pmatrix}    
+v_{1 1} & v_{1 2} & c_{13} & \dots & c_{1 N} \\
+v_{2 1} & v_{2 2} & c_{23} & \dots & c_{2 N} \\
+\vdots & \vdots & \vdots & \vdots &  \vdots \\
+v_{N1} & v_{N2} & c_{N3} & \dots & c_{NN}
+\end{pmatrix}
 \end{equation}
-
-\[\mathcal{H}^{d_Q}\ \mathcal{K}^{N}\]
+By computing the complex coefficients $c_{ks}$, we can then encode any rank-1 POVM measure into a unitary matrix $M$ which can be readily used within a quantum circuit model.
