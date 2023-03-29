@@ -59,8 +59,8 @@ Provided the optimization problem is feasible, we obtain the weights $\{a_k\}$ a
 \end{equation}
 which will implement the POVMs in the form required by the classical simulation protocols, i.e. $B_{k} = 2p_{k}\ket{\vec{y}_{k}}\bra{\vec{y}_{k}}$.
 
-\subsubsection{Measurement in quantum circuit model}
-To compare the probability distributions obtained from classical protocols with those from quantum simulators or noisy quantum computers, we must develop a technique for encoding positive operator-valued measures in a quantum circuit model. For a POVM of $N$ elements, such technique requires to create a $N\times N$ unitary matrix $M$ representing the measurement process.
+\subsubsection{Measurement in quantum circuit model}\label{section:neumark}
+To compare the probability distributions obtained from classical protocols with those from quantum simulators or noisy quantum computers, we must develop a technique for encoding positive operator-valued measures in a quantum circuit model. For a POVM of $N$ elements, such technique requires to create a $N\times N$ unitary matrix $U$ representing the measurement process.
 
 Neumark's theorem \cite{neumark1940} asserts that one can extend the Hilbert space of states $\mathcal{H}$ in which the rank-1 POVM elements 
 \begin{equation}\label{eq:neumark_povm}
@@ -81,9 +81,9 @@ where $c_{ks}$ are the complex coefficients to be determined. Eqs. (\ref{eq:neum
 \begin{equation}\label{eq:neumark_orthonormal_index}
 \sum_{i=1}^{2} v_{j i}^{\star} v_{k i} + \sum_{s=3}^{N} c_{j s}^{\star} c_{k s} = \delta_{j k}
 \end{equation}
-According to Eq. (\ref{eq:neumark_orthonormal_index}) the following matrix $M$ is a unitary matrix which satisfies the closure property in Eq. (\ref{eq:neumark_closure_index}) and encapsulates orthonormal states in the enlarged space $\mathcal{K}$ 
+According to Eq. (\ref{eq:neumark_orthonormal_index}) the following matrix $U$ is a unitary matrix which satisfies the closure property in Eq. (\ref{eq:neumark_closure_index}) and encapsulates orthonormal states in the enlarged space $\mathcal{K}$ 
 \begin{equation}
-M = 
+U = 
 \begin{pmatrix}
 v_{1 1} & v_{1 2} & c_{13} & \dots & c_{1 N} \\
 v_{2 1} & v_{2 2} & c_{23} & \dots & c_{2 N} \\
@@ -91,4 +91,4 @@ v_{2 1} & v_{2 2} & c_{23} & \dots & c_{2 N} \\
 v_{N1} & v_{N2} & c_{N3} & \dots & c_{NN}
 \end{pmatrix}
 \end{equation}
-By computing the complex coefficients $c_{ks}$, we can then encode any rank-1 POVM measure into a unitary matrix $M$ which can be readily used within a quantum circuit model.
+By computing the complex coefficients $c_{ks}$, we can then encode any rank-1 POVM measure into a unitary matrix $U$ which can be readily used within a quantum circuit model.

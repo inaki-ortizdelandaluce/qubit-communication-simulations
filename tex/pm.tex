@@ -1,0 +1,23 @@
+\subsubsection{Classical transmission of one qubit}
+\subsubsection{Quantum circuit counterpart}
+Following Neumark's theorem described in section \ref{section:neumark}, we can now implement any POVM measure of $N$ elements in a quantum circuit by applying the $N\times N$ unitary matrix $U$ resulting from Neumark's to an initial state made of the original qubit state we want to measure, together with a set of $N-1$ ancillary qubits, a.k.a. \textit{ancillas}, as follows  
+
+\begin{figure}[!h]
+\centering
+\def\myvdots{\ \vdots\ }
+\begin{quantikz}
+    \lstick[wires=4]{$\mathcal{H}^{\otimes N}$}
+      && \lstick{$\ket{q}$}  & \gate[4, nwires=3][2cm]{U} & \meter{} \\
+      && \lstick{$\ket{0}$}  & & \meter{} & \rstick[wires=3]{$\mathcal{H}^{\otimes N-1}\ \text{ancilla qubits}$}\\
+      && \lstick{\myvdots} & & \myvdots &\\
+      && \lstick{$\ket{0}$}  & & \meter{} & 
+\end{quantikz}
+\caption{Quantum circuit implementing a POVM measure of $N$ outcomes following Neumark's extension theorem.}
+\label{fig:quantum_circuit}
+\end{figure}
+
+As we can see in the diagram, we will obtain the different probabilities for each of the $N$ possible outcomes of the POVM, by adding a $N$ bit classical register to the circuit, which will then perform classical measures on the circuit's computational basis.
+
+As we will show in section \ref{section:results}, these circuits will be implemented with Qiskit \cite{Qiskit}, IBM's open-source Quantum Computing SDK, and will be run using IBM's quantum processors to obtain the experimental probability distributions to be compared with the results from the classical simulations.
+
+In order to translate the POVM's unitary matrices into universal quantum gates available in the underlying IBM's quantum processors, we could either follow Nielsen and Chuang's textbook \cite{nielsen2000}, and decompose the unitary into a sequence of two-level unitary gates, or rely on the Qiskit's transpiler, which translates any generic circuit into an optimized circuit using a backend's native gate set, allowing users to program for any quantum processor or processor architecture with minimal inputs. For the sake of simplicity we will follow on using Qiskit's transpiler. 
