@@ -1,12 +1,14 @@
 \documentclass{article}
 \usepackage{amsmath}
 \usepackage{amssymb}
+\usepackage[page,toc,titletoc,title]{appendix}
 \usepackage{authblk}
 \usepackage{bbold}
 \usepackage[backend=biber,style=alphabetic,sorting=ynt]{biblatex}
 \usepackage{float}
 \usepackage{msc}
 \usepackage{graphicx}
+\usepackage{minted}
 \usepackage[skip=7pt plus1pt, indent=20pt]{parskip}
 \usepackage{physics}
 \usepackage{svg}
@@ -17,7 +19,6 @@
 \usetikzlibrary{quantikz}
 \usepackage{xurl}
 \addbibresource{bibliography.bib}
-
 
 \begin{document}
 
@@ -40,6 +41,10 @@
 \input{acknowledgments.tex}
 
 \newpage
-\printbibliography
-%\appendix
+\printbibliography[heading=bibintoc, title={References}]
+\newpage
+\begin{appendices}
+\section{Source Code Listings}\label{section:source}
+\input{appendix.tex}
+\end{appendices}
 \end{document}
