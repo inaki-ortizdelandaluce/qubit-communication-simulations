@@ -1,8 +1,19 @@
+In the following sections we will discuss the methods applied to implement the prepare-and-measure classical simulation protocols described in section \ref{section:protocols}.
 \subsubsection{Classical transmission of one qubit}
-\subsubsection{Quantum circuit counterpart}
+So far we have described the methods available to generate random qubit states and random measurements proportional to rank-1 projectors. Once these are available, we should convert them to the corresponding elements in the Bloch sphere, i.e. to vectors $\vec{x}$, ${\vec{y}_k} \in \mathbb{R}^3$, as per protocol description (see section \ref{section:protocol_pm}). 
+
+A qubit state in density matrix form $\rho$ can be easily be transformed into the dual Bloch vector $\vec{x}$ with components $\{x_k\}$ by applying the equation
+\begin{equation}
+    x_k = tr(\rho \cdot \sigma_k),\ \text{where}\ \vec{\sigma} = (\sigma_x, \sigma_y, \sigma_z)
+\end{equation}
+Similarly, the vector ${\vec{y}_k}$ associated to the POVM will be the Bloch vector corresponding to the rank-1 projector $ \ket{\vec{y}_k} \bra{\vec{y}_k}$, so the same procedure could be flawlessly applied.
+
+For every random state and POVM, we will then sample the shared randomness $\vec{\lambda}_1$, $\vec{\lambda}_2 \in \mathbb{R}^3$ following a uniform distribution and will apply steps 1 to 4 in the protocol such that for every run we get the probability for each measurement outcome. Eq. (\ref{eq:prob_classic}) can then be computed by just using the probabilities outcomes as weights in a random choice whose outcome gets accumulated for each shared randomness run. The accumulated random choices will lead to the final probabilities which will be then compared against the ones obtained with either the theoretical probabilities as per Born's rule, or the probabilities obtained executing the associated quantum circuit in a quantum simulator (see section \ref{section:quantum_circuit}).
+
+\subsubsection{Quantum circuit counterpart}\label{section:quantum_circuit}
 Following Neumark's theorem described in section \ref{section:neumark}, we can now implement any POVM measure of $N$ elements in a quantum circuit by applying the $N\times N$ unitary matrix $U$ resulting from Neumark's to an initial state made of the original qubit state we want to measure, together with a set of $N-1$ ancillary qubits, a.k.a. \textit{ancillas}, as follows  
 
-\begin{figure}[!h]
+\begin{figure}[!ht]
 \centering
 \def\myvdots{\ \vdots\ }
 \begin{quantikz}
