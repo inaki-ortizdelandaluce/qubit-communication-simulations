@@ -170,6 +170,7 @@ def test_povm_circuit():
     plus = 0.5 * np.array([[1, 1], [1, 1]])
     minus = 0.5 * np.array([[1, -1], [-1, 1]])
     povm = POVM(weights=0.5 * np.array([1, 1, 1, 1]), proj=np.array([zero, one, plus, minus], dtype=complex))
+    print(povm.unitary())
 
     shots = 10**7
     p = qt.quantum.prepare_and_measure_povm(shots, qubit, povm)
