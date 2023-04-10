@@ -214,13 +214,12 @@ def prepare_and_measure_povm(shots, n):
     # Alice prepares a random qubit
     qubit = qt.random.qubit()
 
-    # import math
-    # qubit = Qubit(np.array([(3 + 1.j * math.sqrt(3)) / 4., -0.5]))
-
     # Bob prepares a random measurement
     measurement = qt.random.povm(n)
 
-    # P4 = {1/2|0x0|, 1/2|1x1|, 1/2|+x+|, 1/2|-x-|}
+    # import math
+    # qubit = Qubit(np.array([(3 + 1.j * math.sqrt(3)) / 4., -0.5]))
+    # # P4 = {1/2|0x0|, 1/2|1x1|, 1/2|+x+|, 1/2|-x-|}
     # proj = np.array([[[1, 0], [0, 0]], [[0, 0], [0, 1]], [[.5, .5], [.5, .5]], [[.5, -.5], [-.5, .5]]])
     # measurement = POVM(weights=0.5 * np.array([1, 1, 1, 1]), proj=proj)
     # n = measurement.size()

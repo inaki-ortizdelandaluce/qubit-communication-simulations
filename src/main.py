@@ -182,6 +182,6 @@ if __name__ == "__main__":
     # test_pvm_convergence()
     # test_random_povm()
     # test_povm_convergence()
-    # test_povm_convergence_3d()
+    test_povm_convergence_3d()
     # test_neumark()
-    test_povm_circuit()
+    # test_povm_circuit()

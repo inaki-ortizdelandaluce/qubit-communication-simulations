@@ -124,9 +124,11 @@ class POVM:
         n = len(qubits)
 
         a = np.vstack((np.ones((n,)), v.T))
-        b = np.append(np.array([2]), np.zeros(n - 1, ), axis=0)
+        b = np.append(np.array([2]), np.zeros(3, ), axis=0)
 
-        lp = scipy.optimize.linprog(np.ones(n, ), A_eq=a, b_eq=b, bounds=(0.01, 1), method='highs')
+        # c = np.zeros(n, ) finds a solution instead of minimizing a function
+        # lower bounds set to 0.01, this could be fine-tuned
+        lp = scipy.optimize.linprog(np.zeros(n, ), A_eq=a, b_eq=b, bounds=(0.01, 1), method='highs')
         _a, _e = lp['x'], np.asarray([q.rho() for q in qubits])
 
         return cls(_a, _e)

@@ -32,14 +32,14 @@ As described by Sent\'is et al.\ \cite{sentis2013}, the conditions under which a
 \begin{equation}
     \sum_{k=1}^{N} a_{k} \vec{y}_{k} = \vec{0}
 \end{equation}
-where $\vec{y}_{k} \in \mathbb{R}^3$ are the Bloch vectors corresponding to the qubit pure states $\ket{v_{k}}$. The existence of the set $\{a_{k}\}$ has a direct translation into a linear programming feasibility problem we would have to solve computationally.
+where $\vec{y}_{k} \in \mathbb{R}^3$ are the Bloch vectors corresponding to the qubit pure states $\ket{v_{k}}$, such that $E_k = \ket{v_k}\bra{v_k}$. The existence of the set $\{a_{k}\}$ has a direct translation into a linear programming feasibility problem we would have to solve computationally.
 
 As an example, to build a random POVM set of $N=4$ elements, we could apply the following procedure:
 \begin{enumerate}
 \item Assign two rank-1 operators as projective measurement elements $E_i = \ket{v_i}\bra{v_i}$ with unknown weights $\{a_i\} \text{, where}\ i=1,2$.
 \item Apply the closure relation such that the third rank-1 operator is $E_3 = \mathbb{1} - \sum_{i=1}^{2}E_i$. Note that this will not be necessarily a rank-1 operator.
 \item Diagonalize $E_3$ to obtain the relevant qubit states as eigenvectors $\ket{v_3}$ and $\ket{v_4}$.
-\item Convert all quibit states $\ket{v_i}$ to Bloch vectors $\vec{y}_i \text{, where } i=1,2,...4$.
+\item Convert all qubit states $\ket{v_i}$ to Bloch vectors $\vec{y}_i \text{, where } i=1,2,...4$.
 \item Solve the linear programming feasibility problem
 \begin{equation*}
 \begin{array}{ll@{}ll}
@@ -50,7 +50,7 @@ As an example, to build a random POVM set of $N=4$ elements, we could apply the 
 \end{equation*}
 \end{enumerate}
 
-Provided the optimization problem is feasible, we obtain the weights $\{a_k\}$ and compute the rank-1 operators $\{E_k\}$ conforming the POVM set elements $B_k=a_k E_k$. Then we can use Equation \ref{eq:rank1_povm} to perform the following assignment
+Provided the optimization problem is feasible, we obtain the weights $\{a_k\}$ and compute the rank-1 operators $E_k = \ket{v_k}\bra{v_k}$ which conform the POVM set elements $\{B_k\}$ such that $B_k=a_k E_k$. Then we can use Eq. (\ref{eq:rank1_povm}) to perform the following assignment
 \begin{equation}
     p_k = \frac{a_k}{2}
 \end{equation}
