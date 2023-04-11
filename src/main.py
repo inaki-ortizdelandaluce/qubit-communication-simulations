@@ -7,7 +7,7 @@ import qt.qubit
 import qt.random
 from qt.measurement import POVM
 from qt.visualization import *
-
+from scipy.special import rel_entr
 
 
 def test_random_states():
@@ -173,8 +173,136 @@ def test_povm_circuit():
     print(povm.unitary())
 
     shots = 10**7
-    p = qt.quantum.prepare_and_measure_povm(shots, qubit, povm)
-    print('Probabilities={}'.format(p))
+    results = qt.quantum.prepare_and_measure_povm(shots, qubit, povm)
+    print('Probabilities={}'.format(results["probabilities"]))
+    return None
+
+
+def test_probability_sampling():
+    import random
+    from scipy.special import rel_entr
+    import collections
+
+    shots = 10**7
+
+    expected = np.array([0.375, 0.125, 0.0625, 0.4375])
+    actual = np.array([0.275, 0.225, 0.0725, 0.4475])
+
+    p = random.choices(np.arange(len(expected)), weights=expected, k=shots)
+    q = random.choices(np.arange(len(expected)), weights=expected, k=shots)
+
+    counter_p = collections.Counter(p)
+    counter_q = collections.Counter(q)
+
+    freq_p = np.array([counter_p[x] for x in sorted(counter_p.keys())])
+    freq_p = freq_p / np.sum(freq_p)
+
+    freq_q = np.array([counter_q[x] for x in sorted(counter_q.keys())])
+    freq_q = freq_q / np.sum(freq_q)
+
+    print(sum(rel_entr(expected, actual)))
+    print(expected)
+    print(freq_p)
+    print(freq_q)
+    return None
+
+
+def test_kl_classical_born():
+    """
+    Runs PM classical protocol and plots Kullback-Leibler divergence among classical and Born probability distributions
+    """
+
+    # run experiment
+    np.random.seed(0)
+    shots = 10 ** 4
+
+    qubit = qt.qubit.Qubit(np.array([(3 + 1.j * math.sqrt(3)) / 4., -0.5]))
+    # P4 = {1/2|0x0|, 1/2|1x1|, 1/2|+x+|, 1/2|-x-|}
+    proj = np.array([[[1, 0], [0, 0]], [[0, 0], [0, 1]], [[.5, .5], [.5, .5]], [[.5, -.5], [-.5, .5]]])
+    measurement = POVM(weights=0.5 * np.array([1, 1, 1, 1]), proj=proj)
+
+    experiment = qt.classical.prepare_and_measure_povm(shots, 4, qubit=qubit, measurement=measurement)
+
+    # plot Kullback-Leibler divergence
+    runs = experiment['probabilities']['runs']
+    stats = experiment['probabilities']['stats']
+    born = experiment['probabilities']['born']
+    print('Stats:\np1={}, p2={}, p3={}, p4={}, pt={}'.format(stats[0], stats[1], stats[2], stats[3], np.sum(stats)))
+    print('Born:\np1={}, p2={}, p3={}, p4={}, pt={}'.format(born[0], born[1], born[2], born[3], np.sum(born)))
+
+    p1 = np.cumsum(runs[:, 0]) / (np.arange(len(runs[:, 0])) + 1)
+    p2 = np.cumsum(runs[:, 1]) / (np.arange(len(runs[:, 1])) + 1)
+    p3 = np.cumsum(runs[:, 2]) / (np.arange(len(runs[:, 2])) + 1)
+    p4 = np.cumsum(runs[:, 3]) / (np.arange(len(runs[:, 3])) + 1)
+
+    actual = np.vstack((p1, p2, p3, p4))
+    expected = np.repeat(born.reshape(born.shape[0], 1), actual.shape[1], axis=1)
+
+    rows, cols = actual.shape
+    kl = np.zeros((cols, ))
+    for i in range(cols):
+        kl[i] = sum(rel_entr(expected[:, i], actual[:, i]))
+
+    plt.plot(kl, color='b')
+    plt.show()
+    return None
+
+
+def test_kl_classical_quantum_simulator():
+    """
+    Runs classical protocol and quantum simulator and plots Kullback-Leibler divergence among classical and
+    quantum simulator probability distribution
+    """
+    shots = 10 ** 4
+
+    qubit = qt.qubit.Qubit(np.array([(3 + 1.j * math.sqrt(3)) / 4., -0.5]))
+    # P4 = {1/2|0x0|, 1/2|1x1|, 1/2|+x+|, 1/2|-x-|}
+    proj = np.array([[[1, 0], [0, 0]], [[0, 0], [0, 1]], [[.5, .5], [.5, .5]], [[.5, -.5], [-.5, .5]]], dtype=complex)
+    measurement = POVM(weights=0.5 * np.array([1, 1, 1, 1]), proj=proj)
+
+    # run classical protocol
+    experiment1 = qt.classical.prepare_and_measure_povm(shots, qubit=qubit, measurement=measurement)
+    runs = experiment1['probabilities']['runs']
+    born = experiment1['probabilities']['born']
+    p1 = np.cumsum(runs[:, 0]) / (np.arange(len(runs[:, 0])) + 1)
+    p2 = np.cumsum(runs[:, 1]) / (np.arange(len(runs[:, 1])) + 1)
+    p3 = np.cumsum(runs[:, 2]) / (np.arange(len(runs[:, 2])) + 1)
+    p4 = np.cumsum(runs[:, 3]) / (np.arange(len(runs[:, 3])) + 1)
+    experimental1 = np.vstack((p1, p2, p3, p4))
+    theoretical = np.repeat(born.reshape(born.shape[0], 1), experimental1.shape[1], axis=1)
+    print('Classical protocol executed')
+
+    # run quantum circuit in Qiskit simulator
+    experiment2 = qt.quantum.prepare_and_measure_povm(shots, qubit, measurement)
+    import collections
+    memory = experiment2["memory"]
+    experimental2 = np.zeros(experimental1.shape)
+    for i in range(len(memory)):
+        summary = collections.Counter(memory[0: i+1])
+        summary = np.array([summary[k] for k in sorted(summary.keys())])
+        p = np.zeros((measurement.size(),))
+        p[:summary.shape[0]] = summary / np.sum(summary)
+        experimental2[:, i] = p
+    print('Quantum Circuit executed')
+
+    # plot kl divergence
+    _, cols = experimental1.shape
+    klte1 = np.zeros((cols,))
+    klte2 = np.zeros((cols,))
+    klee = np.zeros((cols,))
+
+    for i in range(cols):
+        klte1[i] = sum(rel_entr(theoretical[:, i], experimental1[:, i]))
+        klte2[i] = sum(rel_entr(theoretical[:, i], experimental2[:, i]))
+        klee[i] = sum(rel_entr(experimental2[:, i], experimental1[:, i]))
+
+    plt.title('Kullback-Leibler divergence {:.0E} shots'.format(shots))
+    plt.plot(klte1, color='b', label='Born vs Classical Protocol')
+    plt.plot(klte2, color='r', label='Born vs Quantum Simulator')
+    # plt.plot(klee, color='g', label='Quantum Simulator vs Classical Protocol')
+    plt.legend()
+    plt.show()
+    return None
 
 
 if __name__ == "__main__":
@@ -182,6 +310,9 @@ if __name__ == "__main__":
     # test_pvm_convergence()
     # test_random_povm()
     # test_povm_convergence()
-    test_povm_convergence_3d()
+    # test_povm_convergence_3d()
     # test_neumark()
     # test_povm_circuit()
+    # test_probability_sampling()
+    # test_kl_classical_born()
+    test_kl_classical_quantum_simulator()

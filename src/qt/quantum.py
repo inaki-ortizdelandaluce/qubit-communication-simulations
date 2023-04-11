@@ -16,11 +16,16 @@ def prepare_and_measure_povm(shots, qubit: Qubit, povm: POVM):
     backend = Aer.get_backend('aer_simulator')
     qc_transpiled = transpile(qc, backend)
 
-    job = backend.run(qc_transpiled, shots=shots)
+    job = backend.run(qc_transpiled, shots=shots, memory=True)
     result = job.result()
     counts = result.get_counts(qc_transpiled)
 
     p = np.array([counts['00'], counts['01'], counts['10'], counts['11']])
     p = p / np.sum(p)
 
-    return p
+    results = {
+        "counts": counts,
+        "memory": result.get_memory(),
+        "probabilities": p
+    }
+    return results

@@ -192,7 +192,7 @@ def measure_povm(lambdas, bits, measurement: POVM):
     }
 
 
-def prepare_and_measure_povm(shots, n):
+def prepare_and_measure_povm(shots, n=4, qubit=None, measurement=None):
     """
     Runs a prepare-and-measure classical simulation with a random POVM measurement
 
@@ -200,8 +200,16 @@ def prepare_and_measure_povm(shots, n):
     ---------
     shots : int
         Number of shots the simulation is run with
-    n: int
-        Number of POVM random elements
+
+    n: int, optional
+        Number of POVM random elements. Used if no measurement argument is specified, default value is 4.
+
+    qubit : Qubit, optional
+        Alice's qubit state. If not specified, a random qubit state will be used instead
+
+    measurement: POVM, optional
+        Bob's POVM measurement. If not specified a random POVM will be used instead
+
 
     Returns
     -------
@@ -211,18 +219,15 @@ def prepare_and_measure_povm(shots, n):
         theoretical probability ('born'), the execution runs ('runs') and the probability statistics ('stats')
     """
 
-    # Alice prepares a random qubit
-    qubit = qt.random.qubit()
+    if qubit is None:
+        # Alice prepares a random qubit
+        qubit = qt.random.qubit()
 
-    # Bob prepares a random measurement
-    measurement = qt.random.povm(n)
+    if measurement is None:
+        # Bob prepares a random measurement
+        measurement = qt.random.povm(n)
 
-    # import math
-    # qubit = Qubit(np.array([(3 + 1.j * math.sqrt(3)) / 4., -0.5]))
-    # # P4 = {1/2|0x0|, 1/2|1x1|, 1/2|+x+|, 1/2|-x-|}
-    # proj = np.array([[[1, 0], [0, 0]], [[0, 0], [0, 1]], [[.5, .5], [.5, .5]], [[.5, -.5], [-.5, .5]]])
-    # measurement = POVM(weights=0.5 * np.array([1, 1, 1, 1]), proj=proj)
-    # n = measurement.size()
+    n = measurement.size()
 
     experiment = {
         "qubit": qubit,
