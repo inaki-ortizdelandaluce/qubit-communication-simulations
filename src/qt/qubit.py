@@ -1,10 +1,19 @@
 import numpy as np
 import cmath
 import math
+from enum import Enum
+
+
+class Axis(Enum):
+    X = 0
+    Y = 1
+    Z = 2
+
 
 X = np.array([[0, 1], [1, 0]])
 Y = np.array([[0, -1.j], [1j, 0]])
 Z = np.array([[1, 0], [0, -1]])
+paulis = np.array([X, Y, Z])
 
 
 class Qubit:
@@ -33,13 +42,13 @@ class Qubit:
 
     def rho(self):
         """
-         Returns the density matrix corresponding to the qubit in a pure state.
+        Returns the density matrix corresponding to the qubit in a pure state.
 
-         Returns
-         -------
-         ndarray
-             A 2x2 density matrix corresponding to the qubit in a pure state.
-         """
+        Returns
+        -------
+        ndarray
+            A 2x2 density matrix corresponding to the qubit in a pure state.
+        """
         return np.outer(self.ket(), self.ket().conj())
 
     def bloch_angles(self):
@@ -68,23 +77,38 @@ class Qubit:
         rho : ndarray
             The qubit state in density matrix form
 
-         Returns
-         -------
-         (float, float, float)
-             The cartesian coordinates of the qubit in the Bloch sphere (xyz).
+        Returns
+        -------
+        (float, float, float)
+            The cartesian coordinates of the qubit in the Bloch sphere (xyz).
 
         """
         # cast complex to real to avoid throwing ComplexWarning, imaginary part should always be zero
-        return [np.real(np.trace(np.matmul(rho, sigma))) for sigma in np.array([X, Y, Z])]
+        return [np.real(np.trace(np.matmul(rho, sigma))) for sigma in paulis]
 
     def bloch_vector(self):
         """
-         Returns the cartesian coordinates of the qubit in the Bloch sphere.
+        Returns the cartesian coordinates of the qubit in the Bloch sphere.
 
-         Returns
-         -------
-         (float, float, float)
-             The cartesian coordinates of the qubit in the Bloch sphere (xyz).
+        Returns
+        -------
+        (float, float, float)
+            The cartesian coordinates of the qubit in the Bloch sphere (xyz).
 
          """
         return Qubit.density2bloch(self.rho())
+
+    def rotate(self, axis: Axis, angle):
+        """
+        Rotates the qubit along the specified axis by the specified angle in radians in counterclockwise direction.
+
+        Parameters
+        ---------
+        axis : Axis
+
+        angle : float
+            Angle in radians
+        """
+        r = math.cos(angle/2) * np.eye(2, 2) - 1.j * math.sin(angle/2) * paulis[axis.value]
+        self.alpha, self.beta = r @ self.ket()
+        return None

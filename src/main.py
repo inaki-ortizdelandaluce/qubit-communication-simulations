@@ -305,6 +305,17 @@ def test_kl_classical_quantum_simulator():
     return None
 
 
+def test_bell():
+    A0 = np.array([[0, 1],[1, 0]])
+    A1 = np.array([[1, 0], [0, -1]])
+    B0 = 1 / math.sqrt(2) * np.array([[-1, -1], [-1, 1]])
+    B1 = 1 / math.sqrt(2) * np.array([[-1, 1], [1, 1]])
+
+    w, v = np.linalg.eig(A0)
+    q0 = qt.qubit.Qubit(v[:, 0])
+    q1 = qt.qubit.Qubit(v[:, 1])
+
+
 if __name__ == "__main__":
     # test_random_states()
     # test_pvm_convergence()

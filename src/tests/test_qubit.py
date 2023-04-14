@@ -37,3 +37,9 @@ def test_qubit_bloch_vector():
 def test_qubit_rho():
     q = Qubit(np.array([1., -1.]))
     assert np.allclose(q.rho(), 0.5 * np.array([[1., -1.], [-1., 1.]]))
+
+
+def test_qubit_rotation():
+    q = Qubit(np.array([1., 0.]))
+    q.rotate(Axis.Y, np.pi/2)
+    assert np.allclose(q.ket(), 1/math.sqrt(2) * np.array([1, 1]))
