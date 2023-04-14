@@ -1,0 +1,35 @@
+import numpy as np
+from qiskit import QuantumCircuit, transpile, Aer, IBMQ
+from qiskit.tools.monitor import job_monitor
+from qiskit.visualization import plot_histogram
+from qiskit.extensions import UnitaryGate
+
+qc = QuantumCircuit(2,2)
+
+psi=((3+1.j*math.sqrt(3))/4.,-0.5)
+
+U =  [[ 0.70710678+0.j, 0.+0.j, 0.70710678+0.j, 0.+0.j],
+ [ 0.+0.j, 0.70710678+0.j, 0. +0.j, 0.70710678+0.j],
+ [- 0.5+0.j, -0.5+0.j, 0.5+0.j, 0.5+0.j],
+ [-0.5+0.j, 0.5+0.j, 0.5+0.j, -0.5+0.j]]
+ 
+qc.initialize (psi,0)
+qc.unitary(U,[0,1])
+qc.measure([0,1],[0,1])
+qc.draw()
+
+IBMQ.load_account()
+provider = IBMQ.get_provider(hub = 'ibm-q',group = 'open', project = 'main' )
+qcomp = provider.get_backend ('ibm_nairobi')
+# running in ibm_nairobi. 4000 shots
+
+qc_transpiled = transpile (qc, backend=qcomp)
+job = execute (qc_transpiled, backend=qcomp,shots=4000)
+job_monitor(job)                             
+result = job.result()
+plot_histogram(result.get_counts(qc_transpiled))
+sum(counts.values())
+print(counts ['00'] / sum(counts.values()))
+print(counts ['01'] / sum(counts.values()))
+print(counts ['10'] / sum(counts.values()))
+print(counts ['11'] / sum(counts.values()))
