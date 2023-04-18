@@ -15,7 +15,7 @@ class Observable:
         return self.eigenvalues, self.eigenvectors
 
     def eigenvector(self, eigenvalue):
-        m = self.eigenvectors[:, np.where(self.eigenvalues == eigenvalue)]
+        m = self.eigenvectors[:, np.where(np.isclose(self.eigenvalues, eigenvalue))]
         m = m.reshape(m.size, )
         if m.size == 0:
             return None

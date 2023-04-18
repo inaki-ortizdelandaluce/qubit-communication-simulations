@@ -1,13 +1,19 @@
 import math
 import matplotlib.pyplot as plt
+import numpy as np
 from healpy.pixelfunc import ang2pix
+from scipy.special import rel_entr
+
 import qt.classical
 import qt.quantum
-import qt.qubit
 import qt.random
+
+from qt.qubit import X, Y, Z, Qubit
+from qt.qudit import Qudit
+from qt.bell import BellScenario, BellState
 from qt.measurement import POVM
+from qt.observable import Observable
 from qt.visualization import *
-from scipy.special import rel_entr
 
 
 def test_random_states():
@@ -306,14 +312,14 @@ def test_kl_classical_quantum_simulator():
 
 
 def test_bell():
-    A0 = np.array([[0, 1],[1, 0]])
-    A1 = np.array([[1, 0], [0, -1]])
-    B0 = 1 / math.sqrt(2) * np.array([[-1, -1], [-1, 1]])
-    B1 = 1 / math.sqrt(2) * np.array([[-1, 1], [1, 1]])
+    a1 = Observable(X)
+    a0 = Observable(Z)
+    b0 = Observable(-1 / math.sqrt(2) * (X + Z))
+    b1 = Observable(1 / math.sqrt(2) * (X - Z))
 
-    w, v = np.linalg.eig(A0)
-    q0 = qt.qubit.Qubit(v[:, 0])
-    q1 = qt.qubit.Qubit(v[:, 1])
+    bell = BellScenario(BellState.PSI_MINUS, alice=(a0, a1), bob=(b0, b1))
+    print('CHSH={}'.format(bell.chsh()))
+    return None
 
 
 if __name__ == "__main__":
@@ -326,4 +332,5 @@ if __name__ == "__main__":
     # test_povm_circuit()
     # test_probability_sampling()
     # test_kl_classical_born()
-    test_kl_classical_quantum_simulator()
+    # test_kl_classical_quantum_simulator()
+    test_bell()
