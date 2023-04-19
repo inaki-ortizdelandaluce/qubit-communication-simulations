@@ -17,8 +17,8 @@ def tet_bell_scenario_chsh():
 
 
 def tet_bell_scenario_probability():
-    a1 = Observable(X)
     a0 = Observable(Z)
+    a1 = Observable(X)
     b0 = Observable(-1 / math.sqrt(2) * (X + Z))
     b1 = Observable(1 / math.sqrt(2) * (X - Z))
 
@@ -28,8 +28,8 @@ def tet_bell_scenario_probability():
 
 
 def tet_bell_scenario_expectation_values():
-    a1 = Observable(X)
     a0 = Observable(Z)
+    a1 = Observable(X)
     b0 = Observable(-1 / math.sqrt(2) * (X + Z))
     b1 = Observable(1 / math.sqrt(2) * (X - Z))
 

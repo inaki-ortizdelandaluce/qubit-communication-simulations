@@ -311,15 +311,27 @@ def test_kl_classical_quantum_simulator():
     return None
 
 
-def test_bell():
-    a1 = Observable(X)
+def test_bell_chsh():
     a0 = Observable(Z)
+    a1 = Observable(X)
     b0 = Observable(-1 / math.sqrt(2) * (X + Z))
     b1 = Observable(1 / math.sqrt(2) * (X - Z))
 
     bell = BellScenario(BellState.PSI_MINUS, alice=(a0, a1), bob=(b0, b1))
     print('CHSH={}'.format(bell.chsh()))
     return None
+
+
+def test_bell_convergence():
+    shots = 10 ** 6
+    a0 = Observable(Z)
+    a1 = Observable(X)
+    b0 = Observable(-1 / math.sqrt(2) * (X + Z))
+    b1 = Observable(1 / math.sqrt(2) * (X - Z))
+
+    experiment = qt.classical.bell_pvm(shots, BellState.PSI_MINUS, alice=(a0, a1), bob=(b0, b1))
+    # stats = experiment['probabilities']['stats']
+    # print('Stats:\np1={},p2={},pt={}'.format(stats[0], stats[1], np.sum(stats)))
 
 
 if __name__ == "__main__":
@@ -333,4 +345,5 @@ if __name__ == "__main__":
     # test_probability_sampling()
     # test_kl_classical_born()
     # test_kl_classical_quantum_simulator()
-    test_bell()
+    # test_bell_chsh()
+    test_bell_convergence()

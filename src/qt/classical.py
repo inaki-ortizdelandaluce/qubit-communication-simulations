@@ -3,6 +3,7 @@ import random
 import qt.random
 from qt.qubit import Qubit
 from qt.measurement import PVM, POVM
+from qt.bell import BellState
 
 
 def heaviside(a):
@@ -261,4 +262,109 @@ def prepare_and_measure_povm(shots, n=4, qubit=None, measurement=None):
     experiment['probabilities']['stats'] = experiment['probabilities']['stats'] / shots
     experiment['probabilities']['born'] = bob['measurement'].probability(qubit)
 
+    return experiment
+
+
+def bell_pvm(shots, state, alice, bob):
+    """
+    Runs a classical simulation on a Bell state with a set of local projective measurements
+
+    Parameters
+    ---------
+    shots : int
+        Number of shots the simulation is run with
+
+    state : BellState
+       Bell state
+
+    alice: tuple[Observable, Observable]
+        Alice's local projective measurements described as a tuple of observables
+
+    bob: tuple[Observable, Observable]
+        Bob's local projective measurements described as a tuple of observables
+
+    Returns
+    -------
+    dict
+        A dictionary with the Bell state ('state'), Alice's and Bob's local projective measurements ('alice', 'bob')
+        and the joint probabilities for each measurement outcome ('probabilities') in a nested structure including the
+        theoretical probabilities ('born'), the execution runs ('runs') and the probability statistics ('stats')
+    """
+
+    if type(state) is not BellState:
+        raise ValueError('Input state is not a valid Bell state')
+
+    if type(alice) is not tuple:
+        raise ValueError('Alice\'s observables is not a valid tuple')
+    elif len(alice) != 2:
+        raise ValueError('Alice\'s number of observables is not valid:{}'.format(str(len(alice))))
+
+    if type(bob) is not tuple:
+        raise ValueError('Bob\'s observables is not a valid tuple')
+    elif len(bob) != 2:
+        raise ValueError('Bob\'s number of observables is not tuple:{}'.format(str(len(bob))))
+
+    experiment = {
+        "state": state,
+        "alice": alice,
+        "bob": bob,
+        "probabilities": {
+            "runs": np.zeros((shots, 2)),
+            "stats": np.zeros((2,)),
+            "born": np.ones((2,))
+        }
+    }
+
+    # Alice's positive local projectors as bloch vectors
+    x = [Qubit(alice[i].eigenvector(1)).bloch_vector() for i in range(1)]  # FIXME vectorize
+    y = np.asarray([Qubit(bob[0].eigenvector((-1)**i)).bloch_vector() for i in range(2)])  # FIXME vectorize
+
+    counter00 = 0
+
+    for i in range(shots):
+
+        # Alice and Bob's shared randomness
+        shared_randomness = np.array([qt.random.bloch_vector(), qt.random.bloch_vector()])
+
+        # Alice performs local projective measurements
+        a = - np.sign(x @ shared_randomness[0])
+
+        # Alice sends bit to Bob
+        c = -a * np.sign(x @ shared_randomness[1])
+
+        # Bob flips the lambda if c = -1
+        lambda2 = c * shared_randomness[1]
+
+        # compute lambda according to the probabilities {pb}
+        # FIXME vectorize
+        lambdas = np.zeros((2, 3))
+        lambdas[0, :] = shared_randomness[0]
+        lambdas[1, :] = lambda2
+
+        pb = 0.5 * np.array([1, 1])
+        index = random.choices(range(0, 2), cum_weights=np.cumsum(pb), k=1)[0]
+        ly = np.abs(np.matmul(lambdas, y.T))
+        _lambda = lambdas[np.argmax(ly, axis=0)[index]]
+
+        # compute probabilities
+        thetas = theta(np.matmul(y, _lambda.reshape(-1, 1)))
+        weighted_thetas = np.multiply(thetas, pb.reshape(-1, 1))
+        p = weighted_thetas[:, 0] / np.sum(weighted_thetas, axis=0)
+
+        aa = int(a[0])
+        bb = (-1)**np.where(p == 1)[0][0]
+
+        if aa == 1 and bb == 1:
+            counter00 += 1
+        '''
+        experiment['probabilities']['runs'][i, :] = p
+
+        # accumulate counts according to Bob's probabilities
+        index = random.choices(range(0, 2), cum_weights=np.cumsum(p), k=1)[0]
+        experiment['probabilities']['stats'][index] = experiment['probabilities']['stats'][index] + 1
+        '''
+
+    # experiment['probabilities']['stats'] = experiment['probabilities']['stats'] / shots
+
+    print('p11(A0,B0)={}'.format(counter00/shots))
     return experiment
