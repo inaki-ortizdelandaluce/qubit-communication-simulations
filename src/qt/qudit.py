@@ -31,6 +31,6 @@ class Qudit:
 
     @classmethod
     def bipartite(cls, q1: Qubit, q2: Qubit):
-        ket = np.tensordot(q1.ket(), q2.ket(), axes=0)
+        ket = np.tensordot(q1.ket(), q2.ket(), axes=0).reshape(4, )
         return cls(ket)
 
