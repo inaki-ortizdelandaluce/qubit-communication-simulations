@@ -178,7 +178,7 @@ def test_povm_circuit():
     povm = POVM(weights=0.5 * np.array([1, 1, 1, 1]), proj=np.array([zero, one, plus, minus], dtype=complex))
     print(povm.unitary())
 
-    shots = 10**7
+    shots = 10 ** 7
     results = qt.quantum.prepare_and_measure_povm(shots, qubit, povm)
     print('Probabilities={}'.format(results["probabilities"]))
     return None
@@ -189,7 +189,7 @@ def test_probability_sampling():
     from scipy.special import rel_entr
     import collections
 
-    shots = 10**7
+    shots = 10 ** 7
 
     expected = np.array([0.375, 0.125, 0.0625, 0.4375])
     actual = np.array([0.275, 0.225, 0.0725, 0.4475])
@@ -245,7 +245,7 @@ def test_kl_classical_born():
     expected = np.repeat(born.reshape(born.shape[0], 1), actual.shape[1], axis=1)
 
     rows, cols = actual.shape
-    kl = np.zeros((cols, ))
+    kl = np.zeros((cols,))
     for i in range(cols):
         kl[i] = sum(rel_entr(expected[:, i], actual[:, i]))
 
@@ -284,7 +284,7 @@ def test_kl_classical_quantum_simulator():
     memory = experiment2["memory"]
     experimental2 = np.zeros(experimental1.shape)
     for i in range(len(memory)):
-        summary = collections.Counter(memory[0: i+1])
+        summary = collections.Counter(memory[0: i + 1])
         summary = np.array([summary[k] for k in sorted(summary.keys())])
         p = np.zeros((measurement.size(),))
         p[:summary.shape[0]] = summary / np.sum(summary)
@@ -323,15 +323,79 @@ def test_bell_chsh():
 
 
 def test_bell_convergence():
-    shots = 10 ** 6
+    np.random.seed(0)
+
+    shots = 10 ** 7
     a0 = Observable(Z)
     a1 = Observable(X)
     b0 = Observable(-1 / math.sqrt(2) * (X + Z))
     b1 = Observable(1 / math.sqrt(2) * (X - Z))
 
-    experiment = qt.classical.bell_pvm(shots, BellState.PSI_MINUS, alice=(a0, a1), bob=(b0, b1))
+    alice = Qubit(a0.eigenvector(1))
+    bob = (Qubit(b0.eigenvector(1)), Qubit(b0.eigenvector(-1)))
+
+    # experiment = qt.classical.bell_singlet(shots, alice, bob)
     # stats = experiment['probabilities']['stats']
-    # print('Stats:\np1={},p2={},pt={}'.format(stats[0], stats[1], np.sum(stats)))
+    # print('Stats:\np1={},p2={},p3={},p4={}'.format(stats[0], stats[1], stats[2], stats[3]))
+
+    experiment = qt.classical.bell_singlet_full(shots, alice=(a0, a1), bob=(b0, b1))
+    stats = experiment['probabilities']['stats']
+    born = experiment['probabilities']['born']
+    print('Stats:\n{}'.format(stats))
+    print('Born:\n{}'.format(born))
+    return None
+
+
+def test_bell_convergence_mesh():
+    np.random.seed(19680801)
+    x = np.arange(0, 5)
+    y = np.arange(0, 5)
+
+    actual = np.array([[0.4267916, 0.0731243, 0.073249, 0.4268351],
+                       [0.4269109, 0.0731628, 0.0732563, 0.42667],
+                       [0.426685, 0.0731767, 0.0732062, 0.4269321],
+                       [0.0733566, 0.4265009, 0.4270081, 0.0731344]]).T
+
+    expected = np.array([[0.4267767, 0.0732233, 0.0732233, 0.4267767],
+                         [0.4267767, 0.0732233, 0.0732233, 0.4267767],
+                         [0.4267767, 0.0732233, 0.0732233, 0.4267767],
+                         [0.0732233, 0.4267767, 0.4267767, 0.0732233]]).T
+
+    outcomes = ["$(+1,+1)$", "$(+1,-1)$", "$(-1,+1)$", "$(-1,-1)$"]
+    measurements = ["($A_0$,$B_0$)", "$(A_0,B_1)$", "$(A_1,B_0)$", "$(A_1,B_1)$"]
+
+    fig, ax = plt.subplots(1, 2)
+    # expected
+    im = ax[0].imshow(expected, cmap='PiYG')
+
+    ax[0].set_xticks(np.arange(len(measurements)), labels=measurements)
+    ax[0].set_yticks(np.arange(len(outcomes)), labels=outcomes)
+
+    for i in range(len(measurements)):
+        for j in range(len(outcomes)):
+            text = ax[0].text(j, i, expected[i, j],
+                           ha="center", va="center", color="w")
+
+    ax[0].set_title("Born\'s Rule ")
+
+    # actual
+    im = ax[1].imshow(actual, cmap='PiYG')
+
+    ax[1].set_xticks(np.arange(len(measurements)), labels=measurements)
+    ax[1].set_yticks(np.arange(len(outcomes)), labels=outcomes)
+
+    for i in range(len(measurements)):
+        for j in range(len(outcomes)):
+            text = ax[1].text(j, i, actual[i, j],
+                           ha="center", va="center", color="w")
+
+    ax[1].set_title("Classical Protocol")
+
+    # fig.suptitle('Bell scenario')
+
+    fig.tight_layout()
+    plt.show()
+    return None
 
 
 if __name__ == "__main__":
@@ -346,4 +410,5 @@ if __name__ == "__main__":
     # test_kl_classical_born()
     # test_kl_classical_quantum_simulator()
     # test_bell_chsh()
-    test_bell_convergence()
+    # test_bell_convergence()
+    test_bell_convergence_mesh()

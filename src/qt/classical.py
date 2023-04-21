@@ -1,9 +1,11 @@
+import math
 import numpy as np
 import random
 import qt.random
 from qt.qubit import Qubit
 from qt.measurement import PVM, POVM
-from qt.bell import BellState
+from qt.bell import BellState, BellScenario
+from qt.observable import Observable
 
 
 def heaviside(a):
@@ -265,17 +267,14 @@ def prepare_and_measure_povm(shots, n=4, qubit=None, measurement=None):
     return experiment
 
 
-def bell_pvm(shots, state, alice, bob):
+def bell_singlet_full(shots, alice, bob):
     """
-    Runs a classical simulation on a Bell state with a set of local projective measurements
+    Runs a classical simulation on a Bell singlet state for a set of local observables
 
     Parameters
     ---------
     shots : int
         Number of shots the simulation is run with
-
-    state : BellState
-       Bell state
 
     alice: tuple[Observable, Observable]
         Alice's local projective measurements described as a tuple of observables
@@ -291,9 +290,6 @@ def bell_pvm(shots, state, alice, bob):
         theoretical probabilities ('born'), the execution runs ('runs') and the probability statistics ('stats')
     """
 
-    if type(state) is not BellState:
-        raise ValueError('Input state is not a valid Bell state')
-
     if type(alice) is not tuple:
         raise ValueError('Alice\'s observables is not a valid tuple')
     elif len(alice) != 2:
@@ -304,42 +300,94 @@ def bell_pvm(shots, state, alice, bob):
     elif len(bob) != 2:
         raise ValueError('Bob\'s number of observables is not tuple:{}'.format(str(len(bob))))
 
+    state = BellState.PSI_MINUS
+
     experiment = {
         "state": state,
         "alice": alice,
         "bob": bob,
         "probabilities": {
-            "runs": np.zeros((shots, 2)),
-            "stats": np.zeros((2,)),
-            "born": np.ones((2,))
+            "runs": np.zeros((shots, 4, 4)),
+            "stats": np.zeros((4, 4)),
+            "born": np.zeros((4, 4))
         }
     }
 
-    # Alice's positive local projectors as bloch vectors
-    x = [Qubit(alice[i].eigenvector(1)).bloch_vector() for i in range(1)]  # FIXME vectorize
-    y = np.asarray([Qubit(bob[0].eigenvector((-1)**i)).bloch_vector() for i in range(2)])  # FIXME vectorize
+    # Compute theoretical probabilities
+    bell = BellScenario(state, alice, bob)
+    experiment['probabilities']['born'] = bell.probability().T
 
-    counter00 = 0
+    for i in range(2):
+
+        # Alice's state corresponding to the positive local projector
+        a = Qubit(alice[i].eigenvector(1))
+
+        for j in range(2):
+
+            # Bob's states corresponding to the positive and negative local projectors
+            b = (Qubit(bob[j].eigenvector(1)), Qubit(bob[j].eigenvector(-1)))
+
+            ab = bell_singlet(shots, a, b)
+
+            ij = int('{}{}'.format(i, j), 2)
+            experiment['probabilities']['runs'][:, :, ij] = ab['probabilities']['runs']
+            experiment['probabilities']['stats'][ij] = ab['probabilities']['stats']
+
+    return experiment
+
+
+def bell_singlet(shots, a, b):
+    """
+    Runs a classical simulation on a Bell singlet state for a set of states corresponding to local projection valued
+    measurements
+
+    Parameters
+    ---------
+    shots : int
+        Number of shots the simulation is run with
+
+    a: Qubit
+        Alice's state corresponding to the positive local projection valued measurement operator
+
+    b: tuple(Qubit, Qubit)
+        Bob's states corresponding to the positive and negative local projection valued measurement operators
+
+    Returns
+    -------
+    dict
+        A dictionary with the joint probabilities for each measurement outcome ('probabilities') in a nested structure
+        including the execution runs ('runs') and the probability statistics ('stats')
+    """
+
+    experiment = {
+        "probabilities": {
+            "runs": np.zeros((shots, 4)),
+            "stats": np.zeros((4,))
+        }
+    }
+
+    # Alice's positive local projector as bloch vector
+    x = np.asarray([a.bloch_vector()])
+
+    # Bob's local projectors as bloch vectors
+    y = np.asarray([b[0].bloch_vector(), b[1].bloch_vector()])
 
     for i in range(shots):
 
         # Alice and Bob's shared randomness
-        shared_randomness = np.array([qt.random.bloch_vector(), qt.random.bloch_vector()])
+        lambda1, lambda2 = qt.random.bloch_vector(), qt.random.bloch_vector()
 
         # Alice performs local projective measurements
-        a = - np.sign(x @ shared_randomness[0])
+        a = - np.sign(x @ lambda1)
 
         # Alice sends bit to Bob
-        c = -a * np.sign(x @ shared_randomness[1])
+        c = -a * np.sign(x @ lambda2)
 
         # Bob flips the lambda if c = -1
-        lambda2 = c * shared_randomness[1]
+        lambda2 = c * lambda2
 
         # compute lambda according to the probabilities {pb}
-        # FIXME vectorize
-        lambdas = np.zeros((2, 3))
-        lambdas[0, :] = shared_randomness[0]
-        lambdas[1, :] = lambda2
+        lambdas = np.array([lambda1, lambda2])
 
         pb = 0.5 * np.array([1, 1])
         index = random.choices(range(0, 2), cum_weights=np.cumsum(pb), k=1)[0]
@@ -351,20 +399,10 @@ def bell_pvm(shots, state, alice, bob):
         weighted_thetas = np.multiply(thetas, pb.reshape(-1, 1))
         p = weighted_thetas[:, 0] / np.sum(weighted_thetas, axis=0)
 
-        aa = int(a[0])
-        bb = (-1)**np.where(p == 1)[0][0]
+        bits = '{}{}'.format(int(0.5 * (1 - a[0])), np.where(p == 1)[0][0])
+        index = int(bits, 2)
+        experiment['probabilities']['stats'][index] += 1
 
-        if aa == 1 and bb == 1:
-            counter00 += 1
-        '''
-        experiment['probabilities']['runs'][i, :] = p
+    experiment['probabilities']['stats'] = experiment['probabilities']['stats'] / shots
 
-        # accumulate counts according to Bob's probabilities
-        index = random.choices(range(0, 2), cum_weights=np.cumsum(p), k=1)[0]
-        experiment['probabilities']['stats'][index] = experiment['probabilities']['stats'][index] + 1
-        '''
-
-    # experiment['probabilities']['stats'] = experiment['probabilities']['stats'] / shots
-
-    print('p11(A0,B0)={}'.format(counter00/shots))
     return experiment

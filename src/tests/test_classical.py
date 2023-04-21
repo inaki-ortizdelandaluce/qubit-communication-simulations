@@ -1,4 +1,5 @@
 from qt.classical import *
+from qt.qubit import X, Z
 import qt.random as random
 
 
@@ -42,7 +43,7 @@ def test_measure_pvm():
 def test_prepare_and_measure_pvm():
     np.random.seed(0)
 
-    shots = 10**2
+    shots = 10 ** 2
     experiment = prepare_and_measure_pvm(shots)
 
     assert np.allclose(experiment['probabilities']['born'], np.array([0.96687561, 0.03312439]))
@@ -65,8 +66,57 @@ def test_measure_povm():
 def test_prepare_and_measure_povm():
     np.random.seed(0)
 
-    shots = 10**2
+    shots = 10 ** 2
     experiment = prepare_and_measure_povm(shots, 4)
 
     assert np.allclose(experiment['probabilities']['born'], np.array([0.0096687, 0.0057291, 0.8824570, 0.1021452]))
     assert np.allclose(experiment['probabilities']['stats'], np.array([0, 0.01, 0.91, 0.08]), rtol=1e-2, atol=1e-2)
+
+
+def test_bell_singlet():
+    np.random.seed(0)
+    shots = 10 ** 3
+    a0 = Observable(Z)
+    b0 = Observable(-1 / math.sqrt(2) * (X + Z))
+
+    alice = Qubit(a0.eigenvector(1))
+    bob = (Qubit(b0.eigenvector(1)), Qubit(b0.eigenvector(-1)))
+
+    experiment = qt.classical.bell_singlet(shots, alice, bob)
+    expected = np.array([0.5 * math.cos(math.pi / 8) ** 2,
+                         0.5 * math.sin(math.pi / 8) ** 2,
+                         0.5 * math.sin(math.pi / 8) ** 2,
+                         0.5 * math.cos(math.pi / 8) ** 2])
+    assert np.allclose(experiment['probabilities']['stats'], expected, rtol=1e-1, atol=1e-1)
+
+
+def test_bell_singlet_full():
+    np.random.seed(0)
+
+    shots = 10 ** 3
+    a0 = Observable(Z)
+    a1 = Observable(X)
+    b0 = Observable(-1 / math.sqrt(2) * (X + Z))
+    b1 = Observable(1 / math.sqrt(2) * (X - Z))
+
+    experiment = bell_singlet_full(shots, alice=(a0, a1), bob=(b0, b1))
+
+    expected = np.array([[0.5 * math.cos(math.pi / 8) ** 2,
+                          0.5 * math.sin(math.pi / 8) ** 2,
+                          0.5 * math.sin(math.pi / 8) ** 2,
+                          0.5 * math.cos(math.pi / 8) ** 2],
+                         [0.5 * math.cos(math.pi / 8) ** 2,
+                          0.5 * math.sin(math.pi / 8) ** 2,
+                          0.5 * math.sin(math.pi / 8) ** 2,
+                          0.5 * math.cos(math.pi / 8) ** 2],
+                         [0.5 * math.cos(math.pi / 8) ** 2,
+                          0.5 * math.sin(math.pi / 8) ** 2,
+                          0.5 * math.sin(math.pi / 8) ** 2,
+                          0.5 * math.cos(math.pi / 8) ** 2],
+                         [0.5 * math.cos(3 * math.pi / 8) ** 2,
+                          0.5 * math.sin(3 * math.pi / 8) ** 2,
+                          0.5 * math.sin(3 * math.pi / 8) ** 2,
+                          0.5 * math.cos(3 * math.pi / 8) ** 2]
+                         ])
+    assert np.allclose(experiment['probabilities']['born'], expected)
+    assert np.allclose(experiment['probabilities']['stats'], expected, rtol=1e-1, atol=1e-1)
