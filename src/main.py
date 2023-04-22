@@ -346,8 +346,7 @@ def test_bell_convergence():
     return None
 
 
-def test_bell_convergence_mesh():
-    np.random.seed(19680801)
+def test_bell_heatmap():
     x = np.arange(0, 5)
     y = np.arange(0, 5)
 
@@ -374,7 +373,7 @@ def test_bell_convergence_mesh():
     for i in range(len(measurements)):
         for j in range(len(outcomes)):
             text = ax[0].text(j, i, expected[i, j],
-                           ha="center", va="center", color="w")
+                              ha="center", va="center", color="w")
 
     ax[0].set_title("Born\'s Rule ")
 
@@ -387,11 +386,68 @@ def test_bell_convergence_mesh():
     for i in range(len(measurements)):
         for j in range(len(outcomes)):
             text = ax[1].text(j, i, actual[i, j],
-                           ha="center", va="center", color="w")
+                              ha="center", va="center", color="w")
 
     ax[1].set_title("Classical Protocol")
 
     # fig.suptitle('Bell scenario')
+
+    fig.tight_layout()
+    plt.show()
+    return None
+
+
+def test_bell_convergence_heatmap():
+    np.random.seed(0)
+
+    shots = 10**5
+    a0 = Observable(Z)
+    a1 = Observable(X)
+    b0 = Observable(-1 / math.sqrt(2) * (X + Z))
+    b1 = Observable(1 / math.sqrt(2) * (X - Z))
+
+    alice = Qubit(a0.eigenvector(1))
+    bob = (Qubit(b0.eigenvector(1)), Qubit(b0.eigenvector(-1)))
+
+    experiment = qt.classical.bell_singlet_full(shots, alice=(a0, a1), bob=(b0, b1))
+    actual = experiment['probabilities']['stats'].T
+    expected = np.array([[0.4267767, 0.0732233, 0.0732233, 0.4267767],
+                         [0.4267767, 0.0732233, 0.0732233, 0.4267767],
+                         [0.4267767, 0.0732233, 0.0732233, 0.4267767],
+                         [0.0732233, 0.4267767, 0.4267767, 0.0732233]]).T
+
+    x = np.arange(0, 5)
+    y = np.arange(0, 5)
+
+    outcomes = ["$(+1,+1)$", "$(+1,-1)$", "$(-1,+1)$", "$(-1,-1)$"]
+    measurements = ["($A_0$,$B_0$)", "$(A_0,B_1)$", "$(A_1,B_0)$", "$(A_1,B_1)$"]
+
+    fig, ax = plt.subplots(1, 2, figsize=(14, 5))
+    # expected
+    im = ax[0].imshow(expected, cmap='PiYG')
+
+    ax[0].set_xticks(np.arange(len(measurements)), labels=measurements)
+    ax[0].set_yticks(np.arange(len(outcomes)), labels=outcomes)
+
+    for i in range(len(measurements)):
+        for j in range(len(outcomes)):
+            text = ax[0].text(j, i, expected[i, j],
+                              ha="center", va="center", color="w")
+
+    ax[0].set_title("Born\'s Rule ")
+
+    # actual
+    im = ax[1].imshow(actual, cmap='PiYG')
+
+    ax[1].set_xticks(np.arange(len(measurements)), labels=measurements)
+    ax[1].set_yticks(np.arange(len(outcomes)), labels=outcomes)
+
+    for i in range(len(measurements)):
+        for j in range(len(outcomes)):
+            text = ax[1].text(j, i, actual[i, j],
+                              ha="center", va="center", color="w")
+
+    ax[1].set_title("Classical Protocol - $10^{5}$ shots")
 
     fig.tight_layout()
     plt.show()
@@ -411,4 +467,5 @@ if __name__ == "__main__":
     # test_kl_classical_quantum_simulator()
     # test_bell_chsh()
     # test_bell_convergence()
-    test_bell_convergence_mesh()
+    # test_bell_heatmap()
+    test_bell_convergence_heatmap()
