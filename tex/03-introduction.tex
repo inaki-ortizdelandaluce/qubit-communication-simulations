@@ -2,7 +2,7 @@
 Quantum information theory provides a framework to quantify the power of quantum theory compared to Shannon's classical communication theory \cite{shannon}. Over the last decades, the field has flourished compelled to set realistic boundaries to the promises of quantum advantages in fields like quantum communication and computing. An important feature of quantum theory lies in the statistical correlations produced by local measurements of a quantum system. The simplest example of quantum correlations are the ones produced by projective measurements on a maximally-entangled state of two qubits, also known as a Bell pair state. Such correlations are the basic resource of bipartite quantum information theory, where various equivalences are known: one shared Bell pair plus two bits of classical information can be used to teleport one  qubit and, conversely, one shared Bell pair state plus a single qubit can be used to send two bits of classical information via superdense coding. Exploring the fundamental limits of quantum over classical advantages in these scenarios is crucial, and it will be the primary objective of this work.
 \par
 In the early years of the current century, Ben Toner and David Bacon developed a protocol which proves that any prediction based on projective measurements on an entangled Bell pair state could be simulated by communicating only two classical bits \cite{toner2003}. Very recently, Martin Renner, Armin Tavakoli and Marco Tulio Quintino, have extended such result to a most generalised set of measurements, the positive operator-valued measures \cite{renner2022}.
-Following up such generalization, we will show via classical computer-based experiments that a qubit transmission can be simulated classically with a total cost of two bits for any general measurement, either in a prepare-and-measure or an entanglement scenario. This will prove experimentally that the protocols described in \cite{renner2022} can be reproduced computationally using classical computers, and that the probability distributions obtained can be compared against the ones resulting from performing generalized measurements with existing quantum simulators and noisy intermediate-scale quantum computers.
+Following up such generalization, we will show via computer-based experiments that a qubit transmission can be simulated classically with a total cost of two bits for any general measurement, either in a prepare-and-measure or an entanglement scenario. This will prove experimentally that the protocols described in \cite{renner2022} can be reproduced computationally using classical computers, and that the probability distributions obtained can be compared against the ones resulting from performing generalized measurements with existing quantum simulators and noisy intermediate-scale quantum computers.
 \par
 Before starting to describe the different computational experiments we have carried out to achieve such goal, it is worth spending next sections to introduce some preliminary concepts and notations that have been used extensively throughout this work, specifically the definition of positive operator-valued measures, the set-up of both the prepare-and-measure and Bell scenarios and the particular details of the classical simulation protocols applied to such scenarios.
 \par
@@ -30,14 +30,49 @@ Given Eq. (\ref{eq:prob_quantum}) and (\ref{eq:prob_classic}), the classical sim
 
 \subsection{Bell scenario}
 In a Bell scenario, there is a bipartite quantum system of two entangled and separated qudits, one with Alice and another one with Bob. 
-Alice chooses a random local measurement, and produces an output according to the distribution of her measurement elements. Following the same procedure, Bob chooses his own random local measurement and produces an outcome. Even if both outcomes appear random, their joint probabilities are correlated. We refer to these correlations as Bell correlations.
+Alice chooses a random local measurement $A_x$ among two possible observables $\{A_0, A_1\}$, and produces an output $a_x$ according to the distribution of her measurement elements. Following the same procedure, Bob chooses his own random local measurement $B_y$, among two possible observables $\{B_0, B_1\}$, and produces an outcome $b_y$. Even if both outcomes appear random, their joint probabilities $p_{A_x,B_y}(a_x, b_y)$ are correlated. We refer to these correlations as Bell correlations. 
 
 Similarly to the prepare-and-measure case described in Section \ref{section:pm}, it is not possible to reproduce the correlations using a classical protocol with shared random variables without allowing classical communication among Alice and Bob once they have selected their measurements, see \cite{bell1964}. The main question here is to determine how much classical communication is needed to reproduce the probability distributions.
 
-As \cite{renner2022} shows, it is straight-forward to adapt the prepare-and-measure classical scenario to any entangled qudit-qubit state. Here Alice chooses a random local POVM on a $d_Q$-dimensional quantum system, and produces an output according to the marginal distribution of her POVM elements. Based on her output, she computes Bob's entangled qubit post-measurement state, which is sent to Bob using the prepare-and-measure scenario. Given that Bob's post-measurement qubit state is communicated by Alice using the existing prepare-and-measure classical protocol, the classical cost of the qubit transmission will be exactly the same. 
+As \cite{renner2022} shows, it is straight-forward to adapt the prepare-and-measure classical scenario to any entangled qudit-qubit state. Here Alice chooses a random local POVM on a $d_Q$-dimensional quantum system, and produces an output according to the marginal distribution of her POVM elements. Based on her output, she computes Bob's entangled qubit post-measurement state, which is sent to Bob using the prepare-and-measure scenario. Given that Bob's post-measurement qubit state is communicated by Alice using the existing prepare-and-measure classical protocol, the classical cost of the qubit transmission will be exactly the same: two bits. 
 
-In addition to this, we will discuss in the next sections other Bell scenarios where the entangled state is a Bell singlet state and the classical simulation cost is reduced to one bit.
+In addition, we can restrict our quantum system to a bipartite state of two qubits and local and projection valued measures. The maximally entangled states in such scenario are the well-known Bell states $\ket{\Phi_{ij}}$, as follows
+\begin{equation}\label{eq:bell_states}
+\begin{split}
+\ket{\Phi^{+}} \vcentcolon= \frac{1}{\sqrt{2}}(\ket{00} + \ket{11})\\
+\ket{\Phi^{-}} \vcentcolon= \frac{1}{\sqrt{2}}(\ket{00} - \ket{11})\\
+\ket{\Psi^{+}} \vcentcolon= \frac{1}{\sqrt{2}}(\ket{01} + \ket{10})\\
+\ket{\Psi^{-}} \vcentcolon= \frac{1}{\sqrt{2}}(\ket{01} - \ket{10})
+\end{split}
+\end{equation}
+Each local projective measurements has two eigenvalues, either $\ket{a_{x}}$ or $\ket{b_{y}}$, with outcomes $a_{x}, b_{y}=\pm1$ respectively. In this scenario, the joint probabilities can be defined as
+\begin{equation}\label{eq:prob_quantum_bell}
+\begin{split}
+p_{A_x,B_y}(a_x, b_y) = tr[\ket{a_{x}}\bra{a_{x}} \otimes \ket{b_{y}}\bra{b_{y}} \ket{\Phi_{ij}} \bra{\Phi_{ij}}]\\
+\end{split}
+\end{equation}
 
+The expected values for a given set of observables $(A_{x}, B_{y})$ can be defined from the joint probabilities as follows
+\begin{equation}\label{eq:bell_expected_values}
+\begin{split}
+\mathbb{E}[A_{x}, B_{y}] \vcentcolon= p_{A_x,B_y}(+1, +1)\,- p_{A_x,B_y}(+1, -1)\\-p_{A_x,B_y}(-1, +1)\,+ p_{A_x,B_y}(-1, -1)
+\end{split}
+\end{equation}
+which also leads to the famous Clauser-Horne-Shimony-Holt expression
+\begin{equation}\label{eq:bell_inequality}
+CHSH \vcentcolon= \mathbb{E}[A_{0},B_{0}]\,+\mathbb{E}[A_{1},B_{0}]\,+\mathbb{E}[A_{0},B_{1}]\,-\mathbb{E}[A_{1},B_{1}]
+\end{equation}
+
+The classical protocol described in [RTQ22] using a Bell singlet state $\ket{\Psi^{-}}$, proves that a classical communication of one single bit is enough to reproduce the joint probabilities when Alice performs projective measurements an Bob can either perform projective or positive operator-valued measurements. Similarly as in the prepare and measure scenario, the classical probability distribution can be defined as
+\begin{equation}\label{eq:prob_classic_bell}
+p_C(a_{x}, b_{y}|A_{x},B_{y}) = \int_{\lambda} d\lambda\ \pi(\lambda) p_A(c|A_{x}, \lambda)\ p_B(b_{y}|B_{y}, c, \lambda)
+\end{equation}
+
+Given Eq. (\ref{eq:prob_quantum_bell}) and (\ref{eq:prob_classic_bell}), the classical simulation would be considered successful when, given a bipartite singlet state $\ket{\Psi^{-}}$, for every set of observables $\{A_{x}, B_{y}\}$, the classical probability distribution reproduces the quantum predictions, i.e.
+
+\begin{equation}\label{eq:prob_classic_quantum_bell}
+\forall A_{x}, B_{y}:\quad p_C(a_{x}, b_{y}|A_{x},B_{y}) = p_{A_x,B_y}(a_x, b_y)
+\end{equation}
 
 \subsection{Classical simulation protocols}\label{section:protocols}
 \subsubsection{Prepare-and-measure with one qubit}\label{section:protocol_pm}

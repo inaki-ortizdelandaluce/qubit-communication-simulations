@@ -2,13 +2,18 @@ In this section we will discuss the different methods required to effectively ru
 \begin{equation}
 \forall \rho, \{B_{k}\}:\quad tr(\rho B_{k}) = \int_{\lambda} d\lambda\ \pi(\lambda) \sum_{c=1}^{d_C} p_A(c|\rho, \lambda)\ p_B(k|\{B_{k}\}, c, \lambda)    
 \end{equation}
+and for a Bell singlet state $\ket{\Psi^{-}}$ and any choice of PVMs, the quantum predictions in Eq. (\ref{eq:prob_quantum_bell}) are reproduced classically following Eq. (\ref{eq:prob_classic_bell}), i.e.
+\begin{equation}
+\forall A_{x}, B_{y}: |\bra{\Psi_{ij}}\ket{a_{x}} \otimes \ket{b_{y}}|^{2} = \int_{\lambda} d\lambda\ \pi(\lambda) p_A(c|A_{x}, \lambda)\ p_B(b_{y}|B_{y}, c, \lambda)
+\end{equation}
 
-The main goal is to carry out these simulations using standard classical computations, but some particular results will be confronted with the outcomes from quantum circuit simulators, therefore there will be specific subsections devoted to the implementation of generalized measurements in a quantum circuit model. 
+
+The main goal is to carry out these simulations using standard classical computations, but some particular results will be confronted with the outcomes from quantum circuit simulators and quantum computers, therefore there will be specific subsections devoted to the implementation of generalized measurements in a quantum circuit model. 
 \subsection{State preparation}
 \input{04a-state.tex}
 \subsection{Rank-1 POVMs implementation}
 \input{04b-povm.tex}
 \subsection{Prepare-and-measure simulations}
 \input{04c-pm.tex}
-\subsection{Entanglement simulations}
+\subsection{Bell simulations}
 \input{04d-bell.tex}
