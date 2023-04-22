@@ -10,10 +10,19 @@ breaklines
 import numpy as np
 import cmath
 import math
+from enum import Enum
+
+
+class Axis(Enum):
+    X = 0
+    Y = 1
+    Z = 2
+
 
 X = np.array([[0, 1], [1, 0]])
 Y = np.array([[0, -1.j], [1j, 0]])
 Z = np.array([[1, 0], [0, -1]])
+paulis = np.array([X, Y, Z])
 
 
 class Qubit:
@@ -42,13 +51,13 @@ class Qubit:
 
     def rho(self):
         """
-         Returns the density matrix corresponding to the qubit in a pure state.
+        Returns the density matrix corresponding to the qubit in a pure state.
 
-         Returns
-         -------
-         ndarray
-             A 2x2 density matrix corresponding to the qubit in a pure state.
-         """
+        Returns
+        -------
+        ndarray
+            A 2x2 density matrix corresponding to the qubit in a pure state.
+        """
         return np.outer(self.ket(), self.ket().conj())
 
     def bloch_angles(self):
@@ -77,26 +86,41 @@ class Qubit:
         rho : ndarray
             The qubit state in density matrix form
 
-         Returns
-         -------
-         (float, float, float)
-             The cartesian coordinates of the qubit in the Bloch sphere (xyz).
+        Returns
+        -------
+        (float, float, float)
+            The cartesian coordinates of the qubit in the Bloch sphere (xyz).
 
         """
         # cast complex to real to avoid throwing ComplexWarning, imaginary part should always be zero
-        return [np.real(np.trace(np.matmul(rho, sigma))) for sigma in np.array([X, Y, Z])]
+        return [np.real(np.trace(np.matmul(rho, sigma))) for sigma in paulis]
 
     def bloch_vector(self):
         """
-         Returns the cartesian coordinates of the qubit in the Bloch sphere.
+        Returns the cartesian coordinates of the qubit in the Bloch sphere.
 
-         Returns
-         -------
-         (float, float, float)
-             The cartesian coordinates of the qubit in the Bloch sphere (xyz).
+        Returns
+        -------
+        (float, float, float)
+            The cartesian coordinates of the qubit in the Bloch sphere (xyz).
 
          """
         return Qubit.density2bloch(self.rho())
+
+    def rotate(self, axis: Axis, angle):
+        """
+        Rotates the qubit along the specified axis by the specified angle in radians in counterclockwise direction.
+
+        Parameters
+        ---------
+        axis : Axis
+
+        angle : float
+            Angle in radians
+        """
+        r = math.cos(angle/2) * np.eye(2, 2) - 1.j * math.sin(angle/2) * paulis[axis.value]
+        self.alpha, self.beta = r @ self.ket()
+        return None
 \end{minted}
 \newpage
 \subsection{measurement.py}\label{section:listing_measurement}
@@ -236,6 +260,8 @@ class POVM:
         a = np.vstack((np.ones((n,)), v.T))
         b = np.append(np.array([2]), np.zeros(3, ), axis=0)
 
+        # c = np.zeros(n, ) finds a solution instead of minimizing a function
+        # lower bounds set to 0.01, this could be fine-tuned
         lp = scipy.optimize.linprog(np.zeros(n, ), A_eq=a, b_eq=b, bounds=(0.01, 1), method='highs')
         _a, _e = lp['x'], np.asarray([q.rho() for q in qubits])
 
@@ -436,6 +462,158 @@ def unitary(shape):
     return q
 \end{minted}
 \newpage
+\subsection{observable.py}\label{section:listings_observable}
+This module provides means to obtain the eigenvalues and eigenvector of an observable. 
+\begin{minted}[
+frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+fontsize=\footnotesize,
+breaklines
+]{python}
+import numpy as np
+import scipy as sp
+
+
+class Observable:
+    def __init__(self, matrix):
+
+        if not sp.linalg.ishermitian(matrix):
+            raise ValueError('Input matrix is not hermitian')
+
+        self.matrix = matrix
+        self.eigenvalues, self.eigenvectors = np.linalg.eig(matrix)
+
+    def eigen(self):
+        return self.eigenvalues, self.eigenvectors
+
+    def eigenvector(self, eigenvalue):
+        m = self.eigenvectors[:, np.where(np.isclose(self.eigenvalues, eigenvalue))]
+        m = m.reshape(m.size, )
+        if m.size == 0:
+            return None
+        else:
+            return m
+\end{minted}
+\newpage
+\subsection{qudit.py}\label{section:listings_qudit}
+This module provides means to create a qudit state, and particularly to obtain the qudit corresponding to a bipartite state of two qubits required to compute the probabilities for a Bell scenario as per \ref{section:listings_bell} module. 
+\begin{minted}[
+frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+fontsize=\footnotesize,
+breaklines
+]{python}
+import numpy as np
+from qt.qubit import Qubit
+
+
+class Qudit:
+    def __init__(self, ket):
+        """
+        Initializes a qudit in the computational basis.
+
+        Parameters
+        ---------
+        ket : ndarray
+            The qudit components in the computational basis in a 1-d complex array.
+        """
+        self.ket = ket
+        self.normalize()
+
+    def normalize(self):
+        self.ket = self.ket/np.linalg.norm(self.ket)
+
+    def rho(self):
+        """
+        Returns the density matrix corresponding to the qudit in a pure state.
+
+        Returns
+        -------
+        ndarray
+            A nxn density matrix corresponding to the qubit in a pure state.
+        """
+        return np.outer(self.ket, self.ket.conj())
+
+    @classmethod
+    def bipartite(cls, q1: Qubit, q2: Qubit):
+        ket = np.tensordot(q1.ket(), q2.ket(), axes=0).reshape(4, )
+        return cls(ket)
+\end{minted}
+\newpage
+\subsection{bell.py}\label{section:listings_bell}
+This module provides means to compute the probabilities, expected values and CHSH inequality for any Bell state and the set of Alice and Bob observables. 
+\begin{minted}[
+frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+fontsize=\footnotesize,
+breaklines
+]{python}
+from enum import Enum
+import numpy as np
+import math
+from qt.observable import Observable
+from qt.qudit import Qudit
+from qt.qudit import Qubit
+
+
+class BellState(Enum):
+    PHI_PLUS = 0
+    PHI_MINUS = 1
+    PSI_PLUS = 2
+    PSI_MINUS = 3
+
+
+class BellScenario:
+
+    _states = {
+        0: Qudit(1 / math.sqrt(2) * np.array([1, 0, 0, 1])),
+        1: Qudit(1 / math.sqrt(2) * np.array([1, 0, 0, -1])),
+        2: Qudit(1 / math.sqrt(2) * np.array([0, 1, 1, 0])),
+        3: Qudit(1 / math.sqrt(2) * np.array([0, 1, -1, 0]))
+    }
+
+    def __init__(self, state: BellState, alice: tuple[Observable, Observable], bob: tuple[Observable, Observable]):
+
+        if type(alice) is not tuple:
+            raise ValueError('Alice\'s observables is not a valid tuple')
+        elif len(alice) != 2:
+            raise ValueError('Alice\'s number of observables is not valid:{}'.format(str(len(alice))))
+
+        if type(bob) is not tuple:
+            raise ValueError('Bob\'s observables is not a valid tuple')
+        elif len(bob) != 2:
+            raise ValueError('Bob\'s number of observables is not tuple:{}'.format(str(len(bob))))
+
+        self.state = self._states[state.value]
+        self.alice = alice
+        self.bob = bob
+
+    def probability(self):
+        p = np.zeros((4, 4), dtype=float)
+        for u in range(4):
+            for v in range(4):
+                i, j, m, n = (-1) ** (u >> 1), (-1) ** (u % 2), v >> 1, v % 2
+
+                a = Qubit(self.alice[m].eigenvector(i))
+                b = Qubit(self.bob[n].eigenvector(j))
+                ab = Qudit.bipartite(a, b)
+                p[u, v] = np.real(np.trace(np.matmul(ab.rho(), self.state.rho())))
+                # print('p{}{}=({},{})x(A{},B{})={}'.format(u, v, i, j, m, n, p[u, v]))
+        return p
+
+    def expected_values(self):
+        p = self.probability()
+        sign = np.array([1, -1, -1, 1])
+        return np.sum(p * sign[:, np.newaxis], axis=0)
+
+    def chsh(self):
+        e = self.expected_values()
+        return abs(np.sum(e * np.array([1, 1, 1, -1])))
+\end{minted}
+\newpage
 \subsection{classical.py}\label{section:listings_classical}
 This module implements the classical prepare-and-measure and Bell simulation protocols. 
 \begin{minted}[
@@ -445,11 +623,14 @@ baselinestretch=1.2,
 fontsize=\footnotesize,
 breaklines
 ]{python}
+import math
 import numpy as np
 import random
 import qt.random
 from qt.qubit import Qubit
 from qt.measurement import PVM, POVM
+from qt.bell import BellState, BellScenario
+from qt.observable import Observable
 
 
 def heaviside(a):
@@ -707,6 +888,147 @@ def prepare_and_measure_povm(shots, n=4, qubit=None, measurement=None):
 
     experiment['probabilities']['stats'] = experiment['probabilities']['stats'] / shots
     experiment['probabilities']['born'] = bob['measurement'].probability(qubit)
+
+    return experiment
+
+
+def bell_singlet_full(shots, alice, bob):
+    """
+    Runs a classical simulation on a Bell singlet state for a set of local observables
+
+    Parameters
+    ---------
+    shots : int
+        Number of shots the simulation is run with
+
+    alice: tuple[Observable, Observable]
+        Alice's local projective measurements described as a tuple of observables
+
+    bob: tuple[Observable, Observable]
+        Bob's local projective measurements described as a tuple of observables
+
+    Returns
+    -------
+    dict
+        A dictionary with the Bell state ('state'), Alice's and Bob's local projective measurements ('alice', 'bob')
+        and the joint probabilities for each measurement outcome ('probabilities') in a nested structure including the
+        theoretical probabilities ('born'), the execution runs ('runs') and the probability statistics ('stats')
+    """
+
+    if type(alice) is not tuple:
+        raise ValueError('Alice\'s observables is not a valid tuple')
+    elif len(alice) != 2:
+        raise ValueError('Alice\'s number of observables is not valid:{}'.format(str(len(alice))))
+
+    if type(bob) is not tuple:
+        raise ValueError('Bob\'s observables is not a valid tuple')
+    elif len(bob) != 2:
+        raise ValueError('Bob\'s number of observables is not tuple:{}'.format(str(len(bob))))
+
+    state = BellState.PSI_MINUS
+
+    experiment = {
+        "state": state,
+        "alice": alice,
+        "bob": bob,
+        "probabilities": {
+            "runs": np.zeros((shots, 4, 4)),
+            "stats": np.zeros((4, 4)),
+            "born": np.zeros((4, 4))
+        }
+    }
+
+    # Compute theoretical probabilities
+    bell = BellScenario(state, alice, bob)
+    experiment['probabilities']['born'] = bell.probability().T
+
+    for i in range(2):
+
+        # Alice's state corresponding to the positive local projector
+        a = Qubit(alice[i].eigenvector(1))
+
+        for j in range(2):
+
+            # Bob's states corresponding to the positive and negative local projectors
+            b = (Qubit(bob[j].eigenvector(1)), Qubit(bob[j].eigenvector(-1)))
+
+            ab = bell_singlet(shots, a, b)
+
+            ij = int('{}{}'.format(i, j), 2)
+            experiment['probabilities']['runs'][:, :, ij] = ab['probabilities']['runs']
+            experiment['probabilities']['stats'][ij] = ab['probabilities']['stats']
+
+    return experiment
+
+
+def bell_singlet(shots, a, b):
+    """
+    Runs a classical simulation on a Bell singlet state for a set of states corresponding to local projection valued
+    measurements
+
+    Parameters
+    ---------
+    shots : int
+        Number of shots the simulation is run with
+
+    a: Qubit
+        Alice's state corresponding to the positive local projection valued measurement operator
+
+    b: tuple(Qubit, Qubit)
+        Bob's states corresponding to the positive and negative local projection valued measurement operators
+
+    Returns
+    -------
+    dict
+        A dictionary with the joint probabilities for each measurement outcome ('probabilities') in a nested structure
+        including the execution runs ('runs') and the probability statistics ('stats')
+    """
+
+    experiment = {
+        "probabilities": {
+            "runs": np.zeros((shots, 4)),
+            "stats": np.zeros((4,))
+        }
+    }
+
+    # Alice's positive local projector as bloch vector
+    x = np.asarray([a.bloch_vector()])
+
+    # Bob's local projectors as bloch vectors
+    y = np.asarray([b[0].bloch_vector(), b[1].bloch_vector()])
+
+    for i in range(shots):
+
+        # Alice and Bob's shared randomness
+        lambda1, lambda2 = qt.random.bloch_vector(), qt.random.bloch_vector()
+
+        # Alice performs local projective measurements
+        a = - np.sign(x @ lambda1)
+
+        # Alice sends bit to Bob
+        c = -a * np.sign(x @ lambda2)
+
+        # Bob flips the lambda if c = -1
+        lambda2 = c * lambda2
+
+        # compute lambda according to the probabilities {pb}
+        lambdas = np.array([lambda1, lambda2])
+
+        pb = 0.5 * np.array([1, 1])
+        index = random.choices(range(0, 2), cum_weights=np.cumsum(pb), k=1)[0]
+        ly = np.abs(np.matmul(lambdas, y.T))
+        _lambda = lambdas[np.argmax(ly, axis=0)[index]]
+
+        # compute probabilities
+        thetas = theta(np.matmul(y, _lambda.reshape(-1, 1)))
+        weighted_thetas = np.multiply(thetas, pb.reshape(-1, 1))
+        p = weighted_thetas[:, 0] / np.sum(weighted_thetas, axis=0)
+
+        bits = '{}{}'.format(int(0.5 * (1 - a[0])), np.where(p == 1)[0][0])
+        index = int(bits, 2)
+        experiment['probabilities']['stats'][index] += 1
+
+    experiment['probabilities']['stats'] = experiment['probabilities']['stats'] / shots
 
     return experiment
 \end{minted}
