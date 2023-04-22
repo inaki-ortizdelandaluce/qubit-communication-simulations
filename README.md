@@ -5,7 +5,7 @@ Final Project for Postgraduate Degree in Quantum Engineering by Universitat Poli
 [The classical cost of transmitting a qubit - Renner, Tavakoli and Quintino, 2022 (arXiv2207.02244)](https://arxiv.org/abs/2207.02244)
 
 # Objective
-Prove by classical and quantum computer based experiments that a qubit transmission can be simulated classically with a total cost of 2 bits for any general measurement, either in a prepare-and-measure or an entanglement scenario.
+Prove by classical and quantum computer based experiments that a qubit transmission can be simulated classically with a total cost of 2 bits for any general measurement, either in a prepare-and-measure or a Bell scenario.
 
 # Roadmap
 
@@ -24,11 +24,11 @@ Prove by classical and quantum computer based experiments that a qubit transmiss
 ### &#10003; Simulation using Qiskit Quantum Simulator
 
 ---
-## Simulate using Bell scenarios
+## &#9989; Simulate using Bell scenarios
 
-### Bell's singlet and local projective measurements
+### &#10003; Bell's singlet and local projective measurements
 
-### CHSH inequality
+### &#10003; CHSH inequality
 
 ---
 
