@@ -318,7 +318,15 @@ def test_bell_chsh():
     b1 = Observable(1 / math.sqrt(2) * (X - Z))
 
     bell = BellScenario(BellState.PSI_MINUS, alice=(a0, a1), bob=(b0, b1))
-    print('CHSH={}'.format(bell.chsh()))
+    print('Expected CHSH={}'.format(bell.chsh()))
+
+    actual = np.array([[0.4267916, 0.0731243, 0.073249, 0.4268351],
+                       [0.4269109, 0.0731628, 0.0732563, 0.42667],
+                       [0.426685, 0.0731767, 0.0732062, 0.4269321],
+                       [0.0733566, 0.4265009, 0.4270081, 0.0731344]]).T
+    sign = np.array([1, -1, -1, 1])
+    e = np.sum(actual * sign[:, np.newaxis], axis=0)
+    print('Actual CHSH={}'.format(abs(np.sum(e * np.array([1, 1, 1, -1])))))
     return None
 
 
@@ -465,7 +473,7 @@ if __name__ == "__main__":
     # test_probability_sampling()
     # test_kl_classical_born()
     # test_kl_classical_quantum_simulator()
-    # test_bell_chsh()
+    test_bell_chsh()
     # test_bell_convergence()
     # test_bell_heatmap()
-    test_bell_convergence_heatmap()
+    # test_bell_convergence_heatmap()
