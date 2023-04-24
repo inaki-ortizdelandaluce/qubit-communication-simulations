@@ -1,6 +1,5 @@
 import math
 import matplotlib.pyplot as plt
-import numpy as np
 from healpy.pixelfunc import ang2pix
 from scipy.special import rel_entr
 
@@ -9,11 +8,16 @@ import qt.quantum
 import qt.random
 
 from qt.qubit import X, Y, Z, Qubit
-from qt.qudit import Qudit
 from qt.bell import BellScenario, BellState
 from qt.measurement import POVM
 from qt.observable import Observable
 from qt.visualization import *
+
+from qiskit import transpile
+from qiskit import execute, Aer, IBMQ
+from qiskit.visualization import plot_histogram
+from qiskit import QuantumCircuit
+from qiskit.tools.monitor import job_monitor
 
 
 def test_random_states():
@@ -460,6 +464,72 @@ def test_bell_convergence_heatmap():
     fig.tight_layout()
     plt.show()
     return None
+
+
+def test_quantum_simulator():
+    qc = QuantumCircuit(2, 2)
+
+    psi = ((3 + 1.j * math.sqrt(3)) / 4., -0.5)
+
+    U = [[0.70710678 + 0.j, 0. + 0.j, 0.70710678 + 0.j, 0. + 0.j],
+         [0. + 0.j, 0.70710678 + 0.j, 0. + 0.j, 0.70710678 + 0.j],
+         [0.5 - 0.j, 0.5 + 0.j, -0.5 + 0.j, -0.5 + 0.j],
+         [-0.5 + 0.j, 0.5 + 0.j, 0.5 + 0.j, -0.5 + 0.j]]
+
+    qc.initialize(psi, 0)
+    qc.unitary(U, [0, 1])
+    qc.measure([0, 1], [0, 1])
+    qc.draw()
+
+    backend = Aer.get_backend('aer_simulator')
+    qc_transpiled = transpile(qc, backend)
+    qc_transpiled.draw()
+
+    job = backend.run(qc_transpiled, shots=4000)
+    result = job.result()
+    counts = result.get_counts(qc_transpiled)
+
+    print(counts)
+    plot_histogram(counts)
+
+    sum(counts.values())
+    print(counts['00'] / sum(counts.values()))
+    print(counts['01'] / sum(counts.values()))
+    print(counts['10'] / sum(counts.values()))
+    print(counts['11'] / sum(counts.values()))
+
+
+def test_quantum_computer():
+    qc = QuantumCircuit(2, 2)
+
+    psi = ((3 + 1.j * math.sqrt(3)) / 4., -0.5)
+
+    U = [[0.70710678 + 0.j, 0. + 0.j, 0.70710678 + 0.j, 0. + 0.j],
+         [0. + 0.j, 0.70710678 + 0.j, 0. + 0.j, 0.70710678 + 0.j],
+         [- 0.5 + 0.j, -0.5 + 0.j, 0.5 + 0.j, 0.5 + 0.j],
+         [-0.5 + 0.j, 0.5 + 0.j, 0.5 + 0.j, -0.5 + 0.j]]
+
+    qc.initialize(psi, 0)
+    qc.unitary(U, [0, 1])
+    qc.measure([0, 1], [0, 1])
+    qc.draw()
+
+    IBMQ.load_account()
+    provider = IBMQ.get_provider(hub='ibm-q', group='open', project='main')
+    qcomp = provider.get_backend('ibm_nairobi')
+    # running in ibm_nairobi. 4000 shots
+
+    qc_transpiled = transpile(qc, backend=qcomp)
+    job = execute(qc_transpiled, backend=qcomp, shots=4000)
+    job_monitor(job)
+    result = job.result()
+    counts = result.get_counts(qc_transpiled)
+    plot_histogram(counts)
+    sum(counts.values())
+    print(counts['00'] / sum(counts.values()))
+    print(counts['01'] / sum(counts.values()))
+    print(counts['10'] / sum(counts.values()))
+    print(counts['11'] / sum(counts.values()))
 
 
 if __name__ == "__main__":
