@@ -1,5 +1,0 @@
-Update: In Qiskit version 0.37 a new module qiskit.quantum_info.synthesis.qsd is added to apply Quantum Shannon Decomposition of arbitrary unitaries.
-This functionality replaces the previous isometry-based approach.
-
-The Quantum Shannon Decomposition (arXiv:quant-ph/0406176) uses about half the CNOT gates as the isometry implementation when decomposing 
-unitary matrices of greater than two qubits.
