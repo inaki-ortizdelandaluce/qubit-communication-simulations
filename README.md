@@ -7,8 +7,6 @@ Final Project for Postgraduate Degree in Quantum Engineering by Universitat Poli
 # Objective
 Prove by classical and quantum computer based experiments that a qubit transmission can be simulated classically with a total cost of 2 bits for any general measurement, either in a prepare-and-measure or a Bell scenario.
 
-# Roadmap
-
 ## &#9989; Simulate Prepare-and-Measure PVMs classically 
 
 ### &#10003; Generation of random states and projection-valued measurements
