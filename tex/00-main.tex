@@ -8,6 +8,7 @@
 \usepackage{float}
 \usepackage{msc}
 \usepackage{graphicx}
+\graphicspath{ {./images/} }
 \usepackage{minted}
 \usepackage[skip=7pt plus1pt, indent=20pt]{parskip}
 \usepackage{physics}
@@ -32,10 +33,10 @@
 \section{Introduction}
 \input{03-introduction.tex}
 \newpage
-\section{Methodology}
+\section{Methodology\label{section:methodology}}
 \input{04-methodology.tex}
 \newpage
-\section{Results}\label{section:results}
+\section{Results\label{section:results}\protect\footnote[1]{All the methods described in Section \ref{section:methodology} have been implemented from scratch in a software package, and have been made publicly available as an open-source project on a source code repository \cite{software2023}. The main building blocks of the code have also been included in this document for self completeness (see Appendix \ref{section:source}). All outcomes presented in this section have been acquired and are reproducible by employing the aforementioned software.}}
 \input{05-results.tex}
 \newpage
 \section{Conclusion}

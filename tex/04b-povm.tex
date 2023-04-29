@@ -50,7 +50,7 @@ As an example, to build a random POVM set of $N=4$ elements, we could apply the 
 \end{equation*}
 \end{enumerate}
 
-Provided the optimization problem is feasible, we obtain the weights $\{a_k\}$ and compute the rank-1 operators $E_k = \ket{v_k}\bra{v_k}$ which conform the POVM set elements $\{B_k\}$ such that $B_k=a_k E_k$. Then we can use Eq. (\ref{eq:rank1_povm}) to perform the following assignment
+Provided the optimization problem is feasible, we obtain the weights $\{a_k\}$ and compute the rank-1 operators $E_k = \ket{v_k}\bra{v_k}$ which conform the POVM set elements $\{B_k\}$ such that $B_k=a_k E_k$. Then we can use Equation (\ref{eq:rank1_povm}) to perform the following assignment
 \begin{equation}
     p_k = \frac{a_k}{2}
 \end{equation}
@@ -67,7 +67,7 @@ Neumark's theorem \cite{neumark1940} asserts that one can extend the Hilbert spa
 B_k = \ket{v_{k}} \bra{v_{k}},\ \text{where}\ \sum_{k=1}^{N} B_{k} = \mathbb{1}
 \end{equation}
  are defined, in such a way that there exists in the extended space $\mathcal{K}$ a set of orthogonal projectors $\Pi_{k}$ such that $B_k$
- is the result of projecting $\Pi_{k}$ from $\mathcal{K}$ into $\mathcal{H}$. Following Peres \cite{peres1995}, we can add $N-2$ extra dimensions to $\mathcal{H}$ by introducing unit vectors $\ket{u_{k}}$ othogonal to each other and to all $\ket{v_{k}}$ in Eq. (\ref{eq:neumark_povm}). Then we can build a complete orthonormal basis $\ket{w_{k}}$ in the enlarged space $\mathcal{K}$ such that
+ is the result of projecting $\Pi_{k}$ from $\mathcal{K}$ into $\mathcal{H}$. Following Peres \cite{peres1995}, we can add $N-2$ extra dimensions to $\mathcal{H}$ by introducing unit vectors $\ket{u_{k}}$ othogonal to each other and to all $\ket{v_{k}}$ in Equation (\ref{eq:neumark_povm}). Then we can build a complete orthonormal basis $\ket{w_{k}}$ in the enlarged space $\mathcal{K}$ such that
 \begin{equation}
 \ket{w_{k}} := \ket{v_{k}} + \sum_{s=3}^{N} c_{k s} \ket{u_{k}}
 \end{equation}
@@ -81,7 +81,7 @@ where $c_{ks}$ are the complex coefficients to be determined. Eqs. (\ref{eq:neum
 \begin{equation}\label{eq:neumark_orthonormal_index}
 \sum_{i=1}^{2} v_{j i}^{\star} v_{k i} + \sum_{s=3}^{N} c_{j s}^{\star} c_{k s} = \delta_{j k}
 \end{equation}
-According to Eq. (\ref{eq:neumark_orthonormal_index}) the following matrix $U$ is a unitary matrix which satisfies the closure property in Eq. (\ref{eq:neumark_closure_index}) and encapsulates orthonormal states in the enlarged space $\mathcal{K}$ 
+According to Equation (\ref{eq:neumark_orthonormal_index}) the following matrix $U$ is a unitary matrix which satisfies the closure property in Equation (\ref{eq:neumark_closure_index}) and encapsulates orthonormal states in the enlarged space $\mathcal{K}$ 
 \begin{equation}
 U = 
 \begin{pmatrix}

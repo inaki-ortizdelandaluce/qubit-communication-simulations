@@ -22,7 +22,7 @@ In the context of this work, we are interested in the classical counterpart of t
 p_C(k|\rho,\{B_{k}\}) = \int_{\lambda} d\lambda\ \pi(\lambda) \sum_{c=1}^{d_C} p_A(c|\rho, \lambda)\ p_B(k|\{B_{k}\}, c, \lambda)
 \end{equation}
 
-Given Eq. (\ref{eq:prob_quantum}) and (\ref{eq:prob_classic}), the classical simulation would be considered successful when, for every random state and POVM, the classical probability distribution reproduces the quantum predictions, i.e.
+Given Equations (\ref{eq:prob_quantum}) and (\ref{eq:prob_classic}), the classical simulation would be considered successful when, for every random state and POVM, the classical probability distribution reproduces the quantum predictions, i.e.
 
 \begin{equation}\label{eq:prob_classic_quantum}
 \forall \rho, \{B_{k}\}:\quad p_C(k|\rho,\{B_{k}\}) = p_Q(k|\rho,\{B_{k}\})
@@ -68,7 +68,7 @@ The classical protocol described in [RTQ22] using a Bell singlet state $\ket{\Ps
 p_C(a_{x}, b_{y}|A_{x},B_{y}) = \int_{\lambda} d\lambda\ \pi(\lambda) p_A(c|A_{x}, \lambda)\ p_B(b_{y}|B_{y}, c, \lambda)
 \end{equation}
 
-Given Eq. (\ref{eq:prob_quantum_bell}) and (\ref{eq:prob_classic_bell}), the classical simulation would be considered successful when, given a bipartite singlet state $\ket{\Psi^{-}}$, for every set of observables $\{A_{x}, B_{y}\}$, the classical probability distribution reproduces the quantum predictions, i.e.
+Given Equations (\ref{eq:prob_quantum_bell}) and (\ref{eq:prob_classic_bell}), the classical simulation would be considered successful when, given a bipartite singlet state $\ket{\Psi^{-}}$, for every set of observables $\{A_{x}, B_{y}\}$, the classical probability distribution reproduces the quantum predictions, i.e.
 
 \begin{equation}\label{eq:prob_classic_quantum_bell}
 \forall A_{x}, B_{y}:\quad p_C(a_{x}, b_{y}|A_{x},B_{y}) = p_{A_x,B_y}(a_x, b_y)
@@ -125,7 +125,7 @@ p_B(k|\{B_{k}\},\vec{\lambda}) = \frac{p_{k}\ \Theta(\vec{y}_{k} \cdot \vec{\lam
 \nextlevel[2]
 \end{msc}
 \end{center}
-\caption{Classical prepare-and-measure protocol sequence: Alice sends two bits $c_1, c_2$ resulting from projecting the qubit state's Bloch vector $\vec{x}$ with respect to the shared random vectors $\vec{\lambda}_1, \vec{\lambda}_2$ through a classical channel, Bob flips the shared random vectors when necessary, and finally computes classical probability outcomes according to Eq. \ref{eq:prob_classic_bob}.}
+\caption{Classical prepare-and-measure protocol sequence: Alice sends two bits $c_1, c_2$ resulting from projecting the qubit state's Bloch vector $\vec{x}$ with respect to the shared random vectors $\vec{\lambda}_1, \vec{\lambda}_2$ through a classical channel, Bob flips the shared random vectors when necessary, and finally computes classical probability outcomes according to Equation (\ref{eq:prob_classic_bob}).}
 \label{fig:msc_pm}
 \end{figure}
 
@@ -182,7 +182,7 @@ sgn(z) =
 \nextlevel[2]
 \end{msc}
 \end{center}
-\caption{Classical Bell with singlet state protocol sequence: Alice sends one bit $c$ resulting from projecting the associated projective measurement's Bloch vector $\vec{x}$ with respect to the shared random vectors $\vec{\lambda}_1, \vec{\lambda}_2$ through a classical channel, Bob flips the shared random vectors when necessary, and finally computes classical probability outcomes according to the response function from the prepare-and measure protocol, see Eq. (\ref{eq:prob_classic_bob}).}
+\caption{Classical Bell with singlet state protocol sequence: Alice sends one bit $c$ resulting from projecting the associated projective measurement's Bloch vector $\vec{x}$ with respect to the shared random vectors $\vec{\lambda}_1, \vec{\lambda}_2$ through a classical channel, Bob flips the shared random vectors when necessary, and finally computes classical probability outcomes according to the response function from the prepare-and measure protocol, see Equation (\ref{eq:prob_classic_bob}).}
 \label{fig:msc_bell}
 \end{figure}
 
