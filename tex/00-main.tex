@@ -6,18 +6,28 @@
 \usepackage{bbold}
 \usepackage[backend=biber,style=alphabetic,sorting=ynt]{biblatex}
 \usepackage{float}
-\usepackage{msc}
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=cyan,
+    citecolor=violet,
+    pdftitle={Simulations of qubit communication in prepare-and-measure and Bell scenarios},
+    pdfpagemode=FullScreen,
+}
 \usepackage{graphicx}
 \graphicspath{ {./images/} }
+\usepackage{msc}
 \usepackage{minted}
 \usepackage[skip=7pt plus1pt, indent=20pt]{parskip}
 \usepackage{physics}
 \usepackage{svg}
 \usepackage{tikz}
+\usetikzlibrary{quantikz}
 %\usepackage{tikz-3dplot}
 %\usetikzlibrary{3d}          
 %\usetikzlibrary{perspective} 
-\usetikzlibrary{quantikz}
 \usepackage{xurl}
 \addbibresource{bibliography.bib}
 
@@ -36,7 +46,7 @@
 \section{Methodology\label{section:methodology}}
 \input{04-methodology.tex}
 \newpage
-\section{Results\label{section:results}\protect\footnote[1]{All the methods described in Section \ref{section:methodology} have been implemented from scratch in a software package, and have been made publicly available as an open-source project on a source code repository \cite{software2023}. The main building blocks of the code have also been included in this document for self completeness (see Appendix \ref{section:source}). All outcomes presented in this section have been acquired and are reproducible by employing the aforementioned software.}}
+\section{Results\label{section:results}\protect\footnote[1]{All the methods described in Section \ref{section:methodology} have been implemented from scratch in a software package, and have been made publicly available as an open-source project on a code repository \cite{software2023}. The main building blocks of the code have also been included in this document for self completeness (see Appendix \ref{section:source}). All outcomes presented in this section have been acquired and are reproducible by employing the aforementioned software.}}
 \input{05-results.tex}
 \newpage
 \section{Conclusion}
