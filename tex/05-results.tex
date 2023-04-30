@@ -25,9 +25,8 @@ The outcome probabilities for a given random POVM measure can be obtained analyt
 \label{table:quantum_resources}
 \end{table}
 
-A summary of the main results can be found in Table \ref{table:quantum_results}. It is worth noting that quantum computers publicly available currently have a limitation of twenty thousand shots for every circuit run and therefore the results are reasonably less accurate than using the Qiskit simulator with a full range of shots, as we will see later in the classical simulations results. A full benchmark among quantum simulators and quantum computers for a prepare-and-measure scenario can be found in Appendix \ref{section:benchmark}.
+A summary of the achievable performances for a particular state and POVM measure can be found in Table \ref{table:quantum_results}. Quantum computers currently available to the public are limited to running circuits with a maximum of twenty thousand shots. This results in less accuracy compared to the Qiskit Aer simulator, which can perform simulations with a full range of shots, as we will see later in the classical simulation results discussion. A comprehensive benchmark of IBM's free-access simulators and quantum computers for the same prepare-and-measure scenario can be found in Appendix \ref{section:benchmark}.
 
-%\textit{Quantum Simulator vs. NISQ Computer benchmarking}
 %\textit{Convergence plots, classical vs. quantum vs. theoretical probabilities}
 %\textit{Kullback-Leibler divergence plots}
 %\textit{Bell scenario joint probabilities convergence}
@@ -41,7 +40,7 @@ A summary of the main results can be found in Table \ref{table:quantum_results}.
         \begin{tabular}{llll}
             A & B & C & D \\
         \end{tabular}
-        \captionof{table}{Table caption}
+        \captionof{table}{Example of probability distributions obtained with different IBM Quantum systems and simulators for a prepare-and-measure scenario with state $\ket{\Psi}=\frac{3 + i \sqrt{3}}{4} \ket{0} - \frac{1}{2} \ket{1}$ and POVM measure $\mathbb{P}_4 = \{\frac{1}{2}\ket{0}\bra{0}, \frac{1}{2}\ket{1}\bra{1}, \frac{1}{2}\ket{+}\bra{+}, \frac{1}{2}\ket{-}\bra{-} \}$}
         \label{table:quantum_results}
     \end{landscape}
     \clearpage% Flush page
