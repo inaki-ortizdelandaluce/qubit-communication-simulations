@@ -16,8 +16,6 @@ authors:
     email: inaki.ortizdelandaluce@gmail.com
   - given-names: Aido
     family-names: Cortes Alcaraz
-  - given-names: Tomas Albert
-    family-names: Pastor Juro
 repository-code: >-
   https://github.com/inaki-ortizdelandaluce/qubit-communication-simulations/
 abstract: >-
@@ -38,16 +36,20 @@ message: >-
   intermediate-scale quantum computer, to show how two bits
   of communication are enough to reproduce all quantum
   correlations associated to arbitrary POVMs applied to any
-  prepare-and-measure scenario, and also to any entangled
-  two-qubit pair state. With this investigation we give rise
-  to explore and understand computationally some fundamental
-  limits of quantum over classical advantages.
+  prepare-and-measure scenario. In addition, we have also
+  reproduced the probability distributions of a Bell
+  experiment with an entangled two-qubit pair state using a
+  novel classical protocol also proposed by the authors.
+  With this investigation we give rise to explore and
+  understand computationally some fundamental limits of
+  quantum over classical information theories.
 keywords:
   - Quantum Information
   - Quantum Communication
   - Entanglement
   - Qubit
   - Prepare-and-measure
+  - Bell inequality
 license: MIT
 commit: a54d085ba63049da57cb225a4ca3508ecd91dfeb
 version: '1.0'
