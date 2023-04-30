@@ -25,23 +25,64 @@ The outcome probabilities for a given random POVM measure can be obtained analyt
 \label{table:quantum_resources}
 \end{table}
 
-A summary of the achievable performances for a particular state and POVM measure can be found in Table \ref{table:quantum_results}. Quantum computers currently available to the public are limited to running circuits with a maximum of twenty thousand shots. This results in less accuracy compared to the Qiskit Aer simulator, which can perform simulations with a full range of shots, as we will see later in the classical simulation results discussion. A comprehensive benchmark of IBM's free-access simulators and quantum computers for the same prepare-and-measure scenario can be found in Appendix \ref{section:benchmark}.
+The quantum circuit resulting from applying Neumark's extension to a particular state and POVM measure is shown in Figure \ref{fig:quantum_circuit_example}. A summary of the achievable probability performances for such circuit using different quantum resources can be found in Table \ref{table:quantum_results}. Noisy quantum computers currently available to the public are limited to running circuits with a maximum of twenty thousand shots, so this results in less accuracy than desired. On the other hand, the Qiskit Aer simulator can perform noise-free simulations with a full range of shots, hence leading to better performances, as we will see later in the classical simulation results discussion. A full and comprehensive benchmark of IBM's free-access simulators and quantum computers for this prepare-and-measure scenario can be found in Appendix \ref{section:benchmark}.
 
-%\textit{Convergence plots, classical vs. quantum vs. theoretical probabilities}
-%\textit{Kullback-Leibler divergence plots}
-%\textit{Bell scenario joint probabilities convergence}
-%\textit{CHSH inequality}
+\begin{figure}[!ht]
+\centering
+\begin{quantikz}
+      \lstick{$\ket{\Psi}$}  & \gate[2][2cm]{U} & \meter{} \\
+      \lstick{$\ket{0}$}  && \meter{} 
+\end{quantikz}
+\caption{Quantum circuit implementing a POVM measure of four elements. The unitary gate $U$ resulting from Neumark's is applied to the prepared state together with a single ancilla qubit such that the classical measurement leads to four possible outcomes: $\{00, 01, 10, 11\}$.}
+\label{fig:quantum_circuit_example}
+\end{figure}
 
-\afterpage{%
-    \clearpage
-    \thispagestyle{empty}
-    \begin{landscape}
-        \centering 
-        \begin{tabular}{llll}
-            A & B & C & D \\
-        \end{tabular}
-        \captionof{table}{Example of probability distributions obtained with different IBM Quantum systems and simulators for a prepare-and-measure scenario with state $\ket{\Psi}=\frac{3 + i \sqrt{3}}{4} \ket{0} - \frac{1}{2} \ket{1}$ and POVM measure $\mathbb{P}_4 = \{\frac{1}{2}\ket{0}\bra{0}, \frac{1}{2}\ket{1}\bra{1}, \frac{1}{2}\ket{+}\bra{+}, \frac{1}{2}\ket{-}\bra{-} \}$}
-        \label{table:quantum_results}
-    \end{landscape}
-    \clearpage% Flush page
-}
+\begin{landscape}
+\topskip0pt
+\vspace*{\fill}
+\begin{tabular}{c|cccc|cccc|cccc}
+\toprule
+\textbf{Shots}  & \multicolumn{4}{c|}{$10^2$} 
+                & \multicolumn{4}{c|}{$10^3$} 
+                & \multicolumn{4}{c}{$2\cdot 10^4$}\\
+\midrule
+\textbf{Measure}  & 00 & 01 & 10 & 11
+    & 00 & 01 & 10 & 11
+    & 00 & 01 & 10 & 11\\
+\midrule
+Aer Simulator   & 0.370 & 0.150 & 0.070 & 0.410 
+                & 0.362 & 0.117 & 0.067 & 0.454 
+                & 0.378 & 0.120 & 0.058 & 0.443\\                
+Nairobi         & 0.400 & 0.140 & 0.030 & 0.430 
+                & 0.335 & 0.162 & 0.112 & 0.391 
+                & 0.345 & 0.115 & 0.097 & 0.443\\               
+Perth           & 0.350 & 0.260 & 0.100 & 0.290 
+                & 0.337 & 0.185 & 0.121 & 0.357 
+                & 0.328 & 0.152 & 0.113 & 0.408\\
+Oslo            & 0.400 & 0.080 & 0.040 & 0.480 
+                & 0.379 & 0.100 & 0.052 & 0.469 
+                & 0.378 & 0.114 & 0.064 & 0.444\\
+Jakarta         & 0.350 & 0.160 & 0.110 & 0.380 
+                & 0.378 & 0.160 & 0.076 & 0.386 
+                & 0.366 & 0.149 & 0.099 & 0.387\\   
+Lagos           & 0.380 & 0.100 & 0.060 & 0.460 
+                & 0.366 & 0.113 & 0.060 & 0.461 
+                & 0.366 & 0.130 & 0.070 & 0.434\\
+\midrule
+\textbf{Born's rule}     & 0.375 & 0.125 & 0.064 & 0.435 
+                & 0.375 & 0.125 & 0.064 & 0.435
+                & 0.375 & 0.125 & 0.064 & 0.435\\
+\bottomrule        
+\end{tabular}
+\captionof{table}{Example of probability distributions for circuit's classical measurement outcomes $\{00, 01, 10, 11\}$ obtained with different IBM Quantum systems and simulators. The prepare-and-measure scenario is that with state $\ket{\Psi}=\frac{3 + i \sqrt{3}}{4} \ket{0} - \frac{1}{2} \ket{1}$ and POVM measure $\mathbb{P}_4 = \{\frac{1}{2}\ket{0}\bra{0}, \frac{1}{2}\ket{1}\bra{1}, \frac{1}{2}\ket{+}\bra{+}, \frac{1}{2}\ket{-}\bra{-} \}$.}
+\label{table:quantum_results}
+\vspace*{\fill}
+\end{landscape}
+
+\textit{Convergence plots, classical vs. quantum vs. theoretical probabilities}
+
+\textit{Kullback-Leibler divergence plots}
+
+\textit{Bell scenario joint probabilities convergence}
+
+\textit{CHSH inequality}

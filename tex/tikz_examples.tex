@@ -244,3 +244,56 @@
         180*floor(\tdplotphi/180)
     }{}{}{}
 \end{tikzpicture}
+
+\afterpage{
+    \clearpage
+    \thispagestyle{empty}
+    \begin{landscape}
+        \topskip0pt
+        %\vspace*{\fill}
+        \begin{table}[htb!]
+        \centering 
+        %\tiny
+        \begin{tabular}{ccccccccccccccccc}
+            \toprule
+            Resource    & \multicolumn{4}{c}{100 shots} 
+                        & \multicolumn{4}{c}{100 shots} 
+                        & \multicolumn{4}{c}{100 shots} 
+                        & \multicolumn{4}{c}{500 shots}\\
+            \midrule
+            {}  & 00 & 01 & 10 & 11 
+                & 00 & 01 & 10 & 11 
+                & 00 & 01 & 10 & 11 
+                & 00 & 01 & 10 & 11\\
+            Aer Simulator   & 17.5 & 19.1 & 17.5 & 19.1 
+                            & 17.5 & 19.1 & 17.5 & 19.1 
+                            & 17.5 & 19.1 & 17.5 & 19.1 
+                            & 17.5 & 19.1 & 17.5 & 19.1\\
+            Nairobi         & 17.5 & 19.1 & 17.5 & 19.1 
+                            & 17.5 & 19.1 & 17.5 & 19.1 
+                            & 17.5 & 19.1 & 17.5 & 19.1 
+                            & 17.5 & 19.1 & 17.5 & 19.1\\               
+            Perth           & 17.5 & 19.1 & 17.5 & 19.1 
+                            & 17.5 & 19.1 & 17.5 & 19.1 
+                            & 17.5 & 19.1 & 17.5 & 19.1 
+                            & 17.5 & 19.1 & 17.5 & 19.1\\
+            Oslo            & 17.5 & 19.1 & 17.5 & 19.1 
+                            & 17.5 & 19.1 & 17.5 & 19.1 
+                            & 17.5 & 19.1 & 17.5 & 19.1 
+                            & 17.5 & 19.1 & 17.5 & 19.1\\
+            Jakarta         & 17.5 & 19.1 & 17.5 & 19.1 
+                            & 17.5 & 19.1 & 17.5 & 19.1 
+                            & 17.5 & 19.1 & 17.5 & 19.1 
+                            & 17.5 & 19.1 & 17.5 & 19.1\\   
+            Lagos           & 17.5 & 19.1 & 17.5 & 19.1 
+                            & 17.5 & 19.1 & 17.5 & 19.1 
+                            & 17.5 & 19.1 & 17.5 & 19.1 
+                            & 17.5 & 19.1 & 17.5 & 19.1\\                            
+            \bottomrule        
+        \end{tabular}
+        \captionof{table}{Example of probability distributions for circuit's classical measurement outcomes $\{00, 01, 10, 11\}$ obtained with different IBM Quantum systems and simulators. The prepare-and-measure scenario is that with state $\ket{\Psi}=\frac{3 + i \sqrt{3}}{4} \ket{0} - \frac{1}{2} \ket{1}$ and POVM measure $\mathbb{P}_4 = \{\frac{1}{2}\ket{0}\bra{0}, \frac{1}{2}\ket{1}\bra{1}, \frac{1}{2}\ket{+}\bra{+}, \frac{1}{2}\ket{-}\bra{-} \}$.}
+        \label{table:quantum_results}
+        \end{table}
+    \end{landscape}
+    \clearpage
+}
