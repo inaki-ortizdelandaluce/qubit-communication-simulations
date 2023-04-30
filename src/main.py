@@ -1,4 +1,5 @@
 import math
+import matplotlib as mpl
 import matplotlib.pyplot as plt
 from healpy.pixelfunc import ang2pix
 from scipy.special import rel_entr
@@ -30,8 +31,27 @@ def test_random_states():
         pix = ang2pix(n, theta, phi)
         indexes[i] = pix
 
-    count, bins, ignored = plt.hist(indexes, bins=range(pixels + 1), density=True)
-    plt.plot(bins, np.ones_like(bins) / pixels, linewidth=2, color='r')
+    # mpl.rcParams['font.family'] = 'Avenir'
+    # plt.rcParams['font.size'] = 18
+    # plt.rcParams['axes.linewidth'] = 2
+    mpl.rcParams['mathtext.fontset'] = 'stix'
+    mpl.rcParams['font.family'] = 'STIXGeneral'
+
+    fig, ax = plt.subplots()
+
+    # ax.xaxis.set_tick_params(which='major', size=5, width=1, direction='in', top='on')
+    # ax.xaxis.set_tick_params(which='minor', size=3, width=1, direction='in', top='on')
+    # ax.yaxis.set_tick_params(which='major', size=5, width=1, direction='in', right='on')
+    # ax.yaxis.set_tick_params(which='minor', size=3, width=1, direction='in', right='on')
+
+    count, bins, ignored = ax.hist(indexes, bins=range(pixels + 1), density=True, fill=True, facecolor='whitesmoke',
+                                   edgecolor='k', hatch='', linewidth=1, histtype='step')
+    ax.plot(bins, np.ones_like(bins) / pixels, linewidth=2, color='b', linestyle='-', zorder=2)
+    ax.set_xlabel('Pixel indices', labelpad=6)
+    ax.set_xticks(np.append(np.arange(0, pixels, 25), pixels))
+    ax.set_ylabel('Frequency', labelpad=6)
+    # ax.set_yticklabels(ax.get_yticklabels() * pixels)
+    ax.set_xlim(0, pixels)
     plt.show()
     return None
 
@@ -533,7 +553,7 @@ def test_quantum_computer():
 
 
 if __name__ == "__main__":
-    # test_random_states()
+    test_random_states()
     # test_pvm_convergence()
     # test_random_povm()
     # test_povm_convergence()
@@ -543,7 +563,7 @@ if __name__ == "__main__":
     # test_probability_sampling()
     # test_kl_classical_born()
     # test_kl_classical_quantum_simulator()
-    test_bell_chsh()
+    # test_bell_chsh()
     # test_bell_convergence()
     # test_bell_heatmap()
     # test_bell_convergence_heatmap()
