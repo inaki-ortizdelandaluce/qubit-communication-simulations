@@ -5,13 +5,14 @@
 \usepackage{authblk}
 \usepackage{bbold}
 \usepackage[backend=biber,style=alphabetic,sorting=ynt]{biblatex}
+\usepackage{booktabs}
 \usepackage{float}
 \usepackage{hyperref}
 \hypersetup{
     colorlinks=true,
     linkcolor=blue,
     filecolor=magenta,      
-    urlcolor=cyan,
+    urlcolor=violet,
     citecolor=violet,
     pdftitle={Simulations of qubit communication in prepare-and-measure and Bell scenarios},
     pdfpagemode=FullScreen,
@@ -20,6 +21,7 @@
 \graphicspath{ {./images/} }
 \usepackage{msc}
 \usepackage{minted}
+\usepackage{multirow}
 \usepackage[skip=7pt plus1pt, indent=20pt]{parskip}
 \usepackage{physics}
 \usepackage{svg}
@@ -46,7 +48,7 @@
 \section{Methodology\label{section:methodology}}
 \input{04-methodology.tex}
 \newpage
-\section{Results\label{section:results}\protect\footnote[1]{All the methods described in Section \ref{section:methodology} have been implemented from scratch in a software package, and have been made publicly available as an open-source project on a code repository \cite{software2023}. The main building blocks of the code have also been included in this document for self completeness (see Appendix \ref{section:source}). All outcomes presented in this section have been acquired and are reproducible by employing the aforementioned software.}}
+\section[Results]{Results\label{section:results}\protect\footnote[1]{All the methods described in Section \ref{section:methodology} have been implemented from scratch in a software package, and have been made publicly available as an open-source project on a code repository \cite{software2023}. The main building blocks of the code have also been included in this document for self completeness (see Appendix \ref{section:source}). All outcomes presented in this section have been acquired and are reproducible by employing the aforementioned software.}}
 \input{05-results.tex}
 \newpage
 \section{Conclusion}
@@ -59,7 +61,6 @@
 \printbibliography[heading=bibintoc, title={References}]
 \newpage
 \begin{appendices}
-\section{Source Code Listings}\label{section:source}
 \input{08-appendix.tex}
 \end{appendices}
 \end{document}

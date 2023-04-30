@@ -6,7 +6,25 @@ At the backbone of all classical protocols described in Section \ref{section:pro
 \label{fig:results_random_states}
 \end{figure}
 
-Once we have proven to have means to generate random states and rank-1 POVMs, we can focus on the measurement process. The outcome probabilities for a given random POVM measure can be obtained analytically using the Born's rule, but we have gone a step further and used quantum simulators and noisy intermediate scale quantum computers to calculate such probabilities and compare them to the theoretical ones. For such purpose we have made an extensive use of Qiskit \href{https://qiskit.org/}{Qiskit} and \href{https://quantum-computing.ibm.com}{IBM Quantum}.
+Once proven we have means to generate random states and rank-1 POVMs, we can address the measurement process. The outcome probabilities for a given random POVM measure can be obtained analytically using the Born's rule, but we have gone a step further and used simulators and noisy intermediate-scale quantum computers (see Table \ref{table:quantum_resources}) to calculate such probabilities and compare them to the theoretical ones.
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{c c c c c} 
+ \toprule
+ Name & Qubits & Quantum Volume & CNOT Error & Readout Error \\ [1ex] 
+ \midrule
+ Nairobi & 7 & 32 & 0.01357 & 0.0227 \\ 
+ Perth & 7 & 32 & 0.01733 & 0.0188 \\
+ Oslo & 7 & 32 & 0.01 & 0.01667 \\
+ Jakarta & 7 & 16 & 0.00773 & 0.0258 \\
+ Lagos & 7 & 32 & 0.007243 & 0.0145 \\ 
+ \bottomrule
+\end{tabular}
+\caption{Properties of Noisy Intermediate-Scale Quantum computers available at \href{https://quantum-computing.ibm.com}{IBM Quantum} to compute the prepare-and-measure outcome probabilities.}
+\label{table:quantum_resources}
+\end{table}
+
 
 \textit{To be included:}
 
