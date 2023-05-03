@@ -668,8 +668,167 @@ def bell():
     plt.show()
     return None
 
+
 def test_multiplot():
+    mpl.rcParams['mathtext.fontset'] = 'stix'
+    mpl.rcParams['font.family'] = 'STIXGeneral'
+
+    cases = ['Random-PVM', 'Cross-POVM', 'Trine-POVM', 'SIC-POVM', r"Random-POVM$^{1}$", r"Random-POVM$^{2}$"]
+
+    fig, axs = plt.subplots(3, 2, figsize=(8, 10), layout='constrained')
+
+    for ax, title in zip(axs.flat, cases):
+        ax.xaxis.set_tick_params(which='major', size=5, width=1, direction='in', top='on')
+        ax.xaxis.set_tick_params(which='minor', size=3, width=1, direction='in', top='on')
+        ax.yaxis.set_tick_params(which='major', size=5, width=1, direction='in', right='on')
+        ax.yaxis.set_tick_params(which='minor', size=3, width=1, direction='in', right='on')
+        # ax.set_ylabel(r'$D_{KL}$', labelpad=2)
+        ax.set_title(title)
+
+    fig.supxlabel('Number of shots')
+    fig.supylabel('Kullback-Leibler divergence')
+
+    qubit = qt.qubit.Qubit(np.array([(3 + 1.j * math.sqrt(3)) / 4., -0.5]))
+    shots = 10 ** 4
+
+    # EXPERIMENT 1: RANDOM-PVM
+    experiment1 = qt.classical.prepare_and_measure_pvm(shots)
+
+    qubit1 = experiment1['qubit']
+    runs1 = experiment1['probabilities']['runs']
+    stats1 = experiment1['probabilities']['stats']
+    born1 = experiment1['probabilities']['born']
+    print('EXPERIMENT 1:\nState:{}\nPVM:{}'.format(qubit1, 'RANDOM-PVM'))
+    print('Stats:p1={}, p2={}, pt={}'.format(stats1[0], stats1[1], np.sum(stats1)))
+    print('Born:p1={}, p2={}, pt={}'.format(born1[0], born1[1], np.sum(born1)))
+
+    p11 = np.cumsum(runs1[:, 0]) / (np.arange(len(runs1[:, 0])) + 1)
+    p12 = np.cumsum(runs1[:, 1]) / (np.arange(len(runs1[:, 1])) + 1)
+
+    actual1 = np.vstack((p11, p12))
+    expected1 = np.repeat(born1.reshape(born1.shape[0], 1), actual1.shape[1], axis=1)
+    plot_kl(axs[0][0], actual1, expected1)
+
+    # EXPERIMENT 2: CROSS-POVM
+    # P4 = {1/2|0x0|, 1/2|1x1|, 1/2|+x+|, 1/2|-x-|}
+    proj2 = np.array([[[1, 0], [0, 0]], [[0, 0], [0, 1]], [[.5, .5], [.5, .5]], [[.5, -.5], [-.5, .5]]])
+    measurement2 = POVM(weights=0.5 * np.array([1, 1, 1, 1]), proj=proj2)
+    experiment2 = qt.classical.prepare_and_measure_povm(shots, 4, qubit=qubit, measurement=measurement2)
+
+    runs2 = experiment2['probabilities']['runs']
+    stats2 = experiment2['probabilities']['stats']
+    born2 = experiment2['probabilities']['born']
+    print('EXPERIMENT 2:\nState:{}\nPOVM:{}'.format(qubit, 'CROSS-POVM'))
+    print('Stats:p1={}, p2={}, p3={}, p4={}, pt={}'.format(stats2[0], stats2[1], stats2[2], stats2[3], np.sum(stats2)))
+    print('Born:p1={}, p2={}, p3={}, p4={}, pt={}'.format(born2[0], born2[1], born2[2], born2[3], np.sum(born2)))
+
+    p21 = np.cumsum(runs2[:, 0]) / (np.arange(len(runs2[:, 0])) + 1)
+    p22 = np.cumsum(runs2[:, 1]) / (np.arange(len(runs2[:, 1])) + 1)
+    p23 = np.cumsum(runs2[:, 2]) / (np.arange(len(runs2[:, 2])) + 1)
+    p24 = np.cumsum(runs2[:, 3]) / (np.arange(len(runs2[:, 3])) + 1)
+
+    actual2 = np.vstack((p21, p22, p23, p24))
+    expected2 = np.repeat(born2.reshape(born2.shape[0], 1), actual2.shape[1], axis=1)
+    plot_kl(axs[0][1], actual2, expected2)
+
+    # EXPERIMENT 3: TRINE-POVM
+    one = Qubit(np.array([1, 0])).rho()
+    two = Qubit(0.5 * np.array([1, math.sqrt(3)])).rho()
+    three = Qubit(0.5 * np.array([1, -math.sqrt(3)])).rho()
+    measurement3 = POVM(weights=2. / 3 * np.array([1, 1, 1]), proj=np.array([one, two, three], dtype=complex))
+    experiment3 = qt.classical.prepare_and_measure_povm(shots, qubit=qubit, measurement=measurement3)
+
+    runs3 = experiment3['probabilities']['runs']
+    stats3 = experiment3['probabilities']['stats']
+    born3 = experiment3['probabilities']['born']
+    print('EXPERIMENT 3:\nState:{}\nPOVM:{}'.format(qubit, 'TRINE-POVM'))
+    print('Stats:p1={}, p2={}, p3={}, pt={}'.format(stats3[0], stats3[1], stats3[2], np.sum(stats3)))
+    print('Born:p1={}, p2={}, p3={}, pt={}'.format(born3[0], born3[1], born3[2], np.sum(born3)))
+
+    p31 = np.cumsum(runs3[:, 0]) / (np.arange(len(runs3[:, 0])) + 1)
+    p32 = np.cumsum(runs3[:, 1]) / (np.arange(len(runs3[:, 1])) + 1)
+    p33 = np.cumsum(runs3[:, 2]) / (np.arange(len(runs3[:, 2])) + 1)
+
+    actual3 = np.vstack((p31, p32, p33))
+    expected3 = np.repeat(born3.reshape(born3.shape[0], 1), actual3.shape[1], axis=1)
+    plot_kl(axs[1][0], actual3, expected3)
+
+    # EXPERIMENT 4: SIC-POVM
+    one = Qubit(np.array([1, 0])).rho()
+    two = Qubit(np.array([1/math.sqrt(3), math.sqrt(2/3)])).rho()
+    three = Qubit(np.array([1/math.sqrt(3),
+                            math.sqrt(2/3) * (math.cos(2 * math.pi/3) + 1.j * math.sin(2 * math.pi/3))])).rho()
+    four = Qubit(np.array([1/math.sqrt(3),
+                           math.sqrt(2/3) * (math.cos(4 * math.pi/3) + 1.j * math.sin(4 * math.pi/3))])).rho()
+    measurement4 = POVM(weights=0.5 * np.array([1, 1, 1, 1]), proj=np.array([one, two, three, four], dtype=complex))
+    experiment4 = qt.classical.prepare_and_measure_povm(shots, qubit=qubit, measurement=measurement4)
+
+    runs4 = experiment4['probabilities']['runs']
+    stats4 = experiment4['probabilities']['stats']
+    born4 = experiment4['probabilities']['born']
+    print('EXPERIMENT 4:\nState:{}\nPOVM:{}'.format(qubit, 'SIC-POVM'))
+    print('Stats:p1={}, p2={}, p3={}, p4={}, pt={}'.format(stats4[0], stats4[1], stats4[2], stats4[3], np.sum(stats4)))
+    print('Born:p1={}, p2={}, p3={}, p4={}, pt={}'.format(born4[0], born4[1], born4[2], born4[2], np.sum(born3)))
+
+    p41 = np.cumsum(runs4[:, 0]) / (np.arange(len(runs4[:, 0])) + 1)
+    p42 = np.cumsum(runs4[:, 1]) / (np.arange(len(runs4[:, 1])) + 1)
+    p43 = np.cumsum(runs4[:, 2]) / (np.arange(len(runs4[:, 2])) + 1)
+    p44 = np.cumsum(runs4[:, 3]) / (np.arange(len(runs4[:, 3])) + 1)
+
+    actual4 = np.vstack((p41, p42, p43, p44))
+    expected4 = np.repeat(born4.reshape(born4.shape[0], 1), actual4.shape[1], axis=1)
+    plot_kl(axs[1][1], actual4, expected4)
+
+    # EXPERIMENT 5: RANDOM-POVM-1
+    experiment5 = qt.classical.prepare_and_measure_povm(shots, 4)
+
+    qubit5 = experiment5['qubit']
+    runs5 = experiment5['probabilities']['runs']
+    stats5 = experiment5['probabilities']['stats']
+    born5 = experiment5['probabilities']['born']
+    print('EXPERIMENT 5:\nState:{}\nPOVM:{}'.format(qubit5, 'RANDOM-POVM-1'))
+    print('Stats:p1={}, p2={}, p3={}, p4={}, pt={}'.format(stats5[0], stats5[1], stats5[2], stats5[3], np.sum(stats5)))
+    print('Born:p1={}, p2={}, p3={}, p4={}, pt={}'.format(born5[0], born5[1], born5[2], born5[2], np.sum(born5)))
+
+    p51 = np.cumsum(runs5[:, 0]) / (np.arange(len(runs5[:, 0])) + 1)
+    p52 = np.cumsum(runs5[:, 1]) / (np.arange(len(runs5[:, 1])) + 1)
+    p53 = np.cumsum(runs5[:, 2]) / (np.arange(len(runs5[:, 2])) + 1)
+    p54 = np.cumsum(runs5[:, 3]) / (np.arange(len(runs5[:, 3])) + 1)
+
+    actual5 = np.vstack((p51, p52, p53, p54))
+    expected5 = np.repeat(born5.reshape(born5.shape[0], 1), actual5.shape[1], axis=1)
+    plot_kl(axs[2][0], actual5, expected5)
+
+    # EXPERIMENT 6: RANDOM-POVM-2
+    experiment6 = qt.classical.prepare_and_measure_povm(shots, 4)
+
+    qubit6 = experiment6['qubit']
+    runs6 = experiment6['probabilities']['runs']
+    stats6 = experiment6['probabilities']['stats']
+    born6 = experiment6['probabilities']['born']
+    print('EXPERIMENT 6:\nState:{}\nPOVM:{}'.format(qubit6, 'RANDOM-POVM-2'))
+    print('Stats:p1={}, p2={}, p3={}, p4={}, pt={}'.format(stats6[0], stats6[1], stats6[2], stats6[3], np.sum(stats6)))
+    print('Born:p1={}, p2={}, p3={}, p4={}, pt={}'.format(born6[0], born6[1], born6[2], born6[2], np.sum(born6)))
+
+    p61 = np.cumsum(runs6[:, 0]) / (np.arange(len(runs6[:, 0])) + 1)
+    p62 = np.cumsum(runs6[:, 1]) / (np.arange(len(runs6[:, 1])) + 1)
+    p63 = np.cumsum(runs6[:, 2]) / (np.arange(len(runs6[:, 2])) + 1)
+    p64 = np.cumsum(runs6[:, 3]) / (np.arange(len(runs6[:, 3])) + 1)
+
+    actual6 = np.vstack((p61, p62, p63, p64))
+    expected6 = np.repeat(born6.reshape(born6.shape[0], 1), actual6.shape[1], axis=1)
+    plot_kl(axs[2][1], actual6, expected6)
+
+    plt.show()
     return None
+
+
+def plot_kl(ax, actual, expected, color='b', linewidth=1, linestyle='-'):
+    rows, cols = actual.shape
+    kl = np.zeros((cols,))
+    for i in range(cols):
+        kl[i] = sum(rel_entr(expected[:, i], actual[:, i]))
+    ax.plot(kl, color=color, linewidth=linewidth, linestyle=linestyle)
 
 
 if __name__ == "__main__":
