@@ -21,7 +21,7 @@ from qiskit import QuantumCircuit
 from qiskit.tools.monitor import job_monitor
 
 
-def test_random_states():
+def random_states():
     size = 100000
     n = 4
     pixels = 12 * n ** 2
@@ -56,7 +56,7 @@ def test_random_states():
     return None
 
 
-def test_random_povm():
+def random_povm():
     np.random.seed(0)
     q1 = qt.random.qubit()
     q2 = qt.random.qubit()
@@ -76,7 +76,7 @@ def test_random_povm():
     return None
 
 
-def test_pvm_convergence():
+def pm_pvm():
     # run experiment
     np.random.seed(0)
     shots = 10 ** 7
@@ -97,7 +97,7 @@ def test_pvm_convergence():
     return None
 
 
-def test_povm_convergence():
+def pm_random():
     # run experiment
     np.random.seed(0)
     shots = 10 ** 5
@@ -127,7 +127,118 @@ def test_povm_convergence():
     return None
 
 
-def test_povm_convergence_3d():
+def pm_trine():
+    # run experiment
+    shots = 10 ** 5
+
+    psi = qt.qubit.Qubit(np.array([(3 + 1.j * math.sqrt(3)) / 4., -0.5]))
+
+    one = Qubit(np.array([1, 0])).rho()
+    two = Qubit(0.5 * np.array([1, math.sqrt(3)])).rho()
+    three = Qubit(0.5 * np.array([1, -math.sqrt(3)])).rho()
+    povm = POVM(weights=2./3 * np.array([1, 1, 1]), proj=np.array([one, two, three], dtype=complex))
+
+    experiment = qt.classical.prepare_and_measure_povm(shots, qubit=psi, measurement=povm)
+
+    # plot probability convergence
+    runs = experiment['probabilities']['runs']
+    stats = experiment['probabilities']['stats']
+    born = experiment['probabilities']['born']
+    print('Stats:\np1={}, p2={}, p3={}, pt={}'.format(stats[0], stats[1], stats[2], np.sum(stats)))
+    print('Born:\np1={}, p2={}, p3={}, pt={}'.format(born[0], born[1], born[2], np.sum(born)))
+
+    p1 = np.cumsum(runs[:, 0]) / (np.arange(len(runs[:, 0])) + 1)
+    p2 = np.cumsum(runs[:, 1]) / (np.arange(len(runs[:, 1])) + 1)
+    p3 = np.cumsum(runs[:, 2]) / (np.arange(len(runs[:, 2])) + 1)
+
+    plt.plot(p1, color='r')
+    plt.plot(p2, color='g')
+    plt.plot(p3, color='b')
+    plt.axhline(y=born[0], color='r', linestyle='-')
+    plt.axhline(y=born[1], color='g', linestyle='-')
+    plt.axhline(y=born[2], color='b', linestyle='-')
+    plt.show()
+    return None
+
+
+def pm_cross():
+    # run experiment
+    shots = 10 ** 5
+
+    psi = qt.qubit.Qubit(np.array([(3 + 1.j * math.sqrt(3)) / 4., -0.5]))
+
+    zero = np.array([[1, 0], [0, 0]])
+    one = np.array([[0, 0], [0, 1]])
+    plus = 0.5 * np.array([[1, 1], [1, 1]])
+    minus = 0.5 * np.array([[1, -1], [-1, 1]])
+
+    povm = POVM(weights=0.5 * np.array([1, 1, 1, 1]), proj=np.array([zero, one, plus, minus], dtype=complex))
+
+    experiment = qt.classical.prepare_and_measure_povm(shots, qubit=psi, measurement=povm)
+
+    # plot probability convergence
+    runs = experiment['probabilities']['runs']
+    stats = experiment['probabilities']['stats']
+    born = experiment['probabilities']['born']
+    print('Stats:\np1={}, p2={}, p3={}, pt={}'.format(stats[0], stats[1], stats[2], np.sum(stats)))
+    print('Born:\np1={}, p2={}, p3={}, pt={}'.format(born[0], born[1], born[2], np.sum(born)))
+
+    p1 = np.cumsum(runs[:, 0]) / (np.arange(len(runs[:, 0])) + 1)
+    p2 = np.cumsum(runs[:, 1]) / (np.arange(len(runs[:, 1])) + 1)
+    p3 = np.cumsum(runs[:, 2]) / (np.arange(len(runs[:, 2])) + 1)
+
+    plt.plot(p1, color='r')
+    plt.plot(p2, color='g')
+    plt.plot(p3, color='b')
+    plt.axhline(y=born[0], color='r', linestyle='-')
+    plt.axhline(y=born[1], color='g', linestyle='-')
+    plt.axhline(y=born[2], color='b', linestyle='-')
+    plt.show()
+    return None
+
+
+def pm_sic():
+    # run experiment
+    shots = 10 ** 5
+
+    psi = qt.qubit.Qubit(np.array([(3 + 1.j * math.sqrt(3)) / 4., -0.5]))
+
+    one = Qubit(np.array([1, 0])).rho()
+    two = Qubit(np.array([1/math.sqrt(3), math.sqrt(2/3)])).rho()
+    three = Qubit(np.array([1/math.sqrt(3),
+                            math.sqrt(2/3) * (math.cos(2 * math.pi/3) + 1.j * math.sin(2 * math.pi/3))])).rho()
+    four = Qubit(np.array([1/math.sqrt(3),
+                           math.sqrt(2/3) * (math.cos(4 * math.pi/3) + 1.j * math.sin(4 * math.pi/3))])).rho()
+
+    povm = POVM(weights=0.5 * np.array([1, 1, 1, 1]), proj=np.array([one, two, three, four], dtype=complex))
+
+    experiment = qt.classical.prepare_and_measure_povm(shots, qubit=psi, measurement=povm)
+
+    # plot probability convergence
+    runs = experiment['probabilities']['runs']
+    stats = experiment['probabilities']['stats']
+    born = experiment['probabilities']['born']
+    print('Stats:\np1={}, p2={}, p3={}, p4={}, pt={}'.format(stats[0], stats[1], stats[2], stats[3], np.sum(stats)))
+    print('Born:\np1={}, p2={}, p3={}, p4={}, pt={}'.format(born[0], born[1], born[2], born[3], np.sum(born)))
+
+    p1 = np.cumsum(runs[:, 0]) / (np.arange(len(runs[:, 0])) + 1)
+    p2 = np.cumsum(runs[:, 1]) / (np.arange(len(runs[:, 1])) + 1)
+    p3 = np.cumsum(runs[:, 2]) / (np.arange(len(runs[:, 2])) + 1)
+    p4 = np.cumsum(runs[:, 3]) / (np.arange(len(runs[:, 3])) + 1)
+
+    plt.plot(p1, color='r')
+    plt.plot(p2, color='g')
+    plt.plot(p3, color='b')
+    plt.plot(p4, color='y')
+    plt.axhline(y=born[0], color='r', linestyle='-')
+    plt.axhline(y=born[1], color='g', linestyle='-')
+    plt.axhline(y=born[2], color='b', linestyle='-')
+    plt.axhline(y=born[3], color='y', linestyle='-')
+    plt.show()
+    return None
+
+
+def pm_random_3d():
     # run experiment
     shots = 10 ** 5
     experiment = qt.classical.prepare_and_measure_povm(shots, 4)
@@ -177,7 +288,7 @@ def test_povm_convergence_3d():
     return None
 
 
-def test_neumark():
+def neumark():
     psi = qt.qubit.Qubit(np.array([(3 + 1.j * math.sqrt(3)) / 4., -0.5]))
     print(psi.bloch_vector())
 
@@ -192,7 +303,7 @@ def test_neumark():
     return None
 
 
-def test_povm_circuit():
+def pm_circuit():
     qubit = qt.qubit.Qubit(np.array([(3 + 1.j * math.sqrt(3)) / 4., -0.5]))
 
     zero = np.array([[1, 0], [0, 0]])
@@ -208,7 +319,73 @@ def test_povm_circuit():
     return None
 
 
-def test_probability_sampling():
+def quantum_simulator():
+    qc = QuantumCircuit(2, 2)
+
+    psi = ((3 + 1.j * math.sqrt(3)) / 4., -0.5)
+
+    U = [[0.70710678 + 0.j, 0. + 0.j, 0.70710678 + 0.j, 0. + 0.j],
+         [0. + 0.j, 0.70710678 + 0.j, 0. + 0.j, 0.70710678 + 0.j],
+         [0.5 - 0.j, 0.5 + 0.j, -0.5 + 0.j, -0.5 + 0.j],
+         [-0.5 + 0.j, 0.5 + 0.j, 0.5 + 0.j, -0.5 + 0.j]]
+
+    qc.initialize(psi, 0)
+    qc.unitary(U, [0, 1])
+    qc.measure([0, 1], [0, 1])
+    qc.draw()
+
+    backend = Aer.get_backend('aer_simulator')
+    qc_transpiled = transpile(qc, backend)
+    qc_transpiled.draw()
+
+    job = backend.run(qc_transpiled, shots=4000)
+    result = job.result()
+    counts = result.get_counts(qc_transpiled)
+
+    print(counts)
+    plot_histogram(counts)
+
+    sum(counts.values())
+    print(counts['00'] / sum(counts.values()))
+    print(counts['01'] / sum(counts.values()))
+    print(counts['10'] / sum(counts.values()))
+    print(counts['11'] / sum(counts.values()))
+
+
+def quantum_computer():
+    qc = QuantumCircuit(2, 2)
+
+    psi = ((3 + 1.j * math.sqrt(3)) / 4., -0.5)
+
+    U = [[0.70710678 + 0.j, 0. + 0.j, 0.70710678 + 0.j, 0. + 0.j],
+         [0. + 0.j, 0.70710678 + 0.j, 0. + 0.j, 0.70710678 + 0.j],
+         [- 0.5 + 0.j, -0.5 + 0.j, 0.5 + 0.j, 0.5 + 0.j],
+         [-0.5 + 0.j, 0.5 + 0.j, 0.5 + 0.j, -0.5 + 0.j]]
+
+    qc.initialize(psi, 0)
+    qc.unitary(U, [0, 1])
+    qc.measure([0, 1], [0, 1])
+    qc.draw()
+
+    IBMQ.load_account()
+    provider = IBMQ.get_provider(hub='ibm-q', group='open', project='main')
+    qcomp = provider.get_backend('ibm_nairobi')
+    # running in ibm_nairobi. 4000 shots
+
+    qc_transpiled = transpile(qc, backend=qcomp)
+    job = execute(qc_transpiled, backend=qcomp, shots=4000)
+    job_monitor(job)
+    result = job.result()
+    counts = result.get_counts(qc_transpiled)
+    plot_histogram(counts)
+    sum(counts.values())
+    print(counts['00'] / sum(counts.values()))
+    print(counts['01'] / sum(counts.values()))
+    print(counts['10'] / sum(counts.values()))
+    print(counts['11'] / sum(counts.values()))
+
+
+def kl_sample():
     import random
     from scipy.special import rel_entr
     import collections
@@ -237,7 +414,7 @@ def test_probability_sampling():
     return None
 
 
-def test_kl_classical_born():
+def pm_kl_classical_born():
     """
     Runs PM classical protocol and plots Kullback-Leibler divergence among classical and Born probability distributions
     """
@@ -278,7 +455,7 @@ def test_kl_classical_born():
     return None
 
 
-def test_kl_classical_quantum_simulator():
+def pm_kl_classical_quantum_simulator():
     """
     Runs classical protocol and quantum simulator and plots Kullback-Leibler divergence among classical and
     quantum simulator probability distribution
@@ -335,7 +512,7 @@ def test_kl_classical_quantum_simulator():
     return None
 
 
-def test_bell_chsh():
+def chsh_sample():
     a0 = Observable(Z)
     a1 = Observable(X)
     b0 = Observable(-1 / math.sqrt(2) * (X + Z))
@@ -354,7 +531,7 @@ def test_bell_chsh():
     return None
 
 
-def test_bell_convergence():
+def bell_sample_probabilities():
     np.random.seed(0)
 
     shots = 10 ** 7
@@ -378,7 +555,7 @@ def test_bell_convergence():
     return None
 
 
-def test_bell_heatmap():
+def bell_sample_heatmap():
     x = np.arange(0, 5)
     y = np.arange(0, 5)
 
@@ -429,7 +606,7 @@ def test_bell_heatmap():
     return None
 
 
-def test_bell_convergence_heatmap():
+def bell():
     np.random.seed(0)
 
     shots = 10**5
@@ -486,84 +663,24 @@ def test_bell_convergence_heatmap():
     return None
 
 
-def test_quantum_simulator():
-    qc = QuantumCircuit(2, 2)
-
-    psi = ((3 + 1.j * math.sqrt(3)) / 4., -0.5)
-
-    U = [[0.70710678 + 0.j, 0. + 0.j, 0.70710678 + 0.j, 0. + 0.j],
-         [0. + 0.j, 0.70710678 + 0.j, 0. + 0.j, 0.70710678 + 0.j],
-         [0.5 - 0.j, 0.5 + 0.j, -0.5 + 0.j, -0.5 + 0.j],
-         [-0.5 + 0.j, 0.5 + 0.j, 0.5 + 0.j, -0.5 + 0.j]]
-
-    qc.initialize(psi, 0)
-    qc.unitary(U, [0, 1])
-    qc.measure([0, 1], [0, 1])
-    qc.draw()
-
-    backend = Aer.get_backend('aer_simulator')
-    qc_transpiled = transpile(qc, backend)
-    qc_transpiled.draw()
-
-    job = backend.run(qc_transpiled, shots=4000)
-    result = job.result()
-    counts = result.get_counts(qc_transpiled)
-
-    print(counts)
-    plot_histogram(counts)
-
-    sum(counts.values())
-    print(counts['00'] / sum(counts.values()))
-    print(counts['01'] / sum(counts.values()))
-    print(counts['10'] / sum(counts.values()))
-    print(counts['11'] / sum(counts.values()))
-
-
-def test_quantum_computer():
-    qc = QuantumCircuit(2, 2)
-
-    psi = ((3 + 1.j * math.sqrt(3)) / 4., -0.5)
-
-    U = [[0.70710678 + 0.j, 0. + 0.j, 0.70710678 + 0.j, 0. + 0.j],
-         [0. + 0.j, 0.70710678 + 0.j, 0. + 0.j, 0.70710678 + 0.j],
-         [- 0.5 + 0.j, -0.5 + 0.j, 0.5 + 0.j, 0.5 + 0.j],
-         [-0.5 + 0.j, 0.5 + 0.j, 0.5 + 0.j, -0.5 + 0.j]]
-
-    qc.initialize(psi, 0)
-    qc.unitary(U, [0, 1])
-    qc.measure([0, 1], [0, 1])
-    qc.draw()
-
-    IBMQ.load_account()
-    provider = IBMQ.get_provider(hub='ibm-q', group='open', project='main')
-    qcomp = provider.get_backend('ibm_nairobi')
-    # running in ibm_nairobi. 4000 shots
-
-    qc_transpiled = transpile(qc, backend=qcomp)
-    job = execute(qc_transpiled, backend=qcomp, shots=4000)
-    job_monitor(job)
-    result = job.result()
-    counts = result.get_counts(qc_transpiled)
-    plot_histogram(counts)
-    sum(counts.values())
-    print(counts['00'] / sum(counts.values()))
-    print(counts['01'] / sum(counts.values()))
-    print(counts['10'] / sum(counts.values()))
-    print(counts['11'] / sum(counts.values()))
-
-
 if __name__ == "__main__":
-    test_random_states()
-    # test_pvm_convergence()
-    # test_random_povm()
-    # test_povm_convergence()
-    # test_povm_convergence_3d()
-    # test_neumark()
-    # test_povm_circuit()
-    # test_probability_sampling()
-    # test_kl_classical_born()
-    # test_kl_classical_quantum_simulator()
-    # test_bell_chsh()
-    # test_bell_convergence()
-    # test_bell_heatmap()
-    # test_bell_convergence_heatmap()
+    # random_states()
+    # random_povm()
+    # pm_pvm()
+    # pm_random()
+    # pm_random_3d()
+    # pm_trine()
+    # pm_cross()
+    pm_sic()
+    # neumark()
+    # pm_circuit()
+    # quantum_simulator()
+    # quantum_computer()
+    # kl_sample()
+    # pm_kl_classical_born()
+    # pm_kl_classical_quantum_simulator()
+    # chsh_sample()
+    # bell_sample_probabilities()
+    # bell_sample_heatmap()
+    # bell()
+
