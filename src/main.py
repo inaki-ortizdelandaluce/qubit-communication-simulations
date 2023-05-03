@@ -99,7 +99,7 @@ def pm_pvm():
 
 def pm_random():
     # run experiment
-    np.random.seed(0)
+    np.random.seed(1200)
     shots = 10 ** 5
     experiment = qt.classical.prepare_and_measure_povm(shots, 4)
 
@@ -123,6 +123,7 @@ def pm_random():
     plt.axhline(y=born[1], color='g', linestyle='-')
     plt.axhline(y=born[2], color='b', linestyle='-')
     plt.axhline(y=born[3], color='y', linestyle='-')
+    plt.title('Prepare and Measure with random state and POVM')
     plt.show()
     return None
 
@@ -157,7 +158,9 @@ def pm_trine():
     plt.axhline(y=born[0], color='r', linestyle='-')
     plt.axhline(y=born[1], color='g', linestyle='-')
     plt.axhline(y=born[2], color='b', linestyle='-')
+    plt.title('Prepare and Measure with Trine POVM')
     plt.show()
+
     return None
 
 
@@ -193,7 +196,9 @@ def pm_cross():
     plt.axhline(y=born[0], color='r', linestyle='-')
     plt.axhline(y=born[1], color='g', linestyle='-')
     plt.axhline(y=born[2], color='b', linestyle='-')
+    plt.title('Prepare and Measure with Cross POVM')
     plt.show()
+
     return None
 
 
@@ -234,6 +239,7 @@ def pm_sic():
     plt.axhline(y=born[1], color='g', linestyle='-')
     plt.axhline(y=born[2], color='b', linestyle='-')
     plt.axhline(y=born[3], color='y', linestyle='-')
+    plt.title('Prepare and Measure with SIC-POVM of 4 elements')
     plt.show()
     return None
 
@@ -667,11 +673,11 @@ if __name__ == "__main__":
     # random_states()
     # random_povm()
     # pm_pvm()
-    # pm_random()
+    pm_random()
     # pm_random_3d()
     # pm_trine()
     # pm_cross()
-    pm_sic()
+    # pm_sic()
     # neumark()
     # pm_circuit()
     # quantum_simulator()
