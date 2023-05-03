@@ -668,12 +668,15 @@ def bell():
     plt.show()
     return None
 
+def test_multiplot():
+    return None
+
 
 if __name__ == "__main__":
     # random_states()
     # random_povm()
     # pm_pvm()
-    pm_random()
+    # pm_random()
     # pm_random_3d()
     # pm_trine()
     # pm_cross()
@@ -689,4 +692,6 @@ if __name__ == "__main__":
     # bell_sample_probabilities()
     # bell_sample_heatmap()
     # bell()
+    test_multiplot()
+
 
