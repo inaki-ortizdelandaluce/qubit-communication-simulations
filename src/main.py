@@ -511,7 +511,7 @@ def pm_kl_classical_quantum_simulator():
 
 
 def pm_kl_classical_quantum_simulator_born(shots):
-    np.random.seed(1000)
+    np.random.seed(1976)
     mpl.rcParams['mathtext.fontset'] = 'stix'
     mpl.rcParams['font.family'] = 'STIXGeneral'
 
@@ -586,7 +586,7 @@ def pm_kl_multiplot(shots):
     mpl.rcParams['mathtext.fontset'] = 'stix'
     mpl.rcParams['font.family'] = 'STIXGeneral'
 
-    cases = ['Random-PVM', 'Cross-POVM', 'Trine-POVM', 'SIC-POVM', r"Random-POVM$^{1}$", r"Random-POVM$^{2}$"]
+    cases = ['Random-PVM', 'Cross-POVM', 'Trine-POVM', 'SIC-POVM', r"Random-POVM", r"Random-POVM"]
 
     fig, axs = plt.subplots(3, 2, figsize=(8, 10), layout='constrained')
 
@@ -897,15 +897,14 @@ def bell():
 
 
 if __name__ == "__main__":
-    shots = 10 ** 7
     # random_states()
     # random_povm()
-    pm_pvm(shots)
-    pm_random(shots)
+    pm_pvm(10 ** 7)
+    #pm_random(shots)
     # pm_random_3d()
-    pm_trine(shots)
-    pm_cross(shots)
-    pm_sic(shots)
+    #pm_trine(shots)
+    #pm_cross(shots)
+    #pm_sic(shots)
     # neumark()
     # pm_circuit()
     # quantum_simulator()
@@ -913,7 +912,7 @@ if __name__ == "__main__":
     # kl_sample()
     # pm_kl_classical_born()
     # pm_kl_classical_quantum_simulator()
-    pm_kl_classical_quantum_simulator_born(shots)
+    # pm_kl_classical_quantum_simulator_born(10**4)
     # pm_kl_multiplot(10**4)
     # chsh_sample()
     # bell_sample_probabilities()
