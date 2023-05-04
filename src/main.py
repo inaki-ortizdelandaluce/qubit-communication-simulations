@@ -78,6 +78,7 @@ def random_povm():
 
 def pm_pvm(shots):
     # run experiment
+    # np.random.seed(1200)
     np.random.seed(0)
     experiment = qt.classical.prepare_and_measure_pvm(shots)
 
@@ -100,7 +101,8 @@ def pm_pvm(shots):
 
 def pm_random(shots):
     # run experiment
-    np.random.seed(1200)
+    # np.random.seed(1200)
+    np.random.seed(0)
     experiment = qt.classical.prepare_and_measure_povm(shots, 4)
 
     # plot probability convergence
@@ -903,11 +905,11 @@ def bell():
 if __name__ == "__main__":
     # random_states()
     # random_povm()
-    pm_pvm(10 ** 7)
-    #pm_random(10 ** 7)
+    # pm_pvm(10 ** 7)
+    # pm_random(10 ** 7)
     # pm_random_3d()
     #pm_trine(10 ** 7)
-    #pm_cross(10 ** 7)
+    # pm_cross(10 ** 7)
     #pm_sic(10 ** 7)
     # neumark()
     # pm_circuit()
@@ -916,7 +918,7 @@ if __name__ == "__main__":
     # kl_sample()
     # pm_kl_classical_born()
     # pm_kl_classical_quantum_simulator()
-    # pm_kl_classical_quantum_simulator_born(10**4)
+    pm_kl_classical_quantum_simulator_born(10**7)
     # pm_kl_multiplot(10**4)
     # chsh_sample()
     # bell_sample_probabilities()

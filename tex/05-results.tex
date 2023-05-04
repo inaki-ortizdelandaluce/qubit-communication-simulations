@@ -81,7 +81,7 @@ Lagos           & 0.380 & 0.100 & 0.060 & 0.460
 \vspace*{\fill}
 \end{landscape}
 
-The results shown in Table \ref{table:classical_results_pm} clearly indicates that the correlations obtained by the classical prepare-and-measure simulations reproduce the quantum probabilities with extraordinary accuracy. The relative entropy distances among the theoretical probability distribution $P$, and the classical simulation probability distribution $Q$, on the sample space $\mathcal{X}$, have also been computed following the Kullback-Leibler divergence formula \cite{mackay2003}
+The results shown in Table \ref{table:classical_results_pm} clearly indicate that the correlations obtained by the classical prepare-and-measure simulations reproduce the quantum probabilities with extraordinary accuracy. The relative entropy distances among the theoretical probability distribution $P$, and the classical simulation probability distribution $Q$, on the sample space $\mathcal{X}$, have also been computed following the Kullback-Leibler divergence formula \cite{mackay2003}
 \begin{equation}\label{eq:kullback}
 D_{KL}(P||Q) = \sum_{x\in \mathcal{X}}{P(x)\ log\frac{P(x)}{Q(x)}}
 \end{equation}
@@ -95,29 +95,28 @@ Figure \ref{fig:classical_results_kl} shows the Kullback-Leibler divergence amon
  Scenario & Method & \multicolumn{4}{c}{Probabilities}  \\ \hline
  \multirow{2}*{Cross-POVM$^1$} & Born & 0.3750 & 0.1250 & 0.0625 & 0.4375 \\ \cline{2-6}
  & Simulation & 0.3749 & 0.1250 & 0.0625 & 0.4376 \\ \hline
- \multirow{2}*{Trine-POVM$^2$} & Born &  &  &  &  \\ \cline{2-6}
- & Simulation &  &  &  &  \\ \hline
+ \multirow{2}*{Trine-POVM$^2$} & Born &  &  &  & -  \\ \cline{2-6}
+ & Simulation &  &  &  & - \\ \hline
  \multirow{2}*{SIC-POVM$^3$} & Born & & & & \\ \cline{2-6}
  & Simulation &  &  &  &  \\ \hline
- \multirow{2}*{Random-PVM$^4$} & Born & & & & \\ \cline{2-6}
- & {Simulation} & & & & \\ \hline
- \multirow{2}*{Random-POVM$^5$} & Born & & & & \\ \cline{2-6}
- & Simulation &  &  & &  \\ \hline
- \multirow{2}*{Random-POVM$^6$} & Born & & & & \\ \cline{2-6}
- & Simulation &  &  & & \\ 
+ \multirow{2}*{Random-PVM$^4$} & Born & 0.9669 & 0.0331 & - & - \\ \cline{2-6}
+ & {Simulation} & 0.9669 & 0.0331 & - & - \\ \hline
+ \multirow{2}*{Random-POVM$^5$} & Born & 0.0097 & 0.0057 & 0.8825 & 0.1021 \\ \cline{2-6}
+ & Simulation & 0.0097 & 0.0057 & 0.8825 & 0.1021\\ \hline
+ \multirow{2}*{Random-POVM$^6$} & Born & 0.2389 & 0.1242 & 0.6337 & 0.00311\\ \cline{2-6}
+ & Simulation & 0.2386 & 0.1242 & 0.6341 & 0.00312 \\
  \bottomrule
 \end{tabular}}
 \caption{Probability outcomes of several prepare-and-measure classical simulations after $10^7$ shots, and using a diverse set of measurements and prepared states $\ket{\Psi}$. The theoretical probabilities obtained applying Born's rule are also provided for ease of comparison. \\$^{1,2,3}\:\ket{\Psi}=\frac{3 + i \sqrt{3}}{4} \ket{0} - \frac{1}{2} \ket{1}$\\
-$^{4}\:\ket{\Psi}={x + iy } \ket{0} + {x + iy } \ket{1}$\\
-$^{5}\:\ket{\Psi}={x + iy } \ket{0} + {x + iy } \ket{1}$\\
-$^{6}\:\ket{\Psi}={x + iy } \ket{0} + {x + iy } \ket{1}$}
+$^{4,5}\:\ket{\Psi}= - (0.606 + 0.642 i) \ket{0} - (0.336 + 0.327i) \ket{1}$\\
+$^{6}\:\ket{\Psi}= (-0.461 + 0.195i) \ket{0} - (0.767 - 0.402i) \ket{1}$}
 \label{table:classical_results_pm}
 \end{table}
 
 \begin{figure}[h!]
 \centering
 \includegraphics[width=\textwidth]{images/pm_povm_kl.png}
-\caption{The Kullback-Leibler relative entropy among the theoretical probabilities and the simulation probability distributions for for the prepare-and-measure scenarios specified in Table \ref{table:classical_results_pm}. A total of $10^4$ shots were used for the simulations, and it can be clearly seen that the results converge to zero statistical distance rather quickly.}
+\caption{The Kullback-Leibler relative entropy among the theoretical probabilities and the simulation probability distributions for the prepare-and-measure scenarios specified in Table \ref{table:classical_results_pm}. A total of $10^4$ shots were used for the simulations, and it can be clearly seen that the results converge to zero statistical distance rather quickly.}
 \label{fig:classical_results_kl}
 \end{figure}
 
@@ -144,3 +143,18 @@ Taking advantage of the analysis performed comparing theoretical and simulated p
 provided for ease of comparison.}
 \label{table:classical_quantum_results}
 \end{table}
+
+Following the protocol described in Section \ref{section:protocol_bell}, and the corresponding methodology in Section \ref{section:methods_bell}, a complementary set of simulations have also been carried out for a Bell scenario with a singlet state and local projective measurements. Similarly to the prepare-and-measure scenario case, the results in Table \ref{table:classical_results_bell} show that the correlations obtained by the classical Bell simulations reproduce the quantum joint probabilities and expectation values with remarkable accuracy. 
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{c c c c c} 
+ \toprule
+ \bottomrule
+\end{tabular}
+\caption{Probability outcomes of classical Bell simulations after $10^{7}$ shots. The observables selected are ??. The theoretical probabilities obtained applying Born’s rule are also
+provided for ease of comparison.}
+\label{table:classical_results_bell}
+\end{table}
+
+Figure ?? demonstrates the convergence of the joint probabilities to their theoretical values with an increasing number of shots. Moreover, it is easy to prove that, in the classical simulation performed, the $\mathit{CHSH}$ inequality is violated in the chosen set of Alice and Bob observables, consistent with quantum theory predictions.
