@@ -76,10 +76,9 @@ def random_povm():
     return None
 
 
-def pm_pvm():
+def pm_pvm(shots):
     # run experiment
     np.random.seed(0)
-    shots = 10 ** 7
     experiment = qt.classical.prepare_and_measure_pvm(shots)
 
     # plot probability convergence
@@ -97,10 +96,9 @@ def pm_pvm():
     return None
 
 
-def pm_random():
+def pm_random(shots):
     # run experiment
     np.random.seed(1200)
-    shots = 10 ** 5
     experiment = qt.classical.prepare_and_measure_povm(shots, 4)
 
     # plot probability convergence
@@ -128,10 +126,8 @@ def pm_random():
     return None
 
 
-def pm_trine():
+def pm_trine(shots):
     # run experiment
-    shots = 10 ** 5
-
     psi = qt.qubit.Qubit(np.array([(3 + 1.j * math.sqrt(3)) / 4., -0.5]))
 
     one = Qubit(np.array([1, 0])).rho()
@@ -164,10 +160,8 @@ def pm_trine():
     return None
 
 
-def pm_cross():
+def pm_cross(shots):
     # run experiment
-    shots = 10 ** 5
-
     psi = qt.qubit.Qubit(np.array([(3 + 1.j * math.sqrt(3)) / 4., -0.5]))
 
     zero = np.array([[1, 0], [0, 0]])
@@ -202,10 +196,8 @@ def pm_cross():
     return None
 
 
-def pm_sic():
+def pm_sic(shots):
     # run experiment
-    shots = 10 ** 5
-
     psi = qt.qubit.Qubit(np.array([(3 + 1.j * math.sqrt(3)) / 4., -0.5]))
 
     one = Qubit(np.array([1, 0])).rho()
@@ -905,14 +897,15 @@ def bell():
 
 
 if __name__ == "__main__":
+    shots = 10 ** 7
     # random_states()
     # random_povm()
-    # pm_pvm()
-    # pm_random()
+    pm_pvm(shots)
+    pm_random(shots)
     # pm_random_3d()
-    # pm_trine()
-    # pm_cross()
-    # pm_sic()
+    pm_trine(shots)
+    pm_cross(shots)
+    pm_sic(shots)
     # neumark()
     # pm_circuit()
     # quantum_simulator()
@@ -920,7 +913,7 @@ if __name__ == "__main__":
     # kl_sample()
     # pm_kl_classical_born()
     # pm_kl_classical_quantum_simulator()
-    pm_kl_classical_quantum_simulator_born(10 ** 7)
+    pm_kl_classical_quantum_simulator_born(shots)
     # pm_kl_multiplot(10**4)
     # chsh_sample()
     # bell_sample_probabilities()
