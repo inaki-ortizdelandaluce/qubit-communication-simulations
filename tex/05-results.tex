@@ -37,6 +37,8 @@ The quantum circuit resulting from applying Neumark's extension to a particular 
 \label{fig:quantum_circuit_example}
 \end{figure}
 
+A set of simulations have been conducted for the prepare-and-measure classical protocol using a random assortment of states and measurements, in addition to a collection of well-known measures like the Cross-POVM (\ref{eq:cross-povm}), the Trine-POVM (\ref{eq:trine-povm}) and a four-element SIC-POVM sample (\ref{eq:sic-povm}). 
+
 \begin{landscape}
 \topskip0pt
 \vspace*{\fill}
@@ -79,10 +81,48 @@ Lagos           & 0.380 & 0.100 & 0.060 & 0.460
 \vspace*{\fill}
 \end{landscape}
 
-\textit{Convergence plots, classical vs. quantum vs. theoretical probabilities}
+The results shown in Table \ref{table:classical_results_pm} clearly indicates that the correlations obtained by the classical prepare-and-measure simulations reproduce the quantum probabilities with extraordinary accuracy. The relative entropy distances among the theoretical probability distribution $P$, and the classical simulation probability distribution $Q$, on the sample space $\mathcal{X}$, have also been computed following the Kullback-Leibler divergence formula \cite{mackay2003}
+\begin{equation}\label{eq:kullback}
+D_{KL}(P||Q) = \sum_{x\in \mathcal{X}}{P(x)\ log\frac{P(x)}{Q(x)}}
+\end{equation}
+Figure \ref{fig:classical_results_kl} shows the Kullback-Leibler divergence among Born's rule and the classical simulation probabilities obtained for the set of prepare-and-measure scenarios in Table \ref{table:classical_results_pm}.
+\newline
+\begin{table}[h!]
+\centering
+{\renewcommand{\arraystretch}{1.5}%
+\begin{tabular}{p{3cm}|c|cccc} 
+ \toprule
+ Scenario & Method & \multicolumn{4}{c}{Probabilities}  \\ \hline
+ \multirow{2}*{Random-PVM$^1$} & Born & & & & \\ \cline{2-6}
+ & {Simulation} & & & & \\ \hline
+ \multirow{2}*{Cross-POVM$^2$} & Born & 0.3750 & 0.1250 & 0.0625 & 0.4375 \\ \cline{2-6}
+ & Simulation & 0.3749 & 0.1250 & 0.0625 & 0.4376 \\ \hline
+ \multirow{2}*{Trine-POVM$^3$} & Born &  &  &  &  \\ \cline{2-6}
+ & Simulation &  &  &  &  \\ \hline
+ \multirow{2}*{SIC-POVM$^4$} & Born & & & & \\ \cline{2-6}
+ & Simulation &  &  &  &  \\ \hline
+ \multirow{2}*{Random-POVM$^5$} & Born & & & & \\ \cline{2-6}
+ & Simulation &  &  & &  \\ \hline
+ \multirow{2}*{Random-POVM$^6$} & Born & & & & \\ \cline{2-6}
+ & Simulation &  &  & & \\ 
+ \bottomrule
+\end{tabular}}
+\caption{Probability outcomes of several prepare-and-measure classical simulations using a diverse set of measurements and prepared states $\ket{\Psi}$. The theoretical probabilities obtained applying Born's rule are also provided for ease of comparison. A total of  $10^7$ shots were used in the simulations.\\$^{1,2,3,4}\:\ket{\Psi}=\frac{3 + i \sqrt{3}}{4} \ket{0} - \frac{1}{2} \ket{1}$\\$^{5}\:\ket{\Psi}={x + iy } \ket{0} + {x + iy } \ket{1}$\\$^{6}\:\ket{\Psi}={x + iy } \ket{0} + {x + iy } \ket{1}$}
+\label{table:classical_results_pm}
+\end{table}
 
-\textit{Kullback-Leibler divergence plots}
+\begin{figure}[h!]
+\centering
+\includegraphics[width=\textwidth]{images/pm_povm_kl.png.png}
+\caption{The Kullback-Leibler relative entropy among the theoretical probabilities and the simulation probability distributions for for the prepare-and-measure scenarios specified in Table \ref{table:classical_results_pm}. A total of $10^4$ shots were used for the simulations, and it can be clearly seen that the results converge to zero statistical distance rather quickly.}
+\label{fig:classical_results_kl}
+\end{figure}
 
-\textit{Bell scenario joint probabilities convergence}
+Taking advantage of the analysis performed comparing theoretical and simulated probability distributions, we have extended the variational distance analysis to the prepare-and-measure scenario using IBM Quantum simulators. Figure shows that existing quantum simulators converge to the expected theoretical values slightly slower than the classical simulations. 
 
-\textit{CHSH inequality}
+\begin{figure}[h!]
+\centering
+\includegraphics[width=0.7\textwidth]{images/pm_povm_kl_bcq.png}
+\caption{The Kullback-Leibler relative entropy among the theoretical probabilities and the simulation probability distributions using the classical protocol and the IBM Quantum simulator. The prepared state selected is $\ket{\Psi}=3/4 + i \sqrt{3}/4 \ket{0} - 1/2 \ket{1}$, and the POVM measure the four-element SIC-POVM used in other examples (\ref{eq:sic-povm}). A total of $10^4$ shots were used for the simulations, where it can be noticed some differences in the convergence, particularly during the first thousands of runs.}
+\label{fig:classical_results_kl}
+\end{figure}

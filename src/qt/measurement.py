@@ -198,7 +198,8 @@ class POVM:
         # v, _, _ = np.linalg.svd(self.elements, full_matrices=True, compute_uv=True, hermitian=False)
         # u[:, 0:d] = v[:, :, 0] / np.linalg.norm(v[:, :, 0], axis=0)
         w, v = np.linalg.eig(self.elements)
-        v = v[np.where(w != 0)]
+
+        v = v[np.where(w != 0)]  # FIXME
         u[:, 0:d] = v / np.linalg.norm(v, axis=0)
 
         # remaining n-d columns should correspond to orthogonal projectors in extended space

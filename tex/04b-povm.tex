@@ -3,11 +3,11 @@ We have already discussed how every qubit POVM can be written as a coarse graini
 Even if the final goal is to build POVMs to test how the classical protocol converges with the quantum theory for any random state and measurement, we will also discuss some general rank-1 POVMs with interesting properties, for example, 
 \begin{enumerate}
     \item The measure needed in the eavesdropping  of the BB84 protocol \cite{nielsen2000}
-\begin{equation}
+\begin{equation}\label{eq:cross-povm}
     \mathbb{P}_4 = \{\frac{1}{2}\ket{0}\bra{0}, \frac{1}{2}\ket{1}\bra{1}, \frac{1}{2}\ket{+}\bra{+}, \frac{1}{2}\ket{-}\bra{-} \}
 \end{equation}
     \item The Trine-POVM, consisting of POVM elements uniformly distributed on an equatorial plane of the Bloch sphere, such that $\mathbb{P}_3=\{E_1, E_2, E_3\}$ and $E_k=\frac{2}{3}\ket{\Psi_{k}}\bra{\Psi_{k}}$, where
-\begin{equation}
+\begin{equation}\label{eq:trine-povm}
 \begin{split}
 \ket{\Psi_1}&=\ket{0}\\
 \ket{\Psi_2}&=\frac{1}{2}\ket{0} + \frac{\sqrt{3}}{2} \ket{1}\\ 
@@ -15,7 +15,7 @@ Even if the final goal is to build POVMs to test how the classical protocol conv
 \end{split}
 \end{equation}
     \item The SIC-POVMs, a well-known family of symmetric informationally complete positive operator-valued measures, which are proven to be very relevant in quantum state tomography and quantum cryptography fields among others \cite{renes2004}. The simplest SIC-POVM is the one with states the vertices of a regular tetrahedron in the Bloch sphere, see Figure \ref{fig:sic_povm}, such that $\mathbb{P}_4=\{E_1, E_2, E_3, E_4\}$ and $E_k=\frac{1}{2}\ket{\Psi_{k}}\bra{\Psi_{k}}$, where
-\begin{equation}
+\begin{equation}\label{eq:sic-povm}
 \begin{split}
 \ket{\Psi_1}&=\ket{0}\\ 
 \ket{\Psi_2}&=\frac{1}{\sqrt{3}}\ket{0} + \sqrt{\frac{2}{3}} \ket{1}\\
