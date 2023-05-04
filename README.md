@@ -1,4 +1,4 @@
-# Simulations of qubit communication in prepare-and-measure and entanglement scenarios 
+# Simulations of qubit communication in prepare-and-measure and Bell scenarios 
 Final Project for Postgraduate Degree in Quantum Engineering by Universitat Politècnica de Catalunya (UPC).
 
 # Reference Paper
