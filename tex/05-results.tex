@@ -93,27 +93,30 @@ Figure \ref{fig:classical_results_kl} shows the Kullback-Leibler divergence amon
 \begin{tabular}{p{3cm}|c|cccc} 
  \toprule
  Scenario & Method & \multicolumn{4}{c}{Probabilities}  \\ \hline
- \multirow{2}*{Random-PVM$^1$} & Born & & & & \\ \cline{2-6}
- & {Simulation} & & & & \\ \hline
- \multirow{2}*{Cross-POVM$^2$} & Born & 0.3750 & 0.1250 & 0.0625 & 0.4375 \\ \cline{2-6}
+ \multirow{2}*{Cross-POVM$^1$} & Born & 0.3750 & 0.1250 & 0.0625 & 0.4375 \\ \cline{2-6}
  & Simulation & 0.3749 & 0.1250 & 0.0625 & 0.4376 \\ \hline
- \multirow{2}*{Trine-POVM$^3$} & Born &  &  &  &  \\ \cline{2-6}
+ \multirow{2}*{Trine-POVM$^2$} & Born &  &  &  &  \\ \cline{2-6}
  & Simulation &  &  &  &  \\ \hline
- \multirow{2}*{SIC-POVM$^4$} & Born & & & & \\ \cline{2-6}
+ \multirow{2}*{SIC-POVM$^3$} & Born & & & & \\ \cline{2-6}
  & Simulation &  &  &  &  \\ \hline
+ \multirow{2}*{Random-PVM$^4$} & Born & & & & \\ \cline{2-6}
+ & {Simulation} & & & & \\ \hline
  \multirow{2}*{Random-POVM$^5$} & Born & & & & \\ \cline{2-6}
  & Simulation &  &  & &  \\ \hline
  \multirow{2}*{Random-POVM$^6$} & Born & & & & \\ \cline{2-6}
  & Simulation &  &  & & \\ 
  \bottomrule
 \end{tabular}}
-\caption{Probability outcomes of several prepare-and-measure classical simulations after $10^7$ shots, and using a diverse set of measurements and prepared states $\ket{\Psi}$. The theoretical probabilities obtained applying Born's rule are also provided for ease of comparison. \\$^{1,2,3,4}\:\ket{\Psi}=\frac{3 + i \sqrt{3}}{4} \ket{0} - \frac{1}{2} \ket{1}$\\$^{5}\:\ket{\Psi}={x + iy } \ket{0} + {x + iy } \ket{1}$\\$^{6}\:\ket{\Psi}={x + iy } \ket{0} + {x + iy } \ket{1}$}
+\caption{Probability outcomes of several prepare-and-measure classical simulations after $10^7$ shots, and using a diverse set of measurements and prepared states $\ket{\Psi}$. The theoretical probabilities obtained applying Born's rule are also provided for ease of comparison. \\$^{1,2,3}\:\ket{\Psi}=\frac{3 + i \sqrt{3}}{4} \ket{0} - \frac{1}{2} \ket{1}$\\
+$^{4}\:\ket{\Psi}={x + iy } \ket{0} + {x + iy } \ket{1}$\\
+$^{5}\:\ket{\Psi}={x + iy } \ket{0} + {x + iy } \ket{1}$\\
+$^{6}\:\ket{\Psi}={x + iy } \ket{0} + {x + iy } \ket{1}$}
 \label{table:classical_results_pm}
 \end{table}
 
 \begin{figure}[h!]
 \centering
-\includegraphics[width=\textwidth]{images/pm_povm_kl.png.png}
+\includegraphics[width=\textwidth]{images/pm_povm_kl.png}
 \caption{The Kullback-Leibler relative entropy among the theoretical probabilities and the simulation probability distributions for for the prepare-and-measure scenarios specified in Table \ref{table:classical_results_pm}. A total of $10^4$ shots were used for the simulations, and it can be clearly seen that the results converge to zero statistical distance rather quickly.}
 \label{fig:classical_results_kl}
 \end{figure}

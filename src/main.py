@@ -82,9 +82,11 @@ def pm_pvm(shots):
     experiment = qt.classical.prepare_and_measure_pvm(shots)
 
     # plot probability convergence
+    qubit = experiment['qubit']
     runs = experiment['probabilities']['runs']
     stats = experiment['probabilities']['stats']
     born = experiment['probabilities']['born']
+    print('Qubit: {}'.format(str(qubit)))
     print('Stats:\np1={},p2={},pt={}'.format(stats[0], stats[1], np.sum(stats)))
     print('Born:\np1={},p2={},pt={}'.format(born[0], born[1], np.sum(born)))
 
@@ -102,9 +104,11 @@ def pm_random(shots):
     experiment = qt.classical.prepare_and_measure_povm(shots, 4)
 
     # plot probability convergence
+    qubit = experiment['qubit']
     runs = experiment['probabilities']['runs']
     stats = experiment['probabilities']['stats']
     born = experiment['probabilities']['born']
+    print('Qubit: {}'.format(str(qubit)))
     print('Stats:\np1={}, p2={}, p3={}, p4={}, pt={}'.format(stats[0], stats[1], stats[2], stats[3], np.sum(stats)))
     print('Born:\np1={}, p2={}, p3={}, p4={}, pt={}'.format(born[0], born[1], born[2], born[3], np.sum(born)))
 
@@ -586,7 +590,7 @@ def pm_kl_multiplot(shots):
     mpl.rcParams['mathtext.fontset'] = 'stix'
     mpl.rcParams['font.family'] = 'STIXGeneral'
 
-    cases = ['Random-PVM', 'Cross-POVM', 'Trine-POVM', 'SIC-POVM', r"Random-POVM", r"Random-POVM"]
+    cases = ['Cross-POVM', 'Trine-POVM', 'SIC-POVM', r"Random-PVM", r"Random-POVM", r"Random-POVM"]
 
     fig, axs = plt.subplots(3, 2, figsize=(8, 10), layout='constrained')
 
@@ -619,7 +623,7 @@ def pm_kl_multiplot(shots):
 
     actual1 = np.vstack((p11, p12))
     expected1 = np.repeat(born1.reshape(born1.shape[0], 1), actual1.shape[1], axis=1)
-    plot_kl(axs[0][0], actual1, expected1)
+    plot_kl(axs[1][1], actual1, expected1)
 
     # EXPERIMENT 2: CROSS-POVM
     # P4 = {1/2|0x0|, 1/2|1x1|, 1/2|+x+|, 1/2|-x-|}
@@ -641,7 +645,7 @@ def pm_kl_multiplot(shots):
 
     actual2 = np.vstack((p21, p22, p23, p24))
     expected2 = np.repeat(born2.reshape(born2.shape[0], 1), actual2.shape[1], axis=1)
-    plot_kl(axs[0][1], actual2, expected2)
+    plot_kl(axs[0][0], actual2, expected2)
 
     # EXPERIMENT 3: TRINE-POVM
     one = Qubit(np.array([1, 0])).rho()
@@ -663,7 +667,7 @@ def pm_kl_multiplot(shots):
 
     actual3 = np.vstack((p31, p32, p33))
     expected3 = np.repeat(born3.reshape(born3.shape[0], 1), actual3.shape[1], axis=1)
-    plot_kl(axs[1][0], actual3, expected3)
+    plot_kl(axs[0][1], actual3, expected3)
 
     # EXPERIMENT 4: SIC-POVM
     one = Qubit(np.array([1, 0])).rho()
@@ -689,7 +693,7 @@ def pm_kl_multiplot(shots):
 
     actual4 = np.vstack((p41, p42, p43, p44))
     expected4 = np.repeat(born4.reshape(born4.shape[0], 1), actual4.shape[1], axis=1)
-    plot_kl(axs[1][1], actual4, expected4)
+    plot_kl(axs[1][0], actual4, expected4)
 
     # EXPERIMENT 5: RANDOM-POVM-1
     experiment5 = qt.classical.prepare_and_measure_povm(shots, 4)
@@ -900,11 +904,11 @@ if __name__ == "__main__":
     # random_states()
     # random_povm()
     pm_pvm(10 ** 7)
-    #pm_random(shots)
+    #pm_random(10 ** 7)
     # pm_random_3d()
-    #pm_trine(shots)
-    #pm_cross(shots)
-    #pm_sic(shots)
+    #pm_trine(10 ** 7)
+    #pm_cross(10 ** 7)
+    #pm_sic(10 ** 7)
     # neumark()
     # pm_circuit()
     # quantum_simulator()
