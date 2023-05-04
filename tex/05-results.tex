@@ -107,7 +107,7 @@ Figure \ref{fig:classical_results_kl} shows the Kullback-Leibler divergence amon
  & Simulation &  &  & & \\ 
  \bottomrule
 \end{tabular}}
-\caption{Probability outcomes of several prepare-and-measure classical simulations using a diverse set of measurements and prepared states $\ket{\Psi}$. The theoretical probabilities obtained applying Born's rule are also provided for ease of comparison. A total of  $10^7$ shots were used in the simulations.\\$^{1,2,3,4}\:\ket{\Psi}=\frac{3 + i \sqrt{3}}{4} \ket{0} - \frac{1}{2} \ket{1}$\\$^{5}\:\ket{\Psi}={x + iy } \ket{0} + {x + iy } \ket{1}$\\$^{6}\:\ket{\Psi}={x + iy } \ket{0} + {x + iy } \ket{1}$}
+\caption{Probability outcomes of several prepare-and-measure classical simulations after $10^7$ shots, and using a diverse set of measurements and prepared states $\ket{\Psi}$. The theoretical probabilities obtained applying Born's rule are also provided for ease of comparison. \\$^{1,2,3,4}\:\ket{\Psi}=\frac{3 + i \sqrt{3}}{4} \ket{0} - \frac{1}{2} \ket{1}$\\$^{5}\:\ket{\Psi}={x + iy } \ket{0} + {x + iy } \ket{1}$\\$^{6}\:\ket{\Psi}={x + iy } \ket{0} + {x + iy } \ket{1}$}
 \label{table:classical_results_pm}
 \end{table}
 
@@ -118,11 +118,26 @@ Figure \ref{fig:classical_results_kl} shows the Kullback-Leibler divergence amon
 \label{fig:classical_results_kl}
 \end{figure}
 
-Taking advantage of the analysis performed comparing theoretical and simulated probability distributions, we have extended the variational distance analysis to the prepare-and-measure scenario using IBM Quantum simulators. Figure shows that existing quantum simulators converge to the expected theoretical values slightly slower than the classical simulations. 
+Taking advantage of the analysis performed comparing theoretical and simulated probability distributions, we have extended the variational distance analysis to the prepare-and-measure scenario using IBM Quantum simulators. Figure \ref{fig:classical_quantum_results_kl} shows that existing quantum simulators converge to the expected theoretical values slightly slower than the classical simulations. The outcome probabilities after $10^7$ simulation runs are available in Table \ref{table:classical_quantum_results}.
 
 \begin{figure}[h!]
 \centering
 \includegraphics[width=0.7\textwidth]{images/pm_povm_kl_bcq.png}
-\caption{The Kullback-Leibler relative entropy among the theoretical probabilities and the simulation probability distributions using the classical protocol and the IBM Quantum simulator. The prepared state selected is $\ket{\Psi}=3/4 + i \sqrt{3}/4 \ket{0} - 1/2 \ket{1}$, and the POVM measure the four-element SIC-POVM used in other examples (\ref{eq:sic-povm}). A total of $10^4$ shots were used for the simulations, where it can be noticed some differences in the convergence, particularly during the first thousands of runs.}
-\label{fig:classical_results_kl}
+\caption{The Kullback-Leibler relative entropy among the theoretical probabilities and the simulation probability distributions using the classical protocol and the IBM Quantum simulator. The prepared state selected is $\ket{\Psi}=3/4 + i \sqrt{3}/4 \ket{0} - 1/2 \ket{1}$, and the POVM measure the four-element Cross-POVM (\ref{eq:cross-povm}). A total of $10^4$ shots were used for the simulations, where it can be noticed some differences in the convergence, particularly during the first thousands of runs.}
+\label{fig:classical_quantum_results_kl}
 \end{figure}
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{c c c c c} 
+ \toprule
+ Method & \multicolumn{4}{c}{Probabilities}  \\ \hline
+ Born & 0.3750 & 0.1250 & 0.0625 & 0.4375 \\ 
+ Classical Simulation & 0.3749 & 0.1250 & 0.0625 & 0.4376 \\ 
+ Quantum Simulation & & & & \\ 
+ \bottomrule
+\end{tabular}
+\caption{Probability outcomes of prepare-and-measure classical and quantum simulations after $10^{7}$ shots. The prepared state selected is $\ket{\Psi}=3/4 + i \sqrt{3}/4 \ket{0} - 1/2 \ket{1}$, and the POVM measure the four-element Cross-POVM (\ref{eq:cross-povm}). The theoretical probabilities obtained applying Born’s rule are also
+provided for ease of comparison.}
+\label{table:classical_quantum_results}
+\end{table}

@@ -530,7 +530,7 @@ def pm_kl_classical_quantum_simulator_born(shots):
     ax.yaxis.set_tick_params(which='major', size=5, width=1, direction='in', right='on')
     ax.yaxis.set_tick_params(which='minor', size=3, width=1, direction='in', right='on')
 
-    fig.suptitle(r'SIC-POVM')
+    fig.suptitle(r'Cross-POVM')
     fig.supxlabel('Number of shots')
     fig.supylabel('Kullback-Leibler divergence')
 
