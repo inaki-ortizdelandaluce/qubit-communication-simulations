@@ -95,10 +95,10 @@ Figure \ref{fig:classical_results_kl} shows the Kullback-Leibler divergence amon
  Scenario & Method & \multicolumn{4}{c}{Probabilities}  \\ \hline
  \multirow{2}*{Cross-POVM$^1$} & Born & 0.3750 & 0.1250 & 0.0625 & 0.4375 \\ \cline{2-6}
  & Simulation & 0.3749 & 0.1250 & 0.0625 & 0.4376 \\ \hline
- \multirow{2}*{Trine-POVM$^2$} & Born &  &  &  & -  \\ \cline{2-6}
- & Simulation &  &  &  & - \\ \hline
- \multirow{2}*{SIC-POVM$^3$} & Born & & & & \\ \cline{2-6}
- & Simulation &  &  &  &  \\ \hline
+ \multirow{2}*{Trine-POVM$^2$} & Born & 0.5000 & 0.0335 & 0.4665 & -  \\ \cline{2-6}
+ & Simulation & 0.4998 & 0.0335 & 0.4667 & - \\ \hline
+ \multirow{2}*{SIC-POVM$^3$} & Born & 0.3750 & 0.0316 & 0.3851 & 0.2083 \\ \cline{2-6}
+ & Simulation & 0.3751 & 0.0315 & 0.3851 & 0.2082 \\ \hline
  \multirow{2}*{Random-PVM$^4$} & Born & 0.9669 & 0.0331 & - & - \\ \cline{2-6}
  & {Simulation} & 0.9669 & 0.0331 & - & - \\ \hline
  \multirow{2}*{Random-POVM$^5$} & Born & 0.0097 & 0.0057 & 0.8825 & 0.1021 \\ \cline{2-6}
@@ -136,7 +136,7 @@ Taking advantage of the analysis performed comparing theoretical and simulated p
  Method & \multicolumn{4}{c}{Probabilities}  \\ \hline
  Born & 0.3750 & 0.1250 & 0.0625 & 0.4375 \\ 
  Classical Simulation & 0.3749 & 0.1250 & 0.0625 & 0.4376 \\ 
- Quantum Simulation & & & & \\ 
+ Quantum Simulation & 0.3751 & 0.1249 & 0.0625 & 0.4374 \\ 
  \bottomrule
 \end{tabular}
 \caption{Probability outcomes of prepare-and-measure classical and quantum simulations after $10^{7}$ shots. The prepared state selected is $\ket{\Psi}=3/4 + i \sqrt{3}/4 \ket{0} - 1/2 \ket{1}$, and the POVM measure the four-element Cross-POVM (\ref{eq:cross-povm}). The theoretical probabilities obtained applying Born’s rule are also

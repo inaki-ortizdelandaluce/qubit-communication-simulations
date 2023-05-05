@@ -555,6 +555,9 @@ def pm_kl_classical_quantum_simulator_born(shots):
     experiment2 = qt.quantum.prepare_and_measure_povm(shots, qubit=qubit, povm=measurement)
     import collections
     memory = experiment2["memory"]
+    print('Stats={}'.format(experiment2["probabilities"]))
+    print('Quantum Circuit executed')
+
     experimental2 = np.zeros(experimental1.shape)
     for i in range(len(memory)):
         summary = collections.Counter(memory[0: i + 1])
@@ -562,8 +565,6 @@ def pm_kl_classical_quantum_simulator_born(shots):
         p = np.zeros((measurement.size(),))
         p[:summary.shape[0]] = summary / np.sum(summary)
         experimental2[:, i] = p
-    print('Stats={}'.format(experiment2["probabilities"]))
-    print('Quantum Circuit executed')
 
     # plot kl divergence
     _, cols = experimental1.shape
@@ -908,9 +909,9 @@ if __name__ == "__main__":
     # pm_pvm(10 ** 7)
     # pm_random(10 ** 7)
     # pm_random_3d()
-    #pm_trine(10 ** 7)
+    # pm_trine(10 ** 7)
     # pm_cross(10 ** 7)
-    #pm_sic(10 ** 7)
+    pm_sic(10 ** 7)
     # neumark()
     # pm_circuit()
     # quantum_simulator()
@@ -918,7 +919,7 @@ if __name__ == "__main__":
     # kl_sample()
     # pm_kl_classical_born()
     # pm_kl_classical_quantum_simulator()
-    pm_kl_classical_quantum_simulator_born(10**7)
+    # pm_kl_classical_quantum_simulator_born(10**4)
     # pm_kl_multiplot(10**4)
     # chsh_sample()
     # bell_sample_probabilities()
