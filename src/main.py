@@ -771,10 +771,9 @@ def chsh_sample():
     return None
 
 
-def bell_sample_probabilities():
+def bell_sample_probabilities(shots):
     np.random.seed(0)
 
-    shots = 10 ** 7
     a0 = Observable(Z)
     a1 = Observable(X)
     b0 = Observable(-1 / math.sqrt(2) * (X + Z))
@@ -903,15 +902,19 @@ def bell():
     return None
 
 
+def bell_multiplot(shots):
+    return None
+
+
 if __name__ == "__main__":
     # random_states()
     # random_povm()
-    # pm_pvm(10 ** 7)
-    # pm_random(10 ** 7)
+    # pm_pvm(10**7)
+    # pm_random(10**7)
     # pm_random_3d()
-    # pm_trine(10 ** 7)
-    # pm_cross(10 ** 7)
-    pm_sic(10 ** 7)
+    # pm_trine(10**7)
+    # pm_cross(10**7)
+    # pm_sic(10**7)
     # neumark()
     # pm_circuit()
     # quantum_simulator()
@@ -919,12 +922,9 @@ if __name__ == "__main__":
     # kl_sample()
     # pm_kl_classical_born()
     # pm_kl_classical_quantum_simulator()
-    # pm_kl_classical_quantum_simulator_born(10**4)
+    # pm_kl_classical_quantum_simulator_born(10 **4)
     # pm_kl_multiplot(10**4)
     # chsh_sample()
-    # bell_sample_probabilities()
+    bell_sample_probabilities(10**7)
     # bell_sample_heatmap()
     # bell()
-
-
-

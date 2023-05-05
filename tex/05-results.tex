@@ -1,11 +1,13 @@
+\subsection{Random state and measurement preparation}
 At the backbone of all classical protocols described in Section \ref{section:protocols}, it lies the need to generate random uniform distributions of either qubit states, Bloch vectors or shared randomness in $\mathbb{R^3}$. In Figure \ref{fig:results_random_states}, we can see that applying random unitary transformations to zero qubit states leads to uniformly distributed random qubit pure states, which can later be transformed into random Bloch vectors or normalized random vectors in $\mathbb{R^3}$ as needed. These random states are also the seed to compute random POVMs with rank-1 projectors, as described in Section \ref{section:povm_generation}. Hence, once proven we have means to generate random states and rank-1 POVMs, we can address the measurement process. 
 \begin{figure}[h]
 \centering
-\includegraphics[width=\textwidth]{images/random_bloch_healpix.png}
+\includegraphics[width=0.9\textwidth]{images/random_bloch_healpix.png}
 \caption{In this histogram we see how the frequency distribution of $N=10^4$ random qubit states generated with \cite{software2023} follows a random uniform distribution of state vectors along the Bloch sphere (blue solid line). The frequencies are binned by HEALPix indices corresponding to an equal-area iso-latitude partition of the Bloch sphere with resolution $\mathit{NSIDE}=4$.}
 \label{fig:results_random_states}
 \end{figure}
 
+\subsection{Classical and quantum prepare-and-measure simulation outcomes}
 The outcome probabilities for a given random POVM measure can be obtained analytically using the Born's rule, but we have gone a step further and used simulators and noisy intermediate-scale quantum computers (see Table \ref{table:quantum_resources}) to calculate such probabilities and compare them to the theoretical ones as described in \ref{section:quantum_circuit}. 
 \newline
 \begin{table}[h!]
@@ -120,6 +122,7 @@ $^{6}\:\ket{\Psi}= (-0.461 + 0.195i) \ket{0} - (0.767 - 0.402i) \ket{1}$}
 \label{fig:classical_results_kl}
 \end{figure}
 
+\subsection{Bell simulation outcomes}
 Taking advantage of the analysis performed comparing theoretical and simulated probability distributions, we have extended the variational distance analysis to the prepare-and-measure scenario using IBM Quantum simulators. Figure \ref{fig:classical_quantum_results_kl} shows that existing quantum simulators converge to the expected theoretical values slightly slower than the classical simulations. The outcome probabilities after $10^7$ simulation runs are available in Table \ref{table:classical_quantum_results}.
 
 \begin{figure}[h!]
@@ -144,17 +147,41 @@ provided for ease of comparison.}
 \label{table:classical_quantum_results}
 \end{table}
 
-Following the protocol described in Section \ref{section:protocol_bell}, and the corresponding methodology in Section \ref{section:methods_bell}, a complementary set of simulations have also been carried out for a Bell scenario with a singlet state and local projective measurements. Similarly to the prepare-and-measure scenario case, the results in Table \ref{table:classical_results_bell} show that the correlations obtained by the classical Bell simulations reproduce the quantum joint probabilities and expectation values with remarkable accuracy. 
+Following the protocol described in Section \ref{section:protocol_bell}, and the corresponding methodology in Section \ref{section:methods_bell}, a complementary set of simulations have also been carried out for a Bell scenario with a singlet state and local projective measurements. Similarly to the prepare-and-measure scenario case, the results in Table \ref{table:classical_results_bell} show that the correlations obtained by the classical Bell simulations reproduce the quantum joint probabilities and expectation values with remarkable accuracy. In Table \ref{table:classical_results_bell} it is straightforward to see that, in the classical simulation performed, the $\mathit{CHSH}$ inequality is violated in the chosen set of Alice and Bob observables, and it is therefore consistent with quantum theory predictions. 
 
 \begin{table}[h!]
 \centering
-\begin{tabular}{c c c c c} 
+{\renewcommand{\arraystretch}{1.5}%
+\begin{tabular}{c | c | c | c | c | c} 
  \toprule
- \bottomrule
-\end{tabular}
-\caption{Probability outcomes of classical Bell simulations after $10^{7}$ shots. The observables selected are ??. The theoretical probabilities obtained applying Born’s rule are also
-provided for ease of comparison.}
+ \multirow{2}*{$(a_x, b_y)$} & \multicolumn{4}{c|}{$p_C(a_x, b_y|A_x,B_y)$} & \multirow{2}*{$\mathit{CHSH}$} \\ \cline{2-5}
+ & $(A_0, B_0)$ & $(A_0, B_1)$ & $(A_1, B_0)$ & $(A_1, B_1)$ & \\ \hline
+ $(+1, +1)$ & $\scriptstyle0.4268^{\textcolor[rgb]{0,0,1}{0.4267}}$ 
+            & $\scriptstyle0.4269^{\textcolor[rgb]{0,0,1}{0.4267}}$ 
+            & $\scriptstyle0.4267^{\textcolor[rgb]{0,0,1}{0.4267}}$
+            & $\scriptstyle0.0734^{\textcolor[rgb]{0,0,1}{0.0732}}$ & -\\ \hline
+$(+1, -1)$  & $\scriptstyle0.0731^{\textcolor[rgb]{0,0,1}{0.0732}}$ 
+            & $\scriptstyle0.0732^{\textcolor[rgb]{0,0,1}{0.0732}}$  
+        & $\scriptstyle0.0732^{\textcolor[rgb]{0,0,1}{0.0732}}$ 
+        & $\scriptstyle0.4265^{\textcolor[rgb]{0,0,1}{0.4267}}$ & -\\ \hline
+$(-1, +1)$  & $\scriptstyle0.0732^{\textcolor[rgb]{0,0,1}{0.0732}}$ 
+            & $\scriptstyle0.0733^{\textcolor[rgb]{0,0,1}{0.0732}}$ 
+            & $\scriptstyle0.0732^{\textcolor[rgb]{0,0,1}{0.0732}}$ 
+            & $\scriptstyle0.4270^{\textcolor[rgb]{0,0,1}{0.4267}}$ & -\\ \hline
+$(-1, -1)$  & $\scriptstyle0.4268^{\textcolor[rgb]{0,0,1}{0.4267}}$
+            & $\scriptstyle0.4267^{\textcolor[rgb]{0,0,1}{0.4267}}$ 
+            & $\scriptstyle0.4269^{\textcolor[rgb]{0,0,1}{0.4267}}$ 
+            & $\scriptstyle0.0731^{\textcolor[rgb]{0,0,1}{0.0732}}$ & -\\ \hline
+$\mathbb{E}[A_x, B_y]$  & $\scriptstyle{0.7072}$ 
+                        & $\scriptstyle{0.7073}$ 
+                        & $\scriptstyle{0.7072}$ 
+                        & $\scriptstyle{-0.7070}$ 
+                        & $\scriptstyle{2.8287}$\\
+\bottomrule
+\end{tabular}}
+\caption{Probability outcomes of a classical Bell simulation after $10^{7}$ shots. The entanglement state is the Bell singlet state $\ket{\Psi^{-}}=(\ket{00} - \ket{11})/\sqrt{2}$, and the observables chosen are $A_0=Z,\:A_1=X,\:B_0=-(X +Z)/\sqrt{2},\:B_1=(X - Z)1/\sqrt{2}$. The theoretical probabilities obtained applying Born’s rule are also
+provided for ease of comparison in blue color.}
 \label{table:classical_results_bell}
 \end{table}
-
-Figure ?? demonstrates the convergence of the joint probabilities to their theoretical values with an increasing number of shots. Moreover, it is easy to prove that, in the classical simulation performed, the $\mathit{CHSH}$ inequality is violated in the chosen set of Alice and Bob observables, consistent with quantum theory predictions.
+\clearpage
+% Figure ?? demonstrates the convergence of the joint probabilities to their theoretical values with an increasing number of shots. 
