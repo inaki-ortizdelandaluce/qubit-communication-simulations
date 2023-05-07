@@ -7,22 +7,37 @@ At the backbone of all classical protocols described in Section \ref{section:pro
 \label{fig:results_random_states}
 \end{figure}
 
-\subsection{Classical and quantum prepare-and-measure simulation outcomes}
-The outcome probabilities for a given random POVM measure can be obtained analytically using the Born's rule, but we have gone a step further and used simulators and noisy intermediate-scale quantum computers (see Table \ref{table:quantum_resources}) to calculate such probabilities and compare them to the theoretical ones as described in \ref{section:quantum_circuit}. 
+\subsection{Prepare-and-measure simulation outcomes}
+The outcome probabilities for a given random POVM measure can be obtained analytically using the Born's rule, but we have gone a step further and used simulators and noisy intermediate-scale quantum computers (see Table \ref{table:quantum_resources}) to calculate such probabilities and compare them to the theoretical ones as described in Section \ref{section:quantum_circuit}. 
 \newline
 \begin{table}[h!]
 \centering
+{\renewcommand{\arraystretch}{1.2}%
 \begin{tabular}{c c c c c} 
  \toprule
- Name & Qubits & Quantum Volume & CNOT Error & Readout Error \\ [1ex] 
- \midrule
- Nairobi & 7 & 32 & 0.01357 & 0.0227 \\ 
- Perth & 7 & 32 & 0.01733 & 0.0188 \\
- Oslo & 7 & 32 & 0.01 & 0.01667 \\
- Jakarta & 7 & 16 & 0.00773 & 0.0258 \\
- Lagos & 7 & 32 & 0.007243 & 0.0145 \\ 
+ Name & Qubits & Quantum Volume & CNOT Error & Readout Error \\ \hline
+ Nairobi    & $\scriptstyle7$ 
+            & $\scriptstyle32$ 
+            & $\scriptstyle0.01357$ 
+            & $\scriptstyle0.0227$ \\ \hline
+ Perth      & $\scriptstyle7$ 
+            & $\scriptstyle32$ 
+            & $\scriptstyle0.01733$ 
+            & $\scriptstyle0.0188$ \\ \hline
+ Oslo       & $\scriptstyle7$ 
+            & $\scriptstyle32$ 
+            & $\scriptstyle0.01$ 
+            & $\scriptstyle0.01667$ \\ \hline
+ Jakarta    & $\scriptstyle7$ 
+            & $\scriptstyle16$ 
+            & $\scriptstyle0.00773$ 
+            & $\scriptstyle0.0258$ \\ \hline
+ Lagos      & $\scriptstyle7$ 
+            & $\scriptstyle32$ 
+            & $\scriptstyle0.007243$ 
+            & $\scriptstyle0.0145$ \\ 
  \bottomrule
-\end{tabular}
+\end{tabular}}
 \caption{Properties of Noisy Intermediate-Scale Quantum computers available at \href{https://quantum-computing.ibm.com}{IBM Quantum} to compute the prepare-and-measure outcome probabilities.}
 \label{table:quantum_resources}
 \end{table}
@@ -39,43 +54,52 @@ The quantum circuit resulting from applying Neumark's extension to a particular 
 \label{fig:quantum_circuit_example}
 \end{figure}
 
-A set of simulations have been conducted for the prepare-and-measure classical protocol using a random assortment of states and measurements, in addition to a collection of well-known measures like the Cross-POVM (\ref{eq:cross-povm}), the Trine-POVM (\ref{eq:trine-povm}) and a four-element SIC-POVM sample (\ref{eq:sic-povm}). 
+A set of simulations have also been conducted for the prepare-and-measure classical protocol using a random assortment of states and measurements, in addition to a collection of well-known measures like the Cross-POVM (\ref{eq:cross-povm}), the Trine-POVM (\ref{eq:trine-povm}) and a four-element SIC-POVM sample (\ref{eq:sic-povm}). 
 
 \begin{landscape}
 \topskip0pt
 \vspace*{\fill}
-\begin{tabular}{c|cccc|cccc|cccc}
+\begin{tabular}{c|cccc|cccc|cccc|cccc}
 \toprule
-\textbf{Shots}  & \multicolumn{4}{c|}{$10^2$} 
-                & \multicolumn{4}{c|}{$10^3$} 
-                & \multicolumn{4}{c}{$2\cdot 10^4$}\\
+\textbf{Shots}  & \multicolumn{4}{c|}{$\scriptstyle10^2$} 
+                & \multicolumn{4}{c|}{$\scriptstyle10^3$} 
+                & \multicolumn{4}{c|}{$\scriptstyle10^4$} 
+                & \multicolumn{4}{c}{$\scriptstyle2\cdot 10^4$}\\
 \midrule
-\textbf{Measure}  & 00 & 01 & 10 & 11
-    & 00 & 01 & 10 & 11
-    & 00 & 01 & 10 & 11\\
+\textbf{Measure}    & $\scriptstyle00$ & $\scriptstyle01$ & $\scriptstyle10$ & $\scriptstyle11$
+                    & $\scriptstyle00$ & $\scriptstyle01$ & $\scriptstyle10$ & $\scriptstyle11$
+                    & $\scriptstyle00$ & $\scriptstyle01$ & $\scriptstyle10$ & $\scriptstyle11$
+                    & $\scriptstyle00$ & $\scriptstyle01$ & $\scriptstyle10$ & $\scriptstyle11$\\
 \midrule
-Aer Simulator   & 0.370 & 0.150 & 0.070 & 0.410 
-                & 0.362 & 0.117 & 0.067 & 0.454 
-                & 0.378 & 0.120 & 0.058 & 0.443\\                
-Nairobi         & 0.400 & 0.140 & 0.030 & 0.430 
-                & 0.335 & 0.162 & 0.112 & 0.391 
-                & 0.345 & 0.115 & 0.097 & 0.443\\               
-Perth           & 0.350 & 0.260 & 0.100 & 0.290 
-                & 0.337 & 0.185 & 0.121 & 0.357 
-                & 0.328 & 0.152 & 0.113 & 0.408\\
-Oslo            & 0.400 & 0.080 & 0.040 & 0.480 
-                & 0.379 & 0.100 & 0.052 & 0.469 
-                & 0.378 & 0.114 & 0.064 & 0.444\\
-Jakarta         & 0.350 & 0.160 & 0.110 & 0.380 
-                & 0.378 & 0.160 & 0.076 & 0.386 
-                & 0.366 & 0.149 & 0.099 & 0.387\\   
-Lagos           & 0.380 & 0.100 & 0.060 & 0.460 
-                & 0.366 & 0.113 & 0.060 & 0.461 
-                & 0.366 & 0.130 & 0.070 & 0.434\\
+Aer Simulator   & $\scriptstyle0.370$ & $\scriptstyle0.150$ & $\scriptstyle0.070$ & $\scriptstyle0.410$ 
+                & $\scriptstyle0.362$ & $\scriptstyle0.117$ & $\scriptstyle0.067$ & $\scriptstyle0.454$ 
+                & $\scriptstyle0.377$ & $\scriptstyle0.122$ & $\scriptstyle0.062$ & $\scriptstyle0.438$ 
+                & $\scriptstyle0.378$ & $\scriptstyle0.120$ & $\scriptstyle0.058$ & $\scriptstyle0.443$\\                
+Nairobi         & $\scriptstyle0.400$ & $\scriptstyle0.140$ & $\scriptstyle0.030$ & $\scriptstyle0.430$ 
+                & $\scriptstyle0.335$ & $\scriptstyle0.162$ & $\scriptstyle0.112$ & $\scriptstyle0.391$ 
+                & $\scriptstyle0.378$ & $\scriptstyle0.172$ & $\scriptstyle0.090$ & $\scriptstyle0.359$
+                & $\scriptstyle0.345$ & $\scriptstyle0.115$ & $\scriptstyle0.097$ & $\scriptstyle0.443$\\               
+Perth           & $\scriptstyle0.350$ & $\scriptstyle0.260$ & $\scriptstyle0.100$ & $\scriptstyle0.290$ 
+                & $\scriptstyle0.337$ & $\scriptstyle0.185$ & $\scriptstyle0.121$ & $\scriptstyle0.357$ 
+                & $\scriptstyle0.370$ & $\scriptstyle0.187$ & $\scriptstyle0.118$ & $\scriptstyle0.325$
+                & $\scriptstyle0.328$ & $\scriptstyle0.152$ & $\scriptstyle0.113$ & $\scriptstyle0.408$\\
+Oslo            & $\scriptstyle0.400$ & $\scriptstyle0.080$ & $\scriptstyle0.040$ & $\scriptstyle0.480$ 
+                & $\scriptstyle0.379$ & $\scriptstyle0.100$ & $\scriptstyle0.052$ & $\scriptstyle0.469$ 
+                & $\scriptstyle0.358$ & $\scriptstyle0.108$ & $\scriptstyle0.070$ & $\scriptstyle0.463$
+                & $\scriptstyle0.378$ & $\scriptstyle0.114$ & $\scriptstyle0.064$ & $\scriptstyle0.444$\\
+Jakarta         & $\scriptstyle0.350$ & $\scriptstyle0.160$ & $\scriptstyle0.110$ & $\scriptstyle0.380$ 
+                & $\scriptstyle0.378$ & $\scriptstyle0.160$ & $\scriptstyle0.076$ & $\scriptstyle0.386$ 
+                & $\scriptstyle0.383$ & $\scriptstyle0.143$ & $\scriptstyle0.088$ & $\scriptstyle0.386$
+                & $\scriptstyle0.366$ & $\scriptstyle0.149$ & $\scriptstyle0.099$ & $\scriptstyle0.387$\\   
+Lagos           & $\scriptstyle0.380$ & $\scriptstyle0.100$ & $\scriptstyle0.060$ & $\scriptstyle0.460$ 
+                & $\scriptstyle0.366$ & $\scriptstyle0.113$ & $\scriptstyle0.060$ & $\scriptstyle0.461$ 
+                & $\scriptstyle0.357$ & $\scriptstyle0.113$ & $\scriptstyle0.062$ & $\scriptstyle0.467$
+                & $\scriptstyle0.366$ & $\scriptstyle0.130$ & $\scriptstyle0.070$ & $\scriptstyle0.434$\\
 \midrule
-\textbf{Born's rule}     & 0.375 & 0.125 & 0.064 & 0.435 
-                & 0.375 & 0.125 & 0.064 & 0.435
-                & 0.375 & 0.125 & 0.064 & 0.435\\
+\textbf{Born's rule}    & $\scriptstyle0.375$ & $\scriptstyle0.125$ & $\scriptstyle0.064$ & $\scriptstyle0.435$ 
+                        & $\scriptstyle0.375$ & $\scriptstyle0.125$ & $\scriptstyle0.064$ & $\scriptstyle0.435$ 
+                        & $\scriptstyle0.375$ & $\scriptstyle0.125$ & $\scriptstyle0.064$ & $\scriptstyle0.435$ 
+                        & $\scriptstyle0.375$ & $\scriptstyle0.125$ & $\scriptstyle0.064$ & $\scriptstyle0.435$ \\
 \bottomrule        
 \end{tabular}
 \captionof{table}{Example of probability distributions for circuit's classical measurement outcomes $\{00, 01, 10, 11\}$ obtained with different IBM Quantum systems and simulators. The prepare-and-measure scenario is that with state $\ket{\Psi}=\frac{3 + i \sqrt{3}}{4} \ket{0} - \frac{1}{2} \ket{1}$ and POVM measure $\mathbb{P}_4 = \{\frac{1}{2}\ket{0}\bra{0}, \frac{1}{2}\ket{1}\bra{1}, \frac{1}{2}\ket{+}\bra{+}, \frac{1}{2}\ket{-}\bra{-} \}$.}
@@ -92,24 +116,36 @@ Figure \ref{fig:classical_results_kl} shows the Kullback-Leibler divergence amon
 \begin{table}[h!]
 \centering
 {\renewcommand{\arraystretch}{1.5}%
-\begin{tabular}{p{3cm}|c|cccc} 
+\begin{tabular}{ccccc} 
  \toprule
- Scenario & Method & \multicolumn{4}{c}{Probabilities}  \\ \hline
- \multirow{2}*{Cross-POVM$^1$} & Born & 0.3750 & 0.1250 & 0.0625 & 0.4375 \\ \cline{2-6}
- & Simulation & 0.3749 & 0.1250 & 0.0625 & 0.4376 \\ \hline
- \multirow{2}*{Trine-POVM$^2$} & Born & 0.5000 & 0.0335 & 0.4665 & -  \\ \cline{2-6}
- & Simulation & 0.4998 & 0.0335 & 0.4667 & - \\ \hline
- \multirow{2}*{SIC-POVM$^3$} & Born & 0.3750 & 0.0316 & 0.3851 & 0.2083 \\ \cline{2-6}
- & Simulation & 0.3751 & 0.0315 & 0.3851 & 0.2082 \\ \hline
- \multirow{2}*{Random-PVM$^4$} & Born & 0.9669 & 0.0331 & - & - \\ \cline{2-6}
- & {Simulation} & 0.9669 & 0.0331 & - & - \\ \hline
- \multirow{2}*{Random-POVM$^5$} & Born & 0.0097 & 0.0057 & 0.8825 & 0.1021 \\ \cline{2-6}
- & Simulation & 0.0097 & 0.0057 & 0.8825 & 0.1021\\ \hline
- \multirow{2}*{Random-POVM$^6$} & Born & 0.2389 & 0.1242 & 0.6337 & 0.00311\\ \cline{2-6}
- & Simulation & 0.2386 & 0.1242 & 0.6341 & 0.00312 \\
+ Scenario & \multicolumn{4}{c}{Probabilities}  \\ \hline
+ {Cross-POVM$^1$}   & $\scriptstyle0.3749^{\textcolor[rgb]{0,0,1}{0.3750}}$ 
+                    & $\scriptstyle0.1250^{\textcolor[rgb]{0,0,1}{0.1250}}$ 
+                    & $\scriptstyle0.0625^{\textcolor[rgb]{0,0,1}{0.0625}}$ 
+                    & $\scriptstyle0.4376^{\textcolor[rgb]{0,0,1}{0.4375}}$ \\ \hline
+ {Trine-POVM$^2$}   & $\scriptstyle0.4998^{\textcolor[rgb]{0,0,1}{0.5000}}$ 
+                    & $\scriptstyle0.0335^{\textcolor[rgb]{0,0,1}{0.0335}}$ 
+                    & $\scriptstyle0.4667^{\textcolor[rgb]{0,0,1}{0.4665}}$ 
+                    & -  \\ \hline
+ {SIC-POVM$^3$}     & $\scriptstyle0.3751^{\textcolor[rgb]{0,0,1}{0.3750}}$ 
+                    & $\scriptstyle0.0315^{\textcolor[rgb]{0,0,1}{0.0316}}$ 
+                    & $\scriptstyle0.3851^{\textcolor[rgb]{0,0,1}{0.3851}}$ 
+                    & $\scriptstyle0.2082^{\textcolor[rgb]{0,0,1}{0.2083}}$ \\ \hline
+ {Random-PVM$^4$}   & $\scriptstyle0.9669^{\textcolor[rgb]{0,0,1}{0.9669}}$ 
+                    & $\scriptstyle0.0331^{\textcolor[rgb]{0,0,1}{0.0331}}$ 
+                    & - 
+                    & - \\ \hline
+ {Random-POVM$^5$}  & $\scriptstyle0.0097^{\textcolor[rgb]{0,0,1}{0.0097}}$ 
+                    & $\scriptstyle0.0057^{\textcolor[rgb]{0,0,1}{0.0057}}$ 
+                    & $\scriptstyle0.8825^{\textcolor[rgb]{0,0,1}{0.8825}}$ 
+                    & $\scriptstyle0.1021^{\textcolor[rgb]{0,0,1}{0.1021}}$ \\ \hline
+ {Random-POVM$^6$}  & $\scriptstyle0.2386^{\textcolor[rgb]{0,0,1}{0.2389}}$ 
+                    & $\scriptstyle0.1242^{\textcolor[rgb]{0,0,1}{0.1242}}$ 
+                    & $\scriptstyle0.6341^{\textcolor[rgb]{0,0,1}{0.6337}}$ 
+                    & $\scriptstyle0.0031^{\textcolor[rgb]{0,0,1}{0.0031}}$\\
  \bottomrule
 \end{tabular}}
-\caption{Probability outcomes of several prepare-and-measure classical simulations after $10^7$ shots, and using a diverse set of measurements and prepared states $\ket{\Psi}$. The theoretical probabilities obtained applying Born's rule are also provided for ease of comparison. \\$^{1,2,3}\:\ket{\Psi}=\frac{3 + i \sqrt{3}}{4} \ket{0} - \frac{1}{2} \ket{1}$\\
+\caption{Probability outcomes of several prepare-and-measure classical simulations after $10^7$ shots, and using a diverse set of measurements and prepared states $\ket{\Psi}$. For the purpose of comparison, theoretical probabilities calculated using Born's rule are presented in superscript blue color. \\$^{1,2,3}\:\ket{\Psi}=\frac{3 + i \sqrt{3}}{4} \ket{0} - \frac{1}{2} \ket{1}$\\
 $^{4,5}\:\ket{\Psi}= - (0.606 + 0.642 i) \ket{0} - (0.336 + 0.327i) \ket{1}$\\
 $^{6}\:\ket{\Psi}= (-0.461 + 0.195i) \ket{0} - (0.767 - 0.402i) \ket{1}$}
 \label{table:classical_results_pm}
@@ -134,20 +170,32 @@ Taking advantage of the analysis performed comparing theoretical and simulated p
 
 \begin{table}[h!]
 \centering
+{\renewcommand{\arraystretch}{1.2}%
 \begin{tabular}{c c c c c} 
  \toprule
  Method & \multicolumn{4}{c}{Probabilities}  \\ \hline
- Born & 0.3750 & 0.1250 & 0.0625 & 0.4375 \\ 
- Classical Simulation & 0.3749 & 0.1250 & 0.0625 & 0.4376 \\ 
- Quantum Simulation & 0.3751 & 0.1249 & 0.0625 & 0.4374 \\ 
+ Classical Simulation   & $\scriptstyle0.3749$ 
+                        & $\scriptstyle0.1250$ 
+                        & $\scriptstyle0.0625$ 
+                        & $\scriptstyle0.4376$ \\ \hline 
+ Quantum Simulation     & $\scriptstyle0.3751$ 
+                        & $\scriptstyle0.1249$ 
+                        & $\scriptstyle0.0625$ 
+                        & $\scriptstyle0.4374$ \\ \hline
+ Born's rule            & $\scriptstyle0.3750$ 
+                        & $\scriptstyle0.1250$ 
+                        & $\scriptstyle0.0625$ 
+                        & $\scriptstyle0.4375$ \\ 
  \bottomrule
-\end{tabular}
+\end{tabular}}
 \caption{Probability outcomes of prepare-and-measure classical and quantum simulations after $10^{7}$ shots. The prepared state selected is $\ket{\Psi}=3/4 + i \sqrt{3}/4 \ket{0} - 1/2 \ket{1}$, and the POVM measure the four-element Cross-POVM (\ref{eq:cross-povm}). The theoretical probabilities obtained applying Born’s rule are also
 provided for ease of comparison.}
 \label{table:classical_quantum_results}
 \end{table}
 
 Following the protocol described in Section \ref{section:protocol_bell}, and the corresponding methodology in Section \ref{section:methods_bell}, a complementary set of simulations have also been carried out for a Bell scenario with a singlet state and local projective measurements. Similarly to the prepare-and-measure scenario case, the results in Table \ref{table:classical_results_bell} show that the correlations obtained by the classical Bell simulations reproduce the quantum joint probabilities and expectation values with remarkable accuracy. In Table \ref{table:classical_results_bell} it is straightforward to see that, in the classical simulation performed, the CHSH inequality is violated in the chosen set of Alice and Bob observables, and it is therefore consistent with quantum theory predictions. 
+
+The convergence of joint probabilities to theoretical values is illustrated more visually in Figure \ref{fig:classical_results_bell}, which demonstrates a rapid convergence as the number of shots increases. On the other hand, Figure \ref{fig:classical_theoretical_results_bell} exhibits the accuracy of this convergence to the theoretical values.
 
 \begin{table}[h!]
 \centering
@@ -162,8 +210,8 @@ Following the protocol described in Section \ref{section:protocol_bell}, and the
             & $\scriptstyle0.0734^{\textcolor[rgb]{0,0,1}{0.0732}}$ & -\\ \hline
 $(+1, -1)$  & $\scriptstyle0.0731^{\textcolor[rgb]{0,0,1}{0.0732}}$ 
             & $\scriptstyle0.0732^{\textcolor[rgb]{0,0,1}{0.0732}}$  
-        & $\scriptstyle0.0732^{\textcolor[rgb]{0,0,1}{0.0732}}$ 
-        & $\scriptstyle0.4265^{\textcolor[rgb]{0,0,1}{0.4267}}$ & -\\ \hline
+            & $\scriptstyle0.0732^{\textcolor[rgb]{0,0,1}{0.0732}}$ 
+            & $\scriptstyle0.4265^{\textcolor[rgb]{0,0,1}{0.4267}}$ & -\\ \hline
 $(-1, +1)$  & $\scriptstyle0.0732^{\textcolor[rgb]{0,0,1}{0.0732}}$ 
             & $\scriptstyle0.0733^{\textcolor[rgb]{0,0,1}{0.0732}}$ 
             & $\scriptstyle0.0732^{\textcolor[rgb]{0,0,1}{0.0732}}$ 
@@ -179,9 +227,21 @@ $\mathbb{E}[A_x, B_y]$  & $\scriptstyle{0.7072}$
                         & $\scriptstyle{2.8287}$\\
 \bottomrule
 \end{tabular}}
-\caption{Probability outcomes of a classical Bell simulation after $10^{7}$ shots. The entanglement state is the Bell singlet state $\ket{\Psi^{-}}=(\ket{00} - \ket{11})/\sqrt{2}$, and the observables chosen are $A_0=Z,\:A_1=X,\:B_0=-(X +Z)/\sqrt{2},\:B_1=(X - Z)1/\sqrt{2}$. The theoretical probabilities obtained applying Born’s rule are also
-provided for ease of comparison in blue color.}
+\caption{Probability outcomes of a classical Bell simulation after $10^{7}$ shots. The entanglement state is the Bell singlet state $\ket{\Psi^{-}}=(\ket{00} - \ket{11})/\sqrt{2}$, and the observables chosen are $A_0=Z,\:A_1=X,\:B_0=-(X +Z)/\sqrt{2},\:B_1=(X - Z)1/\sqrt{2}$. For the purpose of comparison, theoretical probabilities calculated using Born's rule are presented in superscript blue color.}
 \label{table:classical_results_bell}
 \end{table}
+
+\begin{figure}[h!]
+\centering
+\includegraphics[width=\textwidth]{images/bell_heatmap_classical.png}
+\caption{The joint probabilities for the Bell classical simulations are plotted in a heatmap for various numbers of shots, revealing that the outcomes begin to converge after a few thousand shots.}
+\label{fig:classical_results_bell}
+\end{figure}
+
+\begin{figure}[h!]
+\centering
+\includegraphics[width=\textwidth]{images/bell_heatmap_classical_theoretical.png}
+\caption{The heatmap displays the joint probabilities obtained from a classical Bell simulation after $10^7$ shots, alongside the theoretical values computed via Born's rule, revealing a significant level of accuracy.}
+\label{fig:classical_theoretical_results_bell}
+\end{figure}
 \clearpage
-% Figure ?? demonstrates the convergence of the joint probabilities to their theoretical values with an increasing number of shots. 

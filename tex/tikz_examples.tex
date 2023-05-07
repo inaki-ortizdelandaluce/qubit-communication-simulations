@@ -37,45 +37,45 @@
 % A custom arrowhead for use on x, y, z axes
 \tikzstyle{axisarrow} = [-{Latex[inset=0pt,length=5pt]}]
 \begin{tikzpicture}[scale=1.2]
-	% Draw the background grid.
-	\draw [cornflower!20,step=0.25,thin] (-3,-3) grid (3,3);
-	\draw [cornflower!40,step=1.0,thin] (-3,-3) grid (3,3);
+    % Draw the background grid.
+    \draw [cornflower!20,step=0.25,thin] (-3,-3) grid (3,3);
+    \draw [cornflower!40,step=1.0,thin] (-3,-3) grid (3,3);
 
-	
-	% The obscured part of the z-axis
-	\draw (0,0) -- (0,-3);
+    
+    % The obscured part of the z-axis
+    \draw (0,0) -- (0,-3);
 
-	% Draw a shaded ball, but clip so only the lower half shows.
-	% The arc in the clipping region is the foreground part of the equator
-	\begin{scope}
-	    \clip(-3,-3) -- (-3,0) -- (-2,0) arc (180:360:2cm and 0.6cm) -- (3,0) -- (3,-3) -- (-3,-3);
-		\shade[ball color=chameleon!60!white, opacity=0.70] (0,0) circle (2cm);
-	\end{scope}
+    % Draw a shaded ball, but clip so only the lower half shows.
+    % The arc in the clipping region is the foreground part of the equator
+    \begin{scope}
+        \clip(-3,-3) -- (-3,0) -- (-2,0) arc (180:360:2cm and 0.6cm) -- (3,0) -- (3,-3) -- (-3,-3);
+        \shade[ball color=chameleon!60!white, opacity=0.70] (0,0) circle (2cm);
+    \end{scope}
 
-	% Draw the disc on top of the hemisphere.
+    % Draw the disc on top of the hemisphere.
     \shade[shading=radial, inner color=chameleon!20!white, outer color=chameleon!60!white, opacity=0.70] (2,0) arc (0:360:2cm and 0.6cm); 
-	
-	% Outline the disk in black
+    
+    % Outline the disk in black
     \draw (2,0) arc (0:360:2cm and 0.6cm);
 
-	% Outline the hemisphere in black
+    % Outline the hemisphere in black
     \draw (-2,0) arc (180:360:2cm and 2cm);
 
-	% A dashed line and label indicating the radius
+    % A dashed line and label indicating the radius
     \draw [dashed] (0,0)--(2,0);
-	\node at (1.2,.2) {$R$};
+    \node at (1.2,.2) {$R$};
 
-	% The rest of the z-axis
-	\draw[axisarrow] (0,0) -- (0,3);
-	\node at (.2,2.8) {$z$};
+    % The rest of the z-axis
+    \draw[axisarrow] (0,0) -- (0,3);
+    \node at (.2,2.8) {$z$};
 
-	% The y-axis
-	\draw[axisarrow] (-2.5,1) -- (2.5,-1);
-	\node at (2.5,-1.2) {$y$};
+    % The y-axis
+    \draw[axisarrow] (-2.5,1) -- (2.5,-1);
+    \node at (2.5,-1.2) {$y$};
 
-	% The x-axis
-	\draw[axisarrow] (2.5,1) -- (-2.5,-1);
-	\node at (-2.5,-0.8) {$x$};
+    % The x-axis
+    \draw[axisarrow] (2.5,1) -- (-2.5,-1);
+    \node at (-2.5,-0.8) {$x$};
 
 \end{tikzpicture}
 

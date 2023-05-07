@@ -845,10 +845,12 @@ def bell_sample_heatmap():
     return None
 
 
-def bell():
+def bell(shots):
     np.random.seed(0)
 
-    shots = 10**5
+    mpl.rcParams['mathtext.fontset'] = 'stix'
+    mpl.rcParams['font.family'] = 'STIXGeneral'
+
     a0 = Observable(Z)
     a1 = Observable(X)
     b0 = Observable(-1 / math.sqrt(2) * (X + Z))
@@ -859,10 +861,17 @@ def bell():
 
     experiment = qt.classical.bell_singlet_full(shots, alice=(a0, a1), bob=(b0, b1))
     actual = experiment['probabilities']['stats'].T
+    expected = experiment['probabilities']['born'].T
+    '''
+    actual = np.array([[0.4267916, 0.0731243, 0.073249,  0.4268351],
+                       [0.4269109, 0.0731628, 0.0732563, 0.42667],
+                       [0.426685,  0.0731767, 0.0732062, 0.4269321],
+                       [0.0733566, 0.4265009, 0.4270081, 0.0731344]]).T
     expected = np.array([[0.4267767, 0.0732233, 0.0732233, 0.4267767],
                          [0.4267767, 0.0732233, 0.0732233, 0.4267767],
                          [0.4267767, 0.0732233, 0.0732233, 0.4267767],
                          [0.0732233, 0.4267767, 0.4267767, 0.0732233]]).T
+    '''
 
     x = np.arange(0, 5)
     y = np.arange(0, 5)
@@ -871,38 +880,121 @@ def bell():
     measurements = ["($A_0$,$B_0$)", "$(A_0,B_1)$", "$(A_1,B_0)$", "$(A_1,B_1)$"]
 
     fig, ax = plt.subplots(1, 2, figsize=(14, 5))
-    # expected
-    im = ax[0].imshow(expected, cmap='PiYG')
+
+    # actual
+    im = ax[0].imshow(actual, cmap='PiYG')
 
     ax[0].set_xticks(np.arange(len(measurements)), labels=measurements)
     ax[0].set_yticks(np.arange(len(outcomes)), labels=outcomes)
 
     for i in range(len(measurements)):
         for j in range(len(outcomes)):
-            text = ax[0].text(j, i, expected[i, j],
+            text = ax[0].text(j, i, round(actual[i, j], 4),
                               ha="center", va="center", color="w")
 
-    ax[0].set_title("Born\'s Rule ")
+    ax[0].set_title("Classical Protocol")
 
-    # actual
-    im = ax[1].imshow(actual, cmap='PiYG')
+    # expected
+    im = ax[1].imshow(expected, cmap='PiYG')
 
     ax[1].set_xticks(np.arange(len(measurements)), labels=measurements)
     ax[1].set_yticks(np.arange(len(outcomes)), labels=outcomes)
 
     for i in range(len(measurements)):
         for j in range(len(outcomes)):
-            text = ax[1].text(j, i, actual[i, j],
+            text = ax[1].text(j, i, round(expected[i, j], 4),
                               ha="center", va="center", color="w")
 
-    ax[1].set_title("Classical Protocol - $10^{5}$ shots")
+    ax[1].set_title("Born\'s rule ")
 
     fig.tight_layout()
     plt.show()
     return None
 
 
-def bell_multiplot(shots):
+def bell_multiplot():
+    np.random.seed(0)
+
+    mpl.rcParams['mathtext.fontset'] = 'stix'
+    mpl.rcParams['font.family'] = 'STIXGeneral'
+
+    cases = [r'$shots=10$', r'$shots=100$', r'$shots=500$',
+             r'$shots=10^3$', r'$shots=5\cdot10^3$', r'$shots=10^4$',
+             r'$shots=2\cdot10^4$', r'$shots=5\cdot10^4$', r'$shots=10^5$']
+    outcomes = ["$(+1,+1)$", "$(+1,-1)$", "$(-1,+1)$", "$(-1,-1)$"]
+    measurements = ["($A_0$,$B_0$)", "$(A_0,B_1)$", "$(A_1,B_0)$", "$(A_1,B_1)$"]
+
+    fig, axs = plt.subplots(3, 3, figsize=(10, 10), layout='constrained')
+
+    for ax, title in zip(axs.flat, cases):
+        ax.xaxis.set_tick_params(which='major', size=5, width=1, direction='out', top='on')
+        ax.xaxis.set_tick_params(which='minor', size=3, width=1, direction='out', top='on')
+        ax.yaxis.set_tick_params(which='major', size=5, width=1, direction='out', right='on')
+        ax.yaxis.set_tick_params(which='minor', size=3, width=1, direction='out', right='on')
+        # ax.set_ylabel(r'$p_{C}(a_x, b_y | A_x, B_y)$', labelpad=2)
+        ax.set_title(title)
+        ax.set_xticks(np.arange(len(measurements)), labels=measurements)
+        ax.set_yticks(np.arange(len(outcomes)), labels=outcomes)
+
+    fig.supxlabel(r'$(A_x, B_y)$')
+    fig.supylabel(r'$(a_x, b_y)$')
+    fig.suptitle(r'$p_{C}(a_x, b_y\:|\:A_x, B_y)$')
+
+    a0 = Observable(Z)
+    a1 = Observable(X)
+    b0 = Observable(-1 / math.sqrt(2) * (X + Z))
+    b1 = Observable(1 / math.sqrt(2) * (X - Z))
+
+    alice = Qubit(a0.eigenvector(1))
+    bob = (Qubit(b0.eigenvector(1)), Qubit(b0.eigenvector(-1)))
+
+    # shots = 10
+    experiment1 = qt.classical.bell_singlet_full(10, alice=(a0, a1), bob=(b0, b1))
+    actual1 = experiment1['probabilities']['stats'].T
+    axs[0][0].imshow(actual1, cmap='PiYG')
+
+    # shots = 100
+    experiment2 = qt.classical.bell_singlet_full(100, alice=(a0, a1), bob=(b0, b1))
+    actual2 = experiment2['probabilities']['stats'].T
+    axs[0][1].imshow(actual2, cmap='PiYG')
+
+    # shots = 500
+    experiment3 = qt.classical.bell_singlet_full(500, alice=(a0, a1), bob=(b0, b1))
+    actual3 = experiment3['probabilities']['stats'].T
+    axs[0][2].imshow(actual3, cmap='PiYG')
+
+    # shots = 1000
+    experiment4 = qt.classical.bell_singlet_full(1000, alice=(a0, a1), bob=(b0, b1))
+    actual4 = experiment4['probabilities']['stats'].T
+    axs[1][0].imshow(actual4, cmap='PiYG')
+
+    # shots = 5000
+    experiment5 = qt.classical.bell_singlet_full(5000, alice=(a0, a1), bob=(b0, b1))
+    actual5 = experiment5['probabilities']['stats'].T
+    axs[1][1].imshow(actual5, cmap='PiYG')
+
+    # shots = 10000
+    experiment6 = qt.classical.bell_singlet_full(10000, alice=(a0, a1), bob=(b0, b1))
+    actual6 = experiment6['probabilities']['stats'].T
+    axs[1][2].imshow(actual6, cmap='PiYG')
+
+    # shots = 20000
+    experiment7 = qt.classical.bell_singlet_full(20000, alice=(a0, a1), bob=(b0, b1))
+    actual7 = experiment7['probabilities']['stats'].T
+    axs[2][0].imshow(actual7, cmap='PiYG')
+
+    # shots = 50000
+    experiment8 = qt.classical.bell_singlet_full(50000, alice=(a0, a1), bob=(b0, b1))
+    actual8 = experiment8['probabilities']['stats'].T
+    axs[2][1].imshow(actual8, cmap='PiYG')
+
+    # shots = 100000
+    experiment9 = qt.classical.bell_singlet_full(100000, alice=(a0, a1), bob=(b0, b1))
+    actual9 = experiment9['probabilities']['stats'].T
+    axs[2][2].imshow(actual9, cmap='PiYG')
+
+    fig.tight_layout()
+    plt.show()
     return None
 
 
@@ -925,6 +1017,7 @@ if __name__ == "__main__":
     # pm_kl_classical_quantum_simulator_born(10 **4)
     # pm_kl_multiplot(10**4)
     # chsh_sample()
-    bell_sample_probabilities(10**7)
+    # bell_sample_probabilities(10**7)
     # bell_sample_heatmap()
-    # bell()
+    # bell(10**7)
+    bell_multiplot()
