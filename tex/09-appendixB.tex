@@ -6,300 +6,339 @@ The prepare-and-measure scenario selected for the comparison is as follows
 \mathbb{P}_4&=\{\frac{1}{2}\ket{0}\bra{0}, \frac{1}{2}\ket{1}\bra{1}, \frac{1}{2}\ket{+}\bra{+}, \frac{1}{2}\ket{-}\bra{-} \}
 \end{split}
 \end{equation}
-A full analysis of the achievable performances when simulating such scenario with IBM Quantum simulators and computers can be found at \href{https://github.com/inaki-ortizdelandaluce/qubit-communication-simulations/blob/main/tex/xls/qc_probabilities_summary.xlsx}{here}.
-
+The achievable performances when simulating such scenario with IBM Quantum simulators and computers can be found in the tables and figures below.
+\\
 \begin{table}[!ht]
     \centering
-    \begin{tabular}{ccccc}
+    {\renewcommand{\arraystretch}{1.2}%
+    \begin{tabular}{c|cccc}
     \hline
-        \textbf{RESULTS} & \textbf{'00'} & \textbf{'01'} & \textbf{'10'} & \textbf{'11' } \\ \hline
-        \textbf{QS-SIMULATION} & 37 & 15 & 7 & 41  \\ 
-        \textbf{QC-NAIROBI} & 40 & 14 & 3 & 43  \\ 
-        \textbf{QC-PERTH} & 35 & 26 & 10 & 29  \\ 
-        \textbf{QC-OSLO} & 40 & 8 & 4 & 48  \\ 
-        \textbf{QC-JAKARTA} & 35 & 16 & 11 & 38  \\ 
-        \textbf{QC-LAGOS} & 38 & 10 & 6 & 46 \\ \hline
-    \end{tabular}
-    \caption{QS-QC: 100 SHOTS}
+        \multirow{2}*{Resource} & \multicolumn{4}{c}{Measure}  \\ \cline{2-5}
+        & 00 & 01 & 10 & 11 \\ \hline
+        Aer Simulator & $\scriptstyle37$ & $\scriptstyle15$ & $\scriptstyle7$ & $\scriptstyle41$  \\ 
+        Nairobi & $\scriptstyle40$ & $\scriptstyle14$ & $\scriptstyle3$ & $\scriptstyle43$  \\ 
+        Perth & $\scriptstyle35$ & $\scriptstyle26$ & $\scriptstyle10$ & $\scriptstyle29$  \\ 
+        Oslo & $\scriptstyle40$ & $\scriptstyle8$ & $\scriptstyle4$ & $\scriptstyle48$  \\ 
+        Jakarta & $\scriptstyle35$ & $\scriptstyle16$ & $\scriptstyle11$ & $\scriptstyle38$  \\ 
+        Lagos & $\scriptstyle38$ & $\scriptstyle10$ & $\scriptstyle6$ & $\scriptstyle46$ \\ \hline
+    \end{tabular}}
+    \caption{Measure counts for a quantum simulator and different IBM Quantum computers: 100 shots}
 \end{table}
 
 \begin{table}[!ht]
     \centering
-    \begin{tabular}{ccccc}
+    {\renewcommand{\arraystretch}{1.2}%
+    \begin{tabular}{c|cccc}
     \hline
-        \textbf{RESULTS} & \textbf{'00'} & \textbf{'01'} & \textbf{'10'} & \textbf{'11' } \\ \hline
-        \textbf{QS-SIMULATION} & 182 & 54 & 30 & 234  \\ 
-        \textbf{QC-NAIROBI} & 183 & 59 & 67 & 191  \\ 
-        \textbf{QC-PERTH} & 200 & 89 & 67 & 144  \\ 
-        \textbf{QC-OSLO} & 189 & 52 & 33 & 226  \\ 
-        \textbf{QC-JAKARTA} & 187 & 60 & 47 & 206  \\ 
-        \textbf{QC-LAGOS} & 164 & 59 & 43 & 234 \\ \hline
-    \end{tabular}
-    \caption{QS-QC: 500 SHOTS}
+        \multirow{2}*{Resource} & \multicolumn{4}{c}{Measure}  \\ \cline{2-5}
+        & 00 & 01 & 10 & 11 \\ \hline
+        Aer Simulator & $\scriptstyle182$ & $\scriptstyle54$ & $\scriptstyle30$ & $\scriptstyle234$  \\ 
+        Nairobi & $\scriptstyle183$ & $\scriptstyle59$ & $\scriptstyle67$ & $\scriptstyle191$  \\ 
+        Perth & $\scriptstyle200$ & $\scriptstyle89$ & $\scriptstyle67$ & $\scriptstyle144$  \\ 
+        Oslo & $\scriptstyle189$ & $\scriptstyle52$ & $\scriptstyle33$ & $\scriptstyle226$  \\ 
+        Jakarta & $\scriptstyle187$ & $\scriptstyle60$ & $\scriptstyle47$ & $\scriptstyle206$  \\ 
+        Lagos & $\scriptstyle164$ & $\scriptstyle59$ & $\scriptstyle43$ & $\scriptstyle234$ \\ \hline
+    \end{tabular}}
+    \caption{Measure counts for a quantum simulator and different IBM Quantum computers: 500 shots}
 \end{table}
 
 \begin{table}[!ht]
     \centering
-    \begin{tabular}{ccccc}
+    {\renewcommand{\arraystretch}{1.2}%
+    \begin{tabular}{c|cccc}
     \hline
-        \textbf{RESULTS} & \textbf{'00'} & \textbf{'01'} & \textbf{'10'} & \textbf{'11' } \\ \hline
-        \textbf{QS-SIMULATION} & 362 & 117 & 67 & 454  \\ 
-        \textbf{QC-NAIROBI} & 335 & 162 & 112 & 391  \\ 
-        \textbf{QC-PERTH} & 337 & 185 & 121 & 357  \\ 
-        \textbf{QC-OSLO} & 379 & 100 & 52 & 469  \\ 
-        \textbf{QC-JAKARTA} & 378 & 160 & 76 & 386  \\ 
-        \textbf{QC-LAGOS} & 366 & 113 & 60 & 461 \\ \hline
-    \end{tabular}
-    \caption{QS-QC: 1000 SHOTS}
+        \multirow{2}*{Resource} & \multicolumn{4}{c}{Measure}  \\ \cline{2-5}
+        & 00 & 01 & 10 & 11 \\ \hline
+        Aer Simulator & $\scriptstyle362$ & $\scriptstyle117$ & $\scriptstyle67$ & $\scriptstyle454$  \\ 
+        Nairobi & $\scriptstyle335$ & $\scriptstyle162$ & $\scriptstyle112$ & $\scriptstyle391$  \\ 
+        Perth & $\scriptstyle337$ & $\scriptstyle185$ & $\scriptstyle121$ & $\scriptstyle357$  \\ 
+        Oslo & $\scriptstyle379$ & $\scriptstyle100$ & $\scriptstyle52$ & $\scriptstyle469$  \\ 
+        Jakarta & $\scriptstyle378$ & $\scriptstyle160$ & $\scriptstyle76$ & $\scriptstyle386$  \\ 
+        Lagos & $\scriptstyle366$ & $\scriptstyle113$ & $\scriptstyle60$ & $\scriptstyle461$ \\ \hline
+    \end{tabular}}
+    \caption{Measure counts for a quantum simulator and different IBM Quantum computers: 1000 shots}
 \end{table}
 
 \begin{table}[!ht]
     \centering
-    \begin{tabular}{ccccc}
+    {\renewcommand{\arraystretch}{1.2}%
+    \begin{tabular}{c|cccc}
     \hline
-        \textbf{RESULTS} & \textbf{'00'} & \textbf{'01'} & \textbf{'10'} & \textbf{'11' } \\ \hline
-        \textbf{QS-SIMULATION} & 1484 & 513 & 268 & 1735  \\ 
-        \textbf{QC-NAIROBI} & 1417 & 453 & 392 & 1738  \\ 
-        \textbf{QC-PERTH} & 1534 & 656 & 391 & 1419  \\ 
-        \textbf{QC-OSLO} & 1455 & 418 & 266 & 1861  \\ 
-        \textbf{QC-JAKARTA} & 1498 & 547 & 371 & 1584  \\ 
-        \textbf{QC-LAGOS} & 1378 & 424 & 258 & 1940 \\ \hline
-    \end{tabular}
-    \caption{QS-QC: 4000 SHOTS}
+        \multirow{2}*{Resource} & \multicolumn{4}{c}{Measure}  \\ \cline{2-5}
+        & 00 & 01 & 10 & 11 \\ \hline        
+        Aer Simulator & $\scriptstyle1484$ & $\scriptstyle513$ & $\scriptstyle268$ & $\scriptstyle1735$  \\ 
+        Nairobi & $\scriptstyle1417$ & $\scriptstyle453$ & $\scriptstyle392$ & $\scriptstyle1738$  \\ 
+        Perth & $\scriptstyle1534$ & $\scriptstyle656$ & $\scriptstyle391$ & $\scriptstyle1419$  \\ 
+        Oslo & $\scriptstyle1455$ & $\scriptstyle418$ & $\scriptstyle266$ & $\scriptstyle1861$  \\ 
+        Jakarta & $\scriptstyle1498$ & $\scriptstyle547$ & $\scriptstyle371$ & $\scriptstyle1584$  \\ 
+        Lagos & $\scriptstyle1378$ & $\scriptstyle424$ & $\scriptstyle258$ & $\scriptstyle1940$ \\ \hline
+    \end{tabular}}
+    \caption{Measure counts for a quantum simulator and different IBM Quantum computers: 4000 shots}
 \end{table}
 
 \begin{table}[!ht]
     \centering
-    \begin{tabular}{ccccc}
+    {\renewcommand{\arraystretch}{1.2}%
+    \begin{tabular}{c|cccc}
     \hline
-        \textbf{RESULTS} & \textbf{'00'} & \textbf{'01'} & \textbf{'10'} & \textbf{'11' } \\ \hline
-        \textbf{QS-SIMULATION} & 3772 & 1223 & 623 & 4382  \\ 
-        \textbf{QC-NAIROBI} & 3782 & 1724 & 900 & 3594  \\ 
-        \textbf{QC-PERTH} & 3703 & 1867 & 1177 & 3253  \\ 
-        \textbf{QC-OSLO} & 3583 & 1083 & 702 & 4632  \\ 
-        \textbf{QC-JAKARTA} & 3829 & 1427 & 880 & 3864  \\ 
-        \textbf{QC-LAGOS} & 3570 & 1133 & 625 & 4672 \\ \hline
-    \end{tabular}
-    \caption{QS-QC: 10000 SHOTS}
+        \multirow{2}*{Resource} & \multicolumn{4}{c}{Measure}  \\ \cline{2-5}
+         & 00 & 01 & 10 & 11 \\ \hline
+        Aer Simulator & $\scriptstyle3772$ & $\scriptstyle1223$ & $\scriptstyle623$ & $\scriptstyle4382$  \\ 
+        Nairobi & $\scriptstyle3782$ & $\scriptstyle1724$ & $\scriptstyle900$ & $\scriptstyle3594$  \\ 
+        Perth & $\scriptstyle3703$ & $\scriptstyle1867$ & $\scriptstyle1177$ & $\scriptstyle3253$  \\ 
+        Oslo & $\scriptstyle3583$ & $\scriptstyle1083$ & $\scriptstyle702$ & $\scriptstyle4632$  \\ 
+        Jakarta & $\scriptstyle3829$ & $\scriptstyle1427$ & $\scriptstyle880$ & $\scriptstyle3864$  \\ 
+        Lagos & $\scriptstyle3570$ & $\scriptstyle1133$ & $\scriptstyle625$ & $\scriptstyle4672$ \\ \hline
+    \end{tabular}}
+    \caption{Measure counts for a quantum simulator and different IBM Quantum computers: 10000 shots}
 \end{table}
 
 \begin{table}[!ht]
     \centering
-    \begin{tabular}{ccccc}
+    {\renewcommand{\arraystretch}{1.2}%
+    \begin{tabular}{c|cccc}
     \hline
-        \textbf{RESULTS} & \textbf{'00'} & \textbf{'01'} & \textbf{'10'} & \textbf{'11' } \\ \hline
-        \textbf{QS-SIMULATION} & 7560 & 2409 & 1164 & 8867  \\ 
-        \textbf{QC-NAIROBI} & 6904 & 2294 & 1940 & 8862  \\ 
-        \textbf{QC-PERTH} & 6556 & 3034 & 2252 & 8158  \\ 
-        \textbf{QC-OSLO} & 7563 & 2275 & 1274 & 8888  \\ 
-        \textbf{QC-JAKARTA} & 7325 & 2970 & 1971 & 7734  \\ 
-        \textbf{QC-LAGOS} & 7315 & 2594 & 1405 & 8686 \\ \hline
-    \end{tabular}
-    \caption{QS-QC: 20000 SHOTS}
+        \multirow{2}*{Resource} & \multicolumn{4}{c}{Measure}  \\ \cline{2-5}
+        & 00 & 01 & 10 & 11 \\ \hline
+        Aer Simulator & $\scriptstyle7560$ & $\scriptstyle2409$ & $\scriptstyle1164$ & $\scriptstyle8867$  \\ 
+        Nairobi & $\scriptstyle6904$ & $\scriptstyle2294$ & $\scriptstyle1940$ & $\scriptstyle8862$  \\ 
+        Perth & $\scriptstyle6556$ & $\scriptstyle3034$ & $\scriptstyle2252$ & $\scriptstyle8158$  \\ 
+        Oslo & $\scriptstyle7563$ & $\scriptstyle2275$ & $\scriptstyle1274$ & $\scriptstyle8888$  \\ 
+        Jakarta & $\scriptstyle7325$ & $\scriptstyle2970$ & $\scriptstyle1971$ & $\scriptstyle7734$  \\ 
+        Lagos & $\scriptstyle7315$ & $\scriptstyle2594$ & $\scriptstyle1405$ & $\scriptstyle8686$ \\ \hline
+    \end{tabular}}
+    \caption{Measure counts for a quantum simulator and different IBM Quantum computers: 20000 shots}
 \end{table}
 
 \begin{table}[!ht]
     \centering
-    \begin{tabular}{ccccc}
+    {\renewcommand{\arraystretch}{1.2}%
+    \begin{tabular}{c|cccc}
     \hline
-        \textbf{RESULTS} & \textbf{'00'} & \textbf{'01'} & \textbf{'10'} & \textbf{'11' } \\ \hline
-        \textbf{QS-SIMULATION} & 0,37 & 0,15 & 0,07 & 0,41  \\ 
-        \textbf{QC-NAIROBI} & 0,4 & 0,14 & 0,03 & 0,43  \\ 
-        \textbf{QC-PERTH} & 0,35 & 0,26 & 0,1 & 0,29  \\ 
-        \textbf{QC-OSLO} & 0,4 & 0,08 & 0,04 & 0,48  \\ 
-        \textbf{QC-JAKARTA} & 0,35 & 0,16 & 0,11 & 0,38  \\ 
-        \textbf{QC-LAGOS} & 0,38 & 0,1 & 0,06 & 0,46 \\ \hline
-    \end{tabular}
-    \caption{QS-QC: 100 SHOTS (Probabilities)}
+        \multirow{2}*{Resource} & \multicolumn{4}{c}{Measure}  \\ \cline{2-5}
+        & 00 & 01 & 10 & 11 \\ \hline
+        Aer Simulator & $\scriptstyle0.37$ & $\scriptstyle0.15$ & $\scriptstyle0.07$ & $\scriptstyle0.41$  \\ 
+        Nairobi & $\scriptstyle0.4$ & $\scriptstyle0.14$ & $\scriptstyle0.03$ & $\scriptstyle0.43$  \\ 
+        Perth & $\scriptstyle0.35$ & $\scriptstyle0.26$ & $\scriptstyle0.1$ & $\scriptstyle0.29$  \\ 
+        Oslo & $\scriptstyle0.4$ & $\scriptstyle0.08$ & $\scriptstyle0.04$ & $\scriptstyle0.48$  \\ 
+        Jakarta & $\scriptstyle0.35$ & $\scriptstyle0.16$ & $\scriptstyle0.11$ & $\scriptstyle0.38$  \\ 
+        Lagos & $\scriptstyle0.38$ & $\scriptstyle0.1$ & $\scriptstyle0.06$ & $\scriptstyle0.46$ \\ \hline
+    \end{tabular}}
+    \caption{Measure probabilities for a quantum simulator and different IBM Quantum computers: 100 shots}
 \end{table}
 
 \begin{table}[!ht]
     \centering
-    \begin{tabular}{ccccc}
+    {\renewcommand{\arraystretch}{1.2}%
+    \begin{tabular}{c|cccc}
     \hline
-        \textbf{RESULTS} & \textbf{'00'} & \textbf{'01'} & \textbf{'10'} & \textbf{'11' } \\ \hline
-        \textbf{QS-SIMULATION} & 0,364 & 0,108 & 0,06 & 0,468  \\ 
-        \textbf{QC-NAIROBI} & 0,366 & 0,118 & 0,134 & 0,382  \\ 
-        \textbf{QC-PERTH} & 0,4 & 0,178 & 0,134 & 0,288  \\ 
-        \textbf{QC-OSLO} & 0,378 & 0,104 & 0,066 & 0,452  \\ 
-        \textbf{QC-JAKARTA} & 0,374 & 0,12 & 0,094 & 0,412  \\ 
-        \textbf{QC-LAGOS} & 0,328 & 0,118 & 0,086 & 0,468 \\ \hline
-    \end{tabular}
-    \caption{QS-QC: 500 SHOTS (Probabilities)}
-\end{table}
-
-
-\begin{table}[!ht]
-    \centering
-    \begin{tabular}{ccccc}
-    \hline
-        \textbf{RESULTS} & \textbf{'00'} & \textbf{'01'} & \textbf{'10'} & \textbf{'11' } \\ \hline
-        \textbf{QS-SIMULATION} & 0,362 & 0,117 & 0,067 & 0,454  \\ 
-        \textbf{QC-NAIROBI} & 0,335 & 0,162 & 0,112 & 0,391  \\ 
-        \textbf{QC-PERTH} & 0,337 & 0,185 & 0,121 & 0,357  \\ 
-        \textbf{QC-OSLO} & 0,379 & 0,1 & 0,052 & 0,469  \\ 
-        \textbf{QC-JAKARTA} & 0,378 & 0,16 & 0,076 & 0,386  \\ 
-        \textbf{QC-LAGOS} & 0,366 & 0,113 & 0,06 & 0,461 \\ \hline
-    \end{tabular}
-    \caption{QS-QC: 1000 SHOTS (Probabilities)}
-\end{table}
-
-\begin{table}[!ht]
-    \centering
-    \begin{tabular}{ccccc}
-    \hline
-        \textbf{RESULTS} & \textbf{'00'} & \textbf{'01'} & \textbf{'10'} & \textbf{'11' } \\ \hline
-        \textbf{QS-SIMULATION} & 0,371 & 0,12825 & 0,067 & 0,43375  \\ 
-        \textbf{QC-NAIROBI} & 0,35425 & 0,11325 & 0,098 & 0,4345  \\ 
-        \textbf{QC-PERTH} & 0,3835 & 0,164 & 0,09775 & 0,35475  \\ 
-        \textbf{QC-OSLO} & 0,36375 & 0,1045 & 0,0665 & 0,46525  \\ 
-        \textbf{QC-JAKARTA} & 0,3745 & 0,13675 & 0,09275 & 0,396  \\ 
-        \textbf{QC-LAGOS} & 0,3445 & 0,106 & 0,0645 & 0,485 \\ \hline
-    \end{tabular}
-    \caption{QS-QC: 4000 SHOTS (Probabilities)}
-\end{table}
-
-\begin{table}[!ht]
-    \centering
-    \begin{tabular}{ccccc}
-    \hline
-        \textbf{RESULTS} & \textbf{'00'} & \textbf{'01'} & \textbf{'10'} & \textbf{'11' } \\ \hline
-        \textbf{QS-SIMULATION} & 0,3772 & 0,1223 & 0,0623 & 0,4382  \\ 
-        \textbf{QC-NAIROBI} & 0,3782 & 0,1724 & 0,09 & 0,3594  \\ 
-        \textbf{QC-PERTH} & 0,3703 & 0,1867 & 0,1177 & 0,3253  \\ 
-        \textbf{QC-OSLO} & 0,3583 & 0,1083 & 0,0702 & 0,4632  \\ 
-        \textbf{QC-JAKARTA} & 0,3829 & 0,1427 & 0,088 & 0,3864  \\ 
-        \textbf{QC-LAGOS} & 0,357 & 0,1133 & 0,0625 & 0,4672 \\ \hline
-    \end{tabular}
-    \caption{QS-QC: 10000 SHOTS (Probabilities)}
-\end{table}
-
-\begin{table}[!ht]
-    \centering
-    \begin{tabular}{ccccc}
-    \hline
-        \textbf{RESULTS} & \textbf{'00'} & \textbf{'01'} & \textbf{'10'} & \textbf{'11' } \\ \hline
-        \textbf{QS-SIMULATION} & 0,378 & 0,12045 & 0,0582 & 0,44335  \\ 
-        \textbf{QC-NAIROBI} & 0,3452 & 0,1147 & 0,097 & 0,4431  \\ 
-        \textbf{QC-PERTH} & 0,3278 & 0,1517 & 0,1126 & 0,4079  \\ 
-        \textbf{QC-OSLO} & 0,37815 & 0,11375 & 0,0637 & 0,4444  \\ 
-        \textbf{QC-JAKARTA} & 0,36625 & 0,1485 & 0,09855 & 0,3867  \\ 
-        \textbf{QC-LAGOS} & 0,36575 & 0,1297 & 0,07025 & 0,4343 \\ \hline
-    \end{tabular}
-    \caption{QS-QC: 20000 SHOTS (Probabilities)}
+        \multirow{2}*{Resource} & \multicolumn{4}{c}{Measure}  \\ \cline{2-5}
+        & 00 & 01 & 10 & 11 \\ \hline
+        Aer Simulator & $\scriptstyle0.364$ & $\scriptstyle0.108$ & $\scriptstyle0.06$ & $\scriptstyle0.468$  \\ 
+        Nairobi & $\scriptstyle0.366$ & $\scriptstyle0.118$ & $\scriptstyle0.134$ & $\scriptstyle0.382$  \\ 
+        Perth & $\scriptstyle0.4$ & $\scriptstyle0.178$ & $\scriptstyle0.134$ & $\scriptstyle0.288$  \\ 
+        Oslo & $\scriptstyle0.378$ & $\scriptstyle0.104$ & $\scriptstyle0.066$ & $\scriptstyle0.452$  \\ 
+        Jakarta & $\scriptstyle0.374$ & $\scriptstyle0.12$ & $\scriptstyle0.094$ & $\scriptstyle0.412$  \\ 
+        Lagos & $\scriptstyle0.328$ & $\scriptstyle0.118$ & $\scriptstyle0.086$ & $\scriptstyle0.468$ \\ \hline
+    \end{tabular}}
+    \caption{Measure probabilities for a quantum simulator and different IBM Quantum computers: 500 shots}
 \end{table}
 
 
 \begin{table}[!ht]
     \centering
-    \begin{tabular}{ccccc}
+    {\renewcommand{\arraystretch}{1.2}%
+    \begin{tabular}{c|cccc}
     \hline
-        \textbf{RESULTS} & \textbf{'00'} & \textbf{'01'} & \textbf{'10'} & \textbf{'11' } \\ \hline
-        \textbf{QC-NAIROBI} & 0,03 & 0,01 & 0,04 & 0,02  \\ 
-        \textbf{QC-PERTH} & 0,02 & 0,11 & 0,03 & 0,12  \\ 
-        \textbf{QC-OSLO} & 0,03 & 0,07 & 0,03 & 0,07  \\ 
-        \textbf{QC-JAKARTA} & 0,02 & 0,01 & 0,04 & 0,03  \\ 
-        \textbf{QC-LAGOS} & 0,01 & 0,05 & 0,01 & 0,05 \\ \hline
-    \end{tabular}
-    \caption{QC ERROR: 100 SHOTS}
+        \multirow{2}*{Resource} & \multicolumn{4}{c}{Measure}  \\ \cline{2-5}
+        & 00 & 01 & 10 & 11 \\ \hline
+        Aer Simulator & $\scriptstyle0.362$ & $\scriptstyle0.117$ & $\scriptstyle0.067$ & $\scriptstyle0.454$  \\ 
+        Nairobi & $\scriptstyle0.335$ & $\scriptstyle0.162$ & $\scriptstyle0.112$ & $\scriptstyle0.391$  \\ 
+        Perth & $\scriptstyle0.337$ & $\scriptstyle0.185$ & $\scriptstyle0.121$ & $\scriptstyle0.357$  \\ 
+        Oslo & $\scriptstyle0.379$ & $\scriptstyle0.1$ & $\scriptstyle0.052$ & $\scriptstyle0.469$  \\ 
+        Jakarta & $\scriptstyle0.378$ & $\scriptstyle0.16$ & $\scriptstyle0.076$ & $\scriptstyle0.386$  \\ 
+        Lagos & $\scriptstyle0.366$ & $\scriptstyle0.113$ & $\scriptstyle0.06$ & $\scriptstyle0.461$ \\ \hline
+    \end{tabular}}
+    \caption{Measure probabilities for a quantum simulator and different IBM Quantum computers: 1000 shots}
 \end{table}
 
 \begin{table}[!ht]
     \centering
-    \begin{tabular}{ccccc}
+    {\renewcommand{\arraystretch}{1.2}%
+    \begin{tabular}{c|cccc}
     \hline
-        \textbf{RESULTS} & \textbf{'00'} & \textbf{'01'} & \textbf{'10'} & \textbf{'11' } \\ \hline
-        \textbf{QC-NAIROBI} & 0,002 & 0,01 & 0,074 & 0,086  \\ 
-        \textbf{QC-PERTH} & 0,036 & 0,07 & 0,074 & 0,18  \\ 
-        \textbf{QC-OSLO} & 0,014 & 0,004 & 0,006 & 0,016  \\ 
-        \textbf{QC-JAKARTA} & 0,01 & 0,012 & 0,034 & 0,056  \\ 
-        \textbf{QC-LAGOS} & 0,036 & 0,01 & 0,026 & 0 \\ \hline
-    \end{tabular}
-    \caption{QC ERROR: 500 SHOTS}
+        \multirow{2}*{Resource} & \multicolumn{4}{c}{Measure}  \\ \cline{2-5}
+        & 00 & 01 & 10 & 11 \\ \hline
+        Aer Simulator & $\scriptstyle0.371$ & $\scriptstyle0.12825$ & $\scriptstyle0.067$ & $\scriptstyle0.43375$  \\ 
+        Nairobi & $\scriptstyle0.35425$ & $\scriptstyle0.11325$ & $\scriptstyle0.098$ & $\scriptstyle0.4345$  \\ 
+        Perth & $\scriptstyle0.3835$ & $\scriptstyle0.164$ & $\scriptstyle0.09775$ & $\scriptstyle0.35475$  \\ 
+        Oslo & $\scriptstyle0.36375$ & $\scriptstyle0.1045$ & $\scriptstyle0.0665$ & $\scriptstyle0.46525$  \\ 
+        Jakarta & $\scriptstyle0.3745$ & $\scriptstyle0.13675$ & $\scriptstyle0.09275$ & $\scriptstyle0.396$  \\ 
+        Lagos & $\scriptstyle0.3445$ & $\scriptstyle0.106$ & $\scriptstyle0.0645$ & $\scriptstyle0.485$ \\ \hline
+    \end{tabular}}
+    \caption{Measure probabilities for a quantum simulator and different IBM Quantum computers: 4000 shots}
 \end{table}
 
 \begin{table}[!ht]
     \centering
-    \begin{tabular}{ccccc}
+    {\renewcommand{\arraystretch}{1.2}%
+    \begin{tabular}{c|cccc}
     \hline
-        \textbf{RESULTS} & \textbf{'00'} & \textbf{'01'} & \textbf{'10'} & \textbf{'11' } \\ \hline
-        \textbf{QC-NAIROBI} & 0,027 & 0,045 & 0,045 & 0,063  \\ 
-        \textbf{QC-PERTH} & 0,025 & 0,068 & 0,054 & 0,097  \\ 
-        \textbf{QC-OSLO} & 0,017 & 0,017 & 0,015 & 0,015  \\ 
-        \textbf{QC-JAKARTA} & 0,016 & 0,043 & 0,009 & 0,068  \\ 
-        \textbf{QC-LAGOS} & 0,004 & 0,004 & 0,007 & 0,007 \\ \hline
-    \end{tabular}
-    \caption{QC ERROR: 1000 SHOTS}
+        \multirow{2}*{Resource} & \multicolumn{4}{c}{Measure}  \\ \cline{2-5}
+        & 00 & 01 & 10 & 11 \\ \hline
+        Aer Simulator & $\scriptstyle0.3772$ & $\scriptstyle0.1223$ & $\scriptstyle0.0623$ & $\scriptstyle0.4382$  \\ 
+        Nairobi & $\scriptstyle0.3782$ & $\scriptstyle0.1724$ & $\scriptstyle0.09$ & $\scriptstyle0.3594$  \\ 
+        Perth & $\scriptstyle0.3703$ & $\scriptstyle0.1867$ & $\scriptstyle0.1177$ & $\scriptstyle0.3253$  \\ 
+        Oslo & $\scriptstyle0.3583$ & $\scriptstyle0.1083$ & $\scriptstyle0.0702$ & $\scriptstyle0.4632$  \\ 
+        Jakarta & $\scriptstyle0.3829$ & $\scriptstyle0.1427$ & $\scriptstyle0.088$ & $\scriptstyle0.3864$  \\ 
+        Lagos & $\scriptstyle0.357$ & $\scriptstyle0.1133$ & $\scriptstyle0.0625$ & $\scriptstyle0.4672$ \\ \hline
+    \end{tabular}}
+    \caption{Measure probabilities for a quantum simulator and different IBM Quantum computers: 10000 shots}
 \end{table}
 
 \begin{table}[!ht]
     \centering
-    \begin{tabular}{ccccc}
+    {\renewcommand{\arraystretch}{1.2}%
+    \begin{tabular}{c|cccc}
     \hline
-        \textbf{RESULTS} & \textbf{'00'} & \textbf{'01'} & \textbf{'10'} & \textbf{'11' } \\ \hline
-        \textbf{QC-NAIROBI} & 0,01675 & 0,015 & 0,031 & 0,00075  \\ 
-        \textbf{QC-PERTH} & 0,0125 & 0,03575 & 0,03075 & 0,079  \\ 
-        \textbf{QC-OSLO} & 0,00725 & 0,02375 & 0,0005 & 0,0315  \\ 
-        \textbf{QC-JAKARTA} & 0,0035 & 0,0085 & 0,02575 & 0,03775  \\ 
-        \textbf{QC-LAGOS} & 0,0265 & 0,02225 & 0,0025 & 0,05125 \\ \hline
-    \end{tabular}
-    \caption{QC ERROR: 4000 SHOTS}
-\end{table}
-
-\begin{table}[!ht]
-    \centering
-    \begin{tabular}{ccccc}
-    \hline
-        \textbf{RESULTS} & \textbf{'00'} & \textbf{'01'} & \textbf{'10'} & \textbf{'11' } \\ \hline
-        \textbf{QC-NAIROBI} & 0,001 & 0,0501 & 0,0277 & 0,0788  \\ 
-        \textbf{QC-PERTH} & 0,0069 & 0,0644 & 0,0554 & 0,1129  \\ 
-        \textbf{QC-OSLO} & 0,0189 & 0,014 & 0,0079 & 0,025  \\ 
-        \textbf{QC-JAKARTA} & 0,0057 & 0,0204 & 0,0257 & 0,0518  \\ 
-        \textbf{QC-LAGOS} & 0,0202 & 0,009 & 0,0002 & 0,029 \\ \hline
-    \end{tabular}
-    \caption{QC ERROR: 10000 SHOTS}
-\end{table}
-
-\begin{table}[!ht]
-    \centering
-    \begin{tabular}{ccccc}
-    \hline
-        \textbf{RESULTS} & \textbf{'00'} & \textbf{'01'} & \textbf{'10'} & \textbf{'11' } \\ \hline
-        \textbf{QC-NAIROBI} & 0,0328 & 0,00575 & 0,0388 & 0,00025  \\ 
-        \textbf{QC-PERTH} & 0,0502 & 0,03125 & 0,0544 & 0,03545  \\ 
-        \textbf{QC-OSLO} & 0,000 & 0,007 & 0,006 & 0,001  \\ 
-        \textbf{QC-JAKARTA} & 0,01175 & 0,02805 & 0,04035 & 0,05665  \\ 
-        \textbf{QC-LAGOS} & 0,01225 & 0,00925 & 0,01205 & 0,00905 \\ \hline
-    \end{tabular}
-    \caption{QC ERROR: 20000 SHOTS}
+        \multirow{2}*{Resource} & \multicolumn{4}{c}{Measure}  \\ \cline{2-5}
+        & 00 & 01 & 10 & 11 \\ \hline
+        Aer Simulator & $\scriptstyle0.378$ & $\scriptstyle0.12045$ & $\scriptstyle0.0582$ & $\scriptstyle0.44335$  \\ 
+        Nairobi & $\scriptstyle0.3452$ & $\scriptstyle0.1147$ & $\scriptstyle0.097$ & $\scriptstyle0.4431$  \\ 
+        Perth & $\scriptstyle0.3278$ & $\scriptstyle0.1517$ & $\scriptstyle0.1126$ & $\scriptstyle0.4079$  \\ 
+        Oslo & $\scriptstyle0.37815$ & $\scriptstyle0.11375$ & $\scriptstyle0.0637$ & $\scriptstyle0.4444$  \\ 
+        Jakarta & $\scriptstyle0.36625$ & $\scriptstyle0.1485$ & $\scriptstyle0.09855$ & $\scriptstyle0.3867$  \\ 
+        Lagos & $\scriptstyle0.36575$ & $\scriptstyle0.1297$ & $\scriptstyle0.07025$ & $\scriptstyle0.4343$ \\ \hline
+    \end{tabular}}
+    \caption{Measure probabilities for a quantum simulator and different IBM Quantum computers: 20000 shots}
 \end{table}
 
 
 \begin{table}[!ht]
     \centering
-    \begin{tabular}{ccccccc}
+    {\renewcommand{\arraystretch}{1.2}%
+    \begin{tabular}{c|cccc}
     \hline
-        \textbf{RESULTS} & \textbf{100 SH.} & \textbf{500  SH.} & \textbf{1000 SH.} & \textbf{4000 SH.} & \textbf{10000 SH.} & \textbf{20000 SH.} \\ \hline
-        \textbf{QC-NAIROBI} & 0,1 & 0,172 & 0,18 & 0,0635 & 0,1576 & 0,0776  \\ 
-        \textbf{QC-PERTH} & 0,28 & 0,36 & 0,244 & 0,158 & 0,2396 & 0,1713  \\ 
-        \textbf{QC-OSLO} & 0,2 & 0,04 & 0,064 & 0,063 & 0,0658 & 0,0134  \\ 
-        \textbf{QC-JAKARTA} & 0,1 & 0,112 & 0,136 & 0,0755 & 0,1036 & 0,1368  \\ 
-        \textbf{QC-LAGOS} & 0,12 & 0,072 & 0,022 & 0,1025 & 0,0584 & 0,0426 \\ \hline
-    \end{tabular}
-    \caption{TOTAL ERROR QC}
+        \multirow{2}*{Resource} & \multicolumn{4}{c}{Measure}  \\ \cline{2-5}
+        & 00 & 01 & 10 & 11 \\ \hline
+        Nairobi & $\scriptstyle0.03$ & $\scriptstyle0.01$ & $\scriptstyle0.04$ & $\scriptstyle0.02$  \\ 
+        Perth & $\scriptstyle0.02$ & $\scriptstyle0.11$ & $\scriptstyle0.03$ & $\scriptstyle0.12$  \\ 
+        Oslo & $\scriptstyle0.03$ & $\scriptstyle0.07$ & $\scriptstyle0.03$ & $\scriptstyle0.07$  \\ 
+        Jakarta & $\scriptstyle0.02$ & $\scriptstyle0.01$ & $\scriptstyle0.04$ & $\scriptstyle0.03$  \\ 
+        Lagos & $\scriptstyle0.01$ & $\scriptstyle0.05$ & $\scriptstyle0.01$ & $\scriptstyle0.05$ \\ \hline
+    \end{tabular}}
+    \caption{IBM Quantum computer vs. theoretical values error: 100 shots}
+\end{table}
+
+\begin{table}[!ht]
+    \centering
+    {\renewcommand{\arraystretch}{1.2}%
+    \begin{tabular}{c|cccc}
+    \hline
+        \multirow{2}*{Resource} & \multicolumn{4}{c}{Measure}  \\ \cline{2-5}
+        & 00 & 01 & 10 & 11 \\ \hline
+        Nairobi & $\scriptstyle0.002$ & $\scriptstyle0.01$ & $\scriptstyle0.074$ & $\scriptstyle0.086$  \\ 
+        Perth & $\scriptstyle0.036$ & $\scriptstyle0.07$ & $\scriptstyle0.074$ & $\scriptstyle0.18$  \\ 
+        Oslo & $\scriptstyle0.014$ & $\scriptstyle0.004$ & $\scriptstyle0.006$ & $\scriptstyle0.016$  \\ 
+        Jakarta & $\scriptstyle0.01$ & $\scriptstyle0.012$ & $\scriptstyle0.034$ & $\scriptstyle0.056$  \\ 
+        Lagos & $\scriptstyle0.036$ & $\scriptstyle0.01$ & $\scriptstyle0.026$ & $\scriptstyle0$ \\ \hline
+    \end{tabular}}
+    \caption{IBM Quantum computer vs. theoretical probabilities error: 500 shots}
+\end{table}
+
+\begin{table}[!ht]
+    \centering
+    {\renewcommand{\arraystretch}{1.2}%
+    \begin{tabular}{c|cccc}
+    \hline
+        \multirow{2}*{Resource} & \multicolumn{4}{c}{Measure}  \\ \cline{2-5}
+        & 00 & 01 & 10 & 11 \\ \hline
+        Nairobi & $\scriptstyle0.027$ & $\scriptstyle0.045$ & $\scriptstyle0.045$ & $\scriptstyle0.063$  \\ 
+        Perth & $\scriptstyle0.025$ & $\scriptstyle0.068$ & $\scriptstyle0.054$ & $\scriptstyle0.097$  \\ 
+        Oslo & $\scriptstyle0.017$ & $\scriptstyle0.017$ & $\scriptstyle0.015$ & $\scriptstyle0.015$  \\ 
+        Jakarta & $\scriptstyle0.016$ & $\scriptstyle0.043$ & $\scriptstyle0.009$ & $\scriptstyle0.068$  \\ 
+        Lagos & $\scriptstyle0.004$ & $\scriptstyle0.004$ & $\scriptstyle0.007$ & $\scriptstyle0.007$ \\ \hline
+    \end{tabular}}
+    \caption{IBM Quantum computer vs. theoretical probabilities error: 1000 shots}
+\end{table}
+
+\begin{table}[!ht]
+    \centering
+    {\renewcommand{\arraystretch}{1.2}%
+    \begin{tabular}{c|cccc}
+    \hline
+        \multirow{2}*{Resource} & \multicolumn{4}{c}{Measure}  \\ \cline{2-5}
+        & 00 & 01 & 10 & 11 \\ \hline
+        Nairobi & $\scriptstyle0.01675$ & $\scriptstyle0.015$ & $\scriptstyle0.031$ & $\scriptstyle0.00075$  \\ 
+        Perth & $\scriptstyle0.0125$ & $\scriptstyle0.03575$ & $\scriptstyle0.03075$ & $\scriptstyle0.079$  \\ 
+        Oslo & $\scriptstyle0.00725$ & $\scriptstyle0.02375$ & $\scriptstyle0.0005$ & $\scriptstyle0.0315$  \\ 
+        Jakarta & $\scriptstyle0.0035$ & $\scriptstyle0.0085$ & $\scriptstyle0.02575$ & $\scriptstyle0.03775$  \\ 
+        Lagos & $\scriptstyle0.0265$ & $\scriptstyle0.02225$ & $\scriptstyle0.0025$ & $\scriptstyle0.05125$ \\ \hline
+    \end{tabular}}
+    \caption{IBM Quantum computer vs. theoretical probabilities error: 4000 shots}
+\end{table}
+
+\begin{table}[!ht]
+    \centering
+    {\renewcommand{\arraystretch}{1.2}%
+    \begin{tabular}{c|cccc}
+    \hline
+        \multirow{2}*{Resource} & \multicolumn{4}{c}{Measure}  \\ \cline{2-5}
+        & 00 & 01 & 10 & 11 \\ \hline
+        Nairobi & $\scriptstyle0.001$ & $\scriptstyle0.0501$ & $\scriptstyle0.0277$ & $\scriptstyle0.0788$  \\ 
+        Perth & $\scriptstyle0.0069$ & $\scriptstyle0.0644$ & $\scriptstyle0.0554$ & $\scriptstyle0.1129$  \\ 
+        Oslo & $\scriptstyle0.0189$ & $\scriptstyle0.014$ & $\scriptstyle0.0079$ & $\scriptstyle0.025$  \\ 
+        Jakarta & $\scriptstyle0.0057$ & $\scriptstyle0.0204$ & $\scriptstyle0.0257$ & $\scriptstyle0.0518$  \\ 
+        Lagos & $\scriptstyle0.0202$ & $\scriptstyle0.009$ & $\scriptstyle0.0002$ & $\scriptstyle0.029$ \\ \hline
+    \end{tabular}}
+    \caption{IBM Quantum computer vs. theoretical probabilities error: 10000 shots}
+\end{table}
+
+\begin{table}[!ht]
+    \centering
+    {\renewcommand{\arraystretch}{1.2}%
+    \begin{tabular}{c|cccc}
+    \hline
+        \multirow{2}*{Resource} & \multicolumn{4}{c}{Measure}  \\ \cline{2-5}
+        & 00 & 01 & 10 & 11 \\ \hline
+        Nairobi & $\scriptstyle0.0328$ & $\scriptstyle0.00575$ & $\scriptstyle0.0388$ & $\scriptstyle0.00025$  \\ 
+        Perth & $\scriptstyle0.0502$ & $\scriptstyle0.03125$ & $\scriptstyle0.0544$ & $\scriptstyle0.03545$  \\ 
+        Oslo & $\scriptstyle0.000$ & $\scriptstyle0.007$ & $\scriptstyle0.006$ & $\scriptstyle0.001$  \\ 
+        Jakarta & $\scriptstyle0.01175$ & $\scriptstyle0.02805$ & $\scriptstyle0.04035$ & $\scriptstyle0.05665$  \\ 
+        Lagos & $\scriptstyle0.01225$ & $\scriptstyle0.00925$ & $\scriptstyle0.01205$ & $\scriptstyle0.00905$ \\ \hline
+    \end{tabular}}
+    \caption{IBM Quantum computer vs. theoretical probabilities error: 20000 shots}
 \end{table}
 
 
 \begin{table}[!ht]
     \centering
-    \begin{tabular}{cc}
+    {\renewcommand{\arraystretch}{1.2}%
+    \begin{tabular}{c|cccccc}
     \hline
-        \textbf{RESULTS} & \textbf{AVERAGE ERROR } \\ \hline
-        \textbf{QC-PERTH} & 0,24215  \\ 
-        \textbf{QC-NAIROBI} & 0,125116667  \\ 
-        \textbf{QC-JAKARTA} & 0,11065  \\ 
-        \textbf{QC-OSLO} & 0,074366667  \\ 
-        \textbf{QC-LAGOS} & 0,069583333 \\ \hline
-    \end{tabular}
-    \caption{AVERAGE ERROR QC}
+        \multirow{2}*{Resource} & \multicolumn{6}{c}{Shots}  \\ \cline{2-7}
+        & $100$ & $500$ & $10^{3}$ & $4\cdot10^{3}$ & $10^{4}$ & $2\cdot10^{4}$ \\ \hline
+        Nairobi & $\scriptstyle0.1$ & $\scriptstyle0.172$ & $\scriptstyle0.18$ & $\scriptstyle0.0635$ & $\scriptstyle0.1576$ & $\scriptstyle0.0776$  \\ 
+        Perth & $\scriptstyle0.28$ & $\scriptstyle0.36$ & $\scriptstyle0.244$ & $\scriptstyle0.158$ & $\scriptstyle0.2396$ & $\scriptstyle0.1713$  \\ 
+        Oslo & $\scriptstyle0.2$ & $\scriptstyle0.04$ & $\scriptstyle0.064$ & $\scriptstyle0.063$ & $\scriptstyle0.0658$ & $\scriptstyle0.0134$  \\ 
+        Jakarta & $\scriptstyle0.1$ & $\scriptstyle0.112$ & $\scriptstyle0.136$ & $\scriptstyle0.0755$ & $\scriptstyle0.1036$ & $\scriptstyle0.1368$  \\ 
+        Lagos & $\scriptstyle0.12$ & $\scriptstyle0.072$ & $\scriptstyle0.022$ & $\scriptstyle0.1025$ & $\scriptstyle0.0584$ & $\scriptstyle0.0426$ \\ \hline
+    \end{tabular}}
+    \caption{IBM Quantum computer vs. theoretical probabilities total error}
+\end{table}
+
+
+\begin{table}[!ht]
+    \centering
+    {\renewcommand{\arraystretch}{1.2}%
+    \begin{tabular}{c|cccccc}
+    \hline
+        Results & Average Error \\ \hline
+        Perth & $\scriptstyle0.24215$  \\ 
+        Nairobi & $\scriptstyle0.12512$  \\ 
+        Jakarta & $\scriptstyle0.11065$  \\ 
+        Oslo & $\scriptstyle0.07437$  \\ 
+        Lagos & $\scriptstyle0.06958$ \\ \hline
+    \end{tabular}}
+    \caption{IBM Quantum computer vs. theoretical probabilities average error}
 \end{table}
