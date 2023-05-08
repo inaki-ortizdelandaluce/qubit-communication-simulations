@@ -1919,3 +1919,21 @@ The prepare-and-measure scenario selected for the comparison is as follows
 \end{split}
 \end{equation}
 A full analysis of the achievable performances when simulating such scenario with IBM Quantum simulators and computers can be found \href{https://github.com/inaki-ortizdelandaluce/qubit-communication-simulations/blob/main/tex/xls/qc_probabilities_summary.xlsx}{here}.
+
+\begin{table}[!ht]
+    \centering
+    \begin{tabular}{llllllllll}
+    \hline
+        \textbf{} & \textbf{100 SHOTS} & \textbf{} & \textbf{} & \textbf{ } & \textbf{} & \textbf{} & \textbf{} & \textbf{} & \textbf{} \\ \hline
+        \textbf{RESULTS} & '00' & '01' & '10' & '11'  & ~ & ~ & ~ & ~ & ~ \\ 
+        \textbf{QS-SIMULATION} & 37 & 15 & 7 & 41  & ~ & ~ & ~ & ~ & ~ \\ 
+        \textbf{QC-NAIROBI} & 40 & 14 & 3 & 43  & ~ & ~ & ~ & ~ & ~ \\ 
+        \textbf{QC-PERTH} & 35 & 26 & 10 & 29  & ~ & ~ & ~ & ~ & ~ \\ 
+        \textbf{QC-OSLO} & 40 & 8 & 4 & 48  & ~ & ~ & ~ & ~ & ~ \\ 
+        \textbf{QC-JAKARTA} & 35 & 16 & 11 & 38  & ~ & ~ & ~ & ~ & ~ \\ 
+        \textbf{QC-LAGOS} & 38 & 10 & 6 & 46 & ~ & ~ & ~ & ~ & ~ \\ 
+        \textbf{} & ~ & ~ & ~ & ~ & ~ & ~ & ~ & ~ & ~ \\ 
+        \textbf{} & ~ & ~ & ~ & ~ & ~ & ~ & ~ & ~ & ~ \\ \hline
+    \end{tabular}
+\end{table}
+
