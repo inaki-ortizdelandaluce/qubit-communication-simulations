@@ -1092,8 +1092,7 @@ def quantum_benchmarking_probability():
     return None
 
 
-def plot_bar(ax, x, measures, p):
-    multiplier = 1
+def plot_bar(ax, x, measures, p, ylabel='Probability', multiplier=1):
     width = 0.15  # the width of the bars
     bar_colors = plt.cm.get_cmap('tab10', 10)
     for attribute, measurement in p.items():
@@ -1103,7 +1102,7 @@ def plot_bar(ax, x, measures, p):
             ax.bar_label(rects, padding=3, fontsize=8)
         multiplier += 1
 
-    ax.set_ylabel('Probability')
+    ax.set_ylabel(ylabel)
     ax.set_xticks(x + width * len(measures), measures)
     ax.legend(loc='upper left', ncols=3, fontsize=6)
 
@@ -1111,6 +1110,90 @@ def plot_bar(ax, x, measures, p):
 
 
 def quantum_benchmarking_error():
+    mpl.rcParams['mathtext.fontset'] = 'stix'
+    mpl.rcParams['font.family'] = 'STIXGeneral'
+
+    cases = [r'$shots=100$', r'$shots=500$',
+             r'$shots=10^3$', r'$shots=4\cdot10^3$',
+             r'$shots=10^4$', r'$shots=2\cdot10^4$']
+
+    fig, axs = plt.subplots(3, 2, figsize=(8, 10), layout='constrained')
+
+    for ax, title in zip(axs.flat, cases):
+        ax.xaxis.set_tick_params(which='major', size=5, width=1, direction='out', top='on')
+        ax.xaxis.set_tick_params(which='minor', size=3, width=1, direction='out', top='on')
+        ax.yaxis.set_tick_params(which='major', size=5, width=1, direction='out', right='on')
+        ax.yaxis.set_tick_params(which='minor', size=3, width=1, direction='out', right='on')
+        ax.set_title(title)
+
+    measures = ("00", "01", "10", "11")
+    x = np.arange(len(measures))  # the label locations
+    width = 0.15  # the width of the bars
+
+    # shots = 100
+    e1 = {
+        "Nairobi": (0.03, 0.01, 0.04, 0.02),
+        "Perth": (0.02, 0.11, 0.03, 0.12),
+        "Oslo": (0.03, 0.07, 0.03, 0.07),
+        "Jakarta": (0.02, 0.01, 0.04, 0.03),
+        "Lagos": (0.01, 0.05, 0.01, 0.05)
+    }
+
+    # shots = 500
+    e2 = {
+        "Nairobi": (0.002, 0.01, 0.074, 0.086),
+        "Perth": (0.036, 0.07, 0.074, 0.18),
+        "Oslo": (0.014, 0.004, 0.006, 0.016),
+        "Jakarta": (0.01, 0.012, 0.034, 0.056),
+        "Lagos": (0.036, 0.01, 0.026, 0)
+    }
+
+    # shots = 1000
+    e3 = {
+        "Nairobi": (0.027, 0.045, 0.045, 0.063),
+        "Perth": (0.025, 0.068, 0.054, 0.097),
+        "Oslo": (0.017, 0.017, 0.015, 0.015),
+        "Jakarta": (0.016, 0.043, 0.009, 0.068),
+        "Lagos": (0.004, 0.004, 0.007, 0.007)
+    }
+
+    # shots = 4000
+    e4 = {
+        "Nairobi": (0.01675, 0.015, 0.031, 0.00075),
+        "Perth": (0.0125, 0.03575, 0.03075, 0.079),
+        "Oslo": (0.00725, 0.02375, 0.0005, 0.0315),
+        "Jakarta": (0.0035, 0.0085, 0.02575, 0.03775),
+        "Lagos": (0.0265, 0.02225, 0.0025, 0.05125)
+    }
+
+    # shots = 10000
+    e5 = {
+        "Nairobi": (0.001, 0.0501, 0.0277, 0.0788),
+        "Perth": (0.0069, 0.0644, 0.0554, 0.1129),
+        "Oslo": (0.0189, 0.014, 0.0079, 0.025),
+        "Jakarta": (0.0057, 0.0204, 0.0257, 0.0518),
+        "Lagos": (0.0202, 0.009, 0.0002, 0.029)
+    }
+
+    # shots = 20000
+    e6 = {
+        "Nairobi": (0.0328, 0.00575, 0.0388, 0.00025),
+        "Perth": (0.0502, 0.03125, 0.0544, 0.03545),
+        "Oslo": (0.000, 0.007, 0.006, 0.001),
+        "Jakarta": (0.01175, 0.02805, 0.04035, 0.05665),
+        "Lagos": (0.01225, 0.00925, 0.01205, 0.00905)
+    }
+
+    plot_bar(axs[0][0], x, measures, e1, ylabel='Error', multiplier=2)
+    plot_bar(axs[0][1], x, measures, e2, ylabel='Error', multiplier=2)
+    plot_bar(axs[1][0], x, measures, e3, ylabel='Error', multiplier=2)
+    plot_bar(axs[1][1], x, measures, e4, ylabel='Error', multiplier=2)
+    plot_bar(axs[2][0], x, measures, e5, ylabel='Error', multiplier=2)
+    plot_bar(axs[2][1], x, measures, e6, ylabel='Error', multiplier=2)
+
+    fig.tight_layout()
+    plt.show()
+
     return None
 
 
@@ -1141,4 +1224,5 @@ if __name__ == "__main__":
     # bell_sample_heatmap()
     # bell(10**7)
     # bell_multiplot()
-    quantum_benchmarking_probability()
+    # quantum_benchmarking_probability()
+    quantum_benchmarking_error()
