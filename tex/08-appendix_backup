@@ -1,0 +1,1921 @@
+\section{Source Code Listings}\label{section:source}
+\subsection{qubit.py}\label{section:listing_qubit}
+This module provides basic operations for qubit pure states either in two-dimensional the Hilbert space $\mathcal{H}$ or in the Bloch sphere $S_2$. 
+\begin{minted}[
+frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+fontsize=\footnotesize,
+breaklines
+]{python}
+import numpy as np
+import cmath
+import math
+from enum import Enum
+
+
+class Axis(Enum):
+    X = 0
+    Y = 1
+    Z = 2
+
+
+X = np.array([[0, 1], [1, 0]])
+Y = np.array([[0, -1.j], [1j, 0]])
+Z = np.array([[1, 0], [0, -1]])
+paulis = np.array([X, Y, Z])
+
+
+class Qubit:
+    def __init__(self, ket=np.array([1, 0])):
+        """
+        Initializes a qubit in the computational basis. If no arguments are provided, it returns the zero state.
+
+        Parameters
+        ---------
+        ket : ndarray
+            The qubit components in the computational basis in a 1-d complex array.
+        """
+        self.alpha = complex(ket[0])
+        self.beta = complex(ket[1])
+        self.normalize()
+
+    def __repr__(self):
+        return '{} |0> + {} |1>'.format(self.alpha, self.beta)
+
+    def ket(self):
+        return np.array([self.alpha, self.beta], dtype=np.complex_)
+
+    def normalize(self):
+        arr = self.ket()
+        self.alpha, self.beta = arr/np.linalg.norm(arr)
+
+    def rho(self):
+        """
+        Returns the density matrix corresponding to the qubit in a pure state.
+
+        Returns
+        -------
+        ndarray
+            A 2x2 density matrix corresponding to the qubit in a pure state.
+        """
+        return np.outer(self.ket(), self.ket().conj())
+
+    def bloch_angles(self):
+        """
+        Returns the spherical coordinates of the qubit in the Bloch sphere, with polar and azimuthal angles in radians.
+
+        Returns
+        -------
+        (float, float)
+            The Bloch sphere coordinates, first the polar angle and then the azimuthal angle (both in radians).
+        """
+        r0, phi0 = cmath.polar(self.alpha)
+        r1, phi1 = cmath.polar(self.beta)
+        theta = 2 * math.acos(r0)
+        phi = phi1 - phi0
+
+        return theta, phi
+
+    @staticmethod
+    def density2bloch(rho):
+        """
+        Returns the cartesian coordinates of the specified qubit state in the Bloch sphere.
+
+        Parameters
+        ---------
+        rho : ndarray
+            The qubit state in density matrix form
+
+        Returns
+        -------
+        (float, float, float)
+            The cartesian coordinates of the qubit in the Bloch sphere (xyz).
+
+        """
+        # cast complex to real to avoid throwing ComplexWarning, imaginary part should always be zero
+        return [np.real(np.trace(np.matmul(rho, sigma))) for sigma in paulis]
+
+    def bloch_vector(self):
+        """
+        Returns the cartesian coordinates of the qubit in the Bloch sphere.
+
+        Returns
+        -------
+        (float, float, float)
+            The cartesian coordinates of the qubit in the Bloch sphere (xyz).
+
+         """
+        return Qubit.density2bloch(self.rho())
+
+    def rotate(self, axis: Axis, angle):
+        """
+        Rotates the qubit along the specified axis by the specified angle in radians in counterclockwise direction.
+
+        Parameters
+        ---------
+        axis : Axis
+
+        angle : float
+            Angle in radians
+        """
+        r = math.cos(angle/2) * np.eye(2, 2) - 1.j * math.sin(angle/2) * paulis[axis.value]
+        self.alpha, self.beta = r @ self.ket()
+        return None
+\end{minted}
+\newpage
+\subsection{measurement.py}\label{section:listing_measurement}
+This module implements projection-valued measures and rank-1 positive operator-valued measures for qubit states. 
+\begin{minted}[
+frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+fontsize=\footnotesize,
+breaklines
+]{python}
+import numpy as np
+import scipy
+from qt.qubit import Qubit
+
+
+class PVM:
+    def __init__(self, proj):
+        """
+        Creates a PVM with the specified rank-1 projectors.
+
+        Parameters
+        ---------
+        proj : ndarray
+            A 3-d array with the constituting rank-1 projectors.
+       """
+        # check input
+        if not np.allclose(np.identity(2), np.sum(proj, axis=0)):
+            raise ValueError('PVM projectors do not sum up the identity')
+
+        self.proj = proj
+        self.bloch = np.asarray([Qubit.density2bloch(p) for p in proj])
+
+    @classmethod
+    def new(cls, qubit: Qubit):
+        """
+        Creates a PVM with the rank-1 projectors corresponding to the specified qubit state.
+
+        Parameters
+        ---------
+        qubit : Qubit
+            The specified qubit state from which the two rank-1 projectors are generated.
+        """
+        rho = qubit.rho()
+        sigma = np.identity(2) - rho
+        proj = np.array([rho, sigma])
+        return cls(proj)
+
+    def projector(self, index):
+        """
+        Returns rank-1 projector for the corresponding index
+
+        Parameters
+        ---------
+        index : the projector index
+
+        Returns
+        -------
+        ndarray
+            A 2-d array with the corresponding projector.
+        """
+        return self.proj[index]
+
+    def probability(self, qubit: Qubit):
+        """
+        Returns the probabilities of the different outcomes for a given qubit state
+
+        Parameters
+        ---------
+        qubit : the qubit state
+
+        Returns
+        -------
+        ndarray
+            The probabilities for each outcome given the input state, stored in a 1-d array.
+        """
+
+        # repeat density matrix along zero axis
+        rho = qubit.rho()
+        rho = np.repeat(rho[np.newaxis, :, :], self.proj.shape[0], axis=0)
+
+        # compute trace of projectors by density matrix
+        return np.real(np.trace(np.matmul(self.proj, rho), axis1=1, axis2=2))
+
+
+class POVM:
+
+    def __init__(self, weights, proj):
+        """
+        Creates a POVM with the specified weights and rank-1 projectors.
+
+        Parameters
+        ---------
+        weights : ndarray
+            The positive coefficients of the constituting rank-1 projectors.
+
+        proj : ndarray
+            A 3-d array with the constituting rank-1 projectors.
+        """
+        self.weights = weights
+        self.elements = proj * weights[:, np.newaxis, np.newaxis]
+
+        # check input
+        if not np.allclose(np.identity(2), np.sum(self.elements, axis=0)):
+            raise ValueError('POVM elements do not sum up the identity')
+
+        positive = [np.all(np.linalg.eig(element)[0] >= -np.finfo(np.float32).eps) for element in self.elements]
+        if not np.all(positive):
+            raise ValueError('Some POVM elements are not definite positive')
+
+        self.bloch = v = np.asarray([Qubit.density2bloch(p) for p in proj])
+
+    @classmethod
+    def new(cls, qubits):
+        """
+        Creates a POVM with the rank-1 projectors corresponding to the specified qubit states.
+
+        Parameters
+        ---------
+        qubits : ndarray
+           The specified array of N-2 qubit states from which the N rank-1 POVM projectors are generated.
+        """
+        # last element normalizes all POVM elements
+        rhos = np.asarray([q.rho() for q in qubits])
+        e = np.identity(2) - np.sum(rhos, axis=0)
+
+        # diagonalize last element to obtain remaining rank-1 projectors
+        _, w = np.linalg.eig(e)
+        q1 = Qubit(w[:, 0])
+        q2 = Qubit(w[:, 1])
+        qubits = np.append(qubits, np.array([q1, q2]), axis=0)
+
+        # compute POVM weights and elements as a linear program (see Sentís et al. 2013)
+        v = np.asarray([q.bloch_vector() for q in qubits])
+        n = len(qubits)
+
+        a = np.vstack((np.ones((n,)), v.T))
+        b = np.append(np.array([2]), np.zeros(3, ), axis=0)
+
+        # c = np.zeros(n, ) finds a solution instead of minimizing a function
+        # lower bounds set to 0.01, this could be fine-tuned
+        lp = scipy.optimize.linprog(np.zeros(n, ), A_eq=a, b_eq=b, bounds=(0.01, 1), method='highs')
+        _a, _e = lp['x'], np.asarray([q.rho() for q in qubits])
+
+        return cls(_a, _e)
+
+    def element(self, index):
+        """
+        Returns the POVM element for the corresponding index
+
+        Parameters
+        ---------
+        index : the POVM element index
+
+        Returns
+        -------
+        ndarray
+            A 2-d array with the corresponding POVM element.
+        """
+        return self.element[index]
+
+    def probability(self, qubit: Qubit):
+        """
+        Returns the probabilities of the different outcomes for a given qubit state
+
+        Parameters
+        ---------
+        qubit : the qubit state
+
+        Returns
+        -------
+        ndarray
+            The probabilities for each outcome given the input state, stored in a 1-d array.
+        """
+
+        # repeat density matrix along zero axis
+        rho = qubit.rho()
+        rho = np.repeat(rho[np.newaxis, :, :], self.elements.shape[0], axis=0)
+
+        # compute trace of projectors by density matrix
+        return np.real(np.trace(np.matmul(self.elements, rho), axis1=1, axis2=2))
+
+    def size(self):
+        """
+        Returns the number of POVM elements
+
+        Returns
+        -------
+        int
+            The number of POVM elements.
+        """
+        return np.size(self.elements, axis=0)
+
+    def unitary(self):
+        """
+        Returns the associated unitary matrix in the extended Hilbert space according to Neumark's theorem
+
+        Returns
+        -------
+        ndarray
+            The nxn unitary matrix where n is the number of POVM elements.
+
+        """
+        d = 2
+        n = self.size()
+        u = np.zeros((n, n), dtype=np.complex_)
+
+        # compute the kets of the rank-1 POVM projectors and assign to first d columns
+        # v, _, _ = np.linalg.svd(self.elements, full_matrices=True, compute_uv=True, hermitian=False)
+        # u[:, 0:d] = v[:, :, 0] / np.linalg.norm(v[:, :, 0], axis=0)
+        w, v = np.linalg.eig(self.elements)
+        v = v[np.where(w != 0)]
+        u[:, 0:d] = v / np.linalg.norm(v, axis=0)
+
+        # remaining n-d columns should correspond to orthogonal projectors in extended space
+        p = np.eye(n, dtype=np.complex_)
+        for idx in range(d):
+            p -= np.outer(u[:, idx], u[:, idx].conj())
+
+        counter = 0
+        for b in np.eye(n, dtype=np.complex_):
+            w = np.matmul(p, b)
+            if not np.isclose(w, 0.0).all():
+                w /= np.linalg.norm(w)
+                u[:, counter + d] = w
+                p -= np.outer(w, w.conj())
+                counter += 1
+            if counter == (n - d):
+                break
+
+        if not np.allclose(np.matmul(u, u.conj().T), np.eye(n)):
+            raise ValueError('Neumark\'s square matrix is not unitary')
+
+        return u
+\end{minted}
+\newpage
+\subsection{random.py}\label{section:listings_random}
+This module provides means to create random qubit states and random measurements using object classes available on \ref{section:listing_qubit} and \ref{section:listing_measurement} modules. 
+\begin{minted}[
+frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+fontsize=\footnotesize,
+breaklines
+]{python}
+import math
+import numpy as np
+from qt.qubit import Qubit
+from qt.measurement import PVM, POVM
+
+
+def bloch_vector():
+    """
+    Generates a normalised vector uniformly distributed on the Bloch sphere
+
+    Returns
+    -------
+    ndarray
+            A normalised vector on the Bloch sphere
+
+    """
+    theta, phi = qubit().bloch_angles()
+    return np.array([math.sin(theta) * math.cos(phi),
+                     math.sin(theta) * math.sin(phi),
+                     math.cos(theta)])
+
+
+def qubit():
+    """
+    Generates a random qubit.
+
+    Returns
+    -------
+    Qubit
+        A random Qubit.
+    """
+    # evolve the zero state with a random unitary matrix
+    # same as returning first column of random unitary matrix
+    u = unitary((2, 2))
+    return Qubit(u[:, 0])
+
+
+def pvm():
+    """
+    Generates a random projection value measure for a qubit
+
+    Returns
+    -------
+    PVM
+            A projection value measure instance.
+    """
+    q = qubit()
+    measurement = PVM.new(q)
+    return measurement
+
+
+def povm(n):
+    """
+    Generates a random positive operator value measure for a qubit
+
+    Parameters
+    ---------
+    n : int
+        Number of POVM elements. Must be greater than two.
+
+    Returns
+    -------
+    PVM
+            A positive operator value measure instance.
+    """
+    if n <= 2:
+        raise ValueError('Number of POVM elements must be greater thant two')
+
+    qubits = [qubit() for _ in range(n - 2)]
+    measurement = POVM.new(qubits)
+    return measurement
+
+
+def unitary(shape):
+    """
+    Generates a random unitary matrix with the given shape.
+
+    Parameters
+    ---------
+    shape : int or tuple of ints
+        Shape of the unitary matrix.
+
+    Returns
+    -------
+    ndarray
+        Unitary matrix with the given shape.
+    """
+    # build random complex matrix
+    m = np.random.normal(0, 1, shape) + 1.j * np.random.normal(0, 1, shape)
+
+    # apply Gram-Schmidt QR decomposition to orthogonalize the matrix
+    q, *_ = np.linalg.qr(m, mode='complete')
+
+    return q
+\end{minted}
+\newpage
+\subsection{observable.py}\label{section:listings_observable}
+This module provides means to obtain the eigenvalues and eigenvector of an observable. 
+\begin{minted}[
+frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+fontsize=\footnotesize,
+breaklines
+]{python}
+import numpy as np
+import scipy as sp
+
+
+class Observable:
+    def __init__(self, matrix):
+
+        if not sp.linalg.ishermitian(matrix):
+            raise ValueError('Input matrix is not hermitian')
+
+        self.matrix = matrix
+        self.eigenvalues, self.eigenvectors = np.linalg.eig(matrix)
+
+    def eigen(self):
+        return self.eigenvalues, self.eigenvectors
+
+    def eigenvector(self, eigenvalue):
+        m = self.eigenvectors[:, np.where(np.isclose(self.eigenvalues, eigenvalue))]
+        m = m.reshape(m.size, )
+        if m.size == 0:
+            return None
+        else:
+            return m
+\end{minted}
+\newpage
+\subsection{qudit.py}\label{section:listings_qudit}
+This module provides means to create a qudit state, and particularly to obtain the qudit corresponding to a bipartite state of two qubits required to compute the probabilities for a Bell scenario as per \ref{section:listings_bell} module. 
+\begin{minted}[
+frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+fontsize=\footnotesize,
+breaklines
+]{python}
+import numpy as np
+from qt.qubit import Qubit
+
+
+class Qudit:
+    def __init__(self, ket):
+        """
+        Initializes a qudit in the computational basis.
+
+        Parameters
+        ---------
+        ket : ndarray
+            The qudit components in the computational basis in a 1-d complex array.
+        """
+        self.ket = ket
+        self.normalize()
+
+    def normalize(self):
+        self.ket = self.ket/np.linalg.norm(self.ket)
+
+    def rho(self):
+        """
+        Returns the density matrix corresponding to the qudit in a pure state.
+
+        Returns
+        -------
+        ndarray
+            A nxn density matrix corresponding to the qubit in a pure state.
+        """
+        return np.outer(self.ket, self.ket.conj())
+
+    @classmethod
+    def bipartite(cls, q1: Qubit, q2: Qubit):
+        ket = np.tensordot(q1.ket(), q2.ket(), axes=0).reshape(4, )
+        return cls(ket)
+\end{minted}
+\newpage
+\subsection{bell.py}\label{section:listings_bell}
+This module provides means to compute the probabilities, expected values and CHSH inequality for any Bell state and the set of Alice and Bob observables. 
+\begin{minted}[
+frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+fontsize=\footnotesize,
+breaklines
+]{python}
+from enum import Enum
+import numpy as np
+import math
+from qt.observable import Observable
+from qt.qudit import Qudit
+from qt.qudit import Qubit
+
+
+class BellState(Enum):
+    PHI_PLUS = 0
+    PHI_MINUS = 1
+    PSI_PLUS = 2
+    PSI_MINUS = 3
+
+
+class BellScenario:
+
+    _states = {
+        0: Qudit(1 / math.sqrt(2) * np.array([1, 0, 0, 1])),
+        1: Qudit(1 / math.sqrt(2) * np.array([1, 0, 0, -1])),
+        2: Qudit(1 / math.sqrt(2) * np.array([0, 1, 1, 0])),
+        3: Qudit(1 / math.sqrt(2) * np.array([0, 1, -1, 0]))
+    }
+
+    def __init__(self, state: BellState, alice: tuple[Observable, Observable], bob: tuple[Observable, Observable]):
+
+        if type(alice) is not tuple:
+            raise ValueError('Alice\'s observables is not a valid tuple')
+        elif len(alice) != 2:
+            raise ValueError('Alice\'s number of observables is not valid:{}'.format(str(len(alice))))
+
+        if type(bob) is not tuple:
+            raise ValueError('Bob\'s observables is not a valid tuple')
+        elif len(bob) != 2:
+            raise ValueError('Bob\'s number of observables is not tuple:{}'.format(str(len(bob))))
+
+        self.state = self._states[state.value]
+        self.alice = alice
+        self.bob = bob
+
+    def probability(self):
+        p = np.zeros((4, 4), dtype=float)
+        for u in range(4):
+            for v in range(4):
+                i, j, m, n = (-1) ** (u >> 1), (-1) ** (u % 2), v >> 1, v % 2
+
+                a = Qubit(self.alice[m].eigenvector(i))
+                b = Qubit(self.bob[n].eigenvector(j))
+                ab = Qudit.bipartite(a, b)
+                p[u, v] = np.real(np.trace(np.matmul(ab.rho(), self.state.rho())))
+                # print('p{}{}=({},{})x(A{},B{})={}'.format(u, v, i, j, m, n, p[u, v]))
+        return p
+
+    def expected_values(self):
+        p = self.probability()
+        sign = np.array([1, -1, -1, 1])
+        return np.sum(p * sign[:, np.newaxis], axis=0)
+
+    def chsh(self):
+        e = self.expected_values()
+        return abs(np.sum(e * np.array([1, 1, 1, -1])))
+\end{minted}
+\newpage
+\subsection{classical.py}\label{section:listings_classical}
+This module implements the classical prepare-and-measure and Bell simulation protocols. 
+\begin{minted}[
+frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+fontsize=\footnotesize,
+breaklines
+]{python}
+import math
+import numpy as np
+import random
+import qt.random
+from qt.qubit import Qubit
+from qt.measurement import PVM, POVM
+from qt.bell import BellState, BellScenario
+from qt.observable import Observable
+
+
+def heaviside(a):
+    if isinstance(a, np.ndarray):
+        return (a >= 0).astype(int)
+    else:
+        return int(a >= 0)
+
+
+def theta(a):
+    return a * heaviside(a)
+
+
+def prepare(lambdas, qubit):
+    """
+    Alice prepares and sends two bits to Bob
+
+    Parameters
+    ---------
+    lambdas : ndarray
+        Shared randomness as two normalized vectors in a numpy 2-d array
+
+    qubit: Qubit
+        A uniformly sampled pure state qubit
+
+    Returns
+    -------
+    dict
+        A dictionary with the shared randomness ('lambdas'), the random qubit ('qubit')
+        and the bits to be communicated to Bob ('bits')
+    """
+
+    x = qubit.bloch_vector()
+    bits = heaviside(np.matmul(x, lambdas.T))
+    return {
+        "lambdas": lambdas,
+        "qubit": qubit,
+        "bits": bits
+    }
+
+
+def measure_pvm(lambdas, bits, measurement: PVM):
+    """
+    Bob receives two bits from Alice and performs a random PVM
+
+    Parameters
+    ---------
+    lambdas : ndarray
+        Shared randomness as two normalized vectors in a numpy 2-d array
+
+    bits: ndarray
+        Bits communicated by Alice in a numpy 1-d array
+
+    measurement: PVM
+        A uniformly sampled PVM
+
+    Returns
+    -------
+    dict
+        A dictionary with the random measurement ('measurement') and
+        the probabilities for each measurement outcome ('probabilities')
+    """
+    # flip shared randomness
+    flip = np.where(bits == 0, -1, 1).reshape(2, 1)
+    lambdas = np.multiply(lambdas, flip)
+
+    # pick bloch vectors from PVM elements
+    y = measurement.bloch
+    pb = 0.5 * np.array([1, 1])
+
+    # compute lambda according to the probabilities {pb}
+    index = random.choices(range(0, 2), cum_weights=np.cumsum(pb), k=1)[0]
+    a = np.abs(np.matmul(lambdas, y.T))
+    _lambda = lambdas[np.argmax(a, axis=0)[index]]
+
+    # compute probabilities
+    thetas = theta(np.matmul(y, _lambda.reshape(-1, 1)))
+    weighted_thetas = np.multiply(thetas, pb.reshape(-1, 1))
+    p = weighted_thetas[:, 0] / np.sum(weighted_thetas, axis=0)
+
+    return {
+        "measurement": measurement,
+        "probabilities": p
+    }
+
+
+def prepare_and_measure_pvm(shots):
+    """
+    Runs a prepare-and-measure classical simulation with a random PVM measurement
+
+    Parameters
+    ---------
+    shots : int
+        Number of shots the simulation is run with
+
+    Returns
+    -------
+    dict
+        A dictionary with the random state ('qubit'), random PVM measurement ('measurement') and
+        the probabilities for each measurement outcome ('probabilities') in a nested structure including the
+        theoretical probability ('born'), the execution runs ('runs') and the probability statistics ('stats')
+    """
+
+    # Alice prepares a random qubit
+    qubit = qt.random.qubit()
+
+    # Bob prepares a random measurement
+    measurement = qt.random.pvm()
+
+    experiment = {
+        "qubit": qubit,
+        "measurement": measurement,
+        "probabilities": {
+            "runs": np.zeros((shots, 2)),
+            "stats": np.zeros((2,)),
+            "born": np.ones((2,))
+        }
+    }
+
+    for i in range(shots):
+
+        # Alice and Bob's shared randomness
+        shared_randomness = np.array([qt.random.bloch_vector(), qt.random.bloch_vector()])
+
+        # Alice prepares
+        alice = prepare(shared_randomness, qubit)
+
+        # Bob measures
+        bob = measure_pvm(shared_randomness, alice['bits'], measurement)
+
+        # save simulation runs
+        p = np.abs(bob['probabilities'])
+        experiment['probabilities']['runs'][i, :] = p
+
+        # accumulate counts according to Bob's probabilities
+        index = random.choices(range(0, 2), cum_weights=np.cumsum(p), k=1)[0]
+        experiment['probabilities']['stats'][index] = experiment['probabilities']['stats'][index] + 1
+
+    experiment['probabilities']['stats'] = experiment['probabilities']['stats'] / shots
+    experiment['probabilities']['born'] = bob['measurement'].probability(qubit)
+
+    return experiment
+
+
+def measure_povm(lambdas, bits, measurement: POVM):
+    """
+    Bob receives two bits from Alice and performs a random POVM
+
+    Parameters
+    ---------
+    lambdas : ndarray
+        Shared randomness as two normalized vectors in a numpy 2-d array
+
+    bits: ndarray
+        Bits communicated by Alice in a numpy 1-d array
+
+    measurement: POVM
+        A uniformly sampled POVM
+
+    Returns
+    -------
+    dict
+        A dictionary with the random measurement ('measurement') and
+        the probabilities for each measurement outcome ('probabilities')
+    """
+    # flip shared randomness
+    flip = np.where(bits == 0, -1, 1).reshape(2, 1)
+    lambdas = np.multiply(lambdas, flip)
+
+    # pick bloch vectors and weights from POVM elements
+    y = measurement.bloch
+    pb = measurement.weights / 2.
+
+    # compute lambda according to the probabilities {pb}
+    index = random.choices(range(0, measurement.size()), cum_weights=np.cumsum(pb), k=1)[0]
+    a = np.abs(np.matmul(lambdas, y.T))
+    _lambda = lambdas[np.argmax(a, axis=0)[index]]
+
+    # compute probabilities
+    thetas = theta(np.matmul(y, _lambda.reshape(-1, 1)))
+    weighted_thetas = np.multiply(thetas, pb.reshape(-1, 1))
+    p = weighted_thetas[:, 0] / np.sum(weighted_thetas, axis=0)
+
+    return {
+        "measurement": measurement,
+        "probabilities": p
+    }
+
+
+def prepare_and_measure_povm(shots, n=4, qubit=None, measurement=None):
+    """
+    Runs a prepare-and-measure classical simulation with a random POVM measurement
+
+    Parameters
+    ---------
+    shots : int
+        Number of shots the simulation is run with
+
+    n: int, optional
+        Number of POVM random elements. Used if no measurement argument is specified, default value is 4.
+
+    qubit : Qubit, optional
+        Alice's qubit state. If not specified, a random qubit state will be used instead
+
+    measurement: POVM, optional
+        Bob's POVM measurement. If not specified a random POVM will be used instead
+
+
+    Returns
+    -------
+    dict
+        A dictionary with the random state ('qubit'), random POVM measurement ('measurement') and
+        the probabilities for each measurement outcome ('probabilities') in a nested structure including the
+        theoretical probability ('born'), the execution runs ('runs') and the probability statistics ('stats')
+    """
+
+    if qubit is None:
+        # Alice prepares a random qubit
+        qubit = qt.random.qubit()
+
+    if measurement is None:
+        # Bob prepares a random measurement
+        measurement = qt.random.povm(n)
+
+    n = measurement.size()
+
+    experiment = {
+        "qubit": qubit,
+        "measurement": measurement,
+        "probabilities": {
+            "runs": np.zeros((shots, n)),
+            "stats": np.zeros((n,)),
+            "born": np.ones((n,))
+        }
+    }
+
+    for i in range(shots):
+
+        # Alice and Bob's shared randomness
+        shared_randomness = np.array([qt.random.bloch_vector(), qt.random.bloch_vector()])
+
+        # Alice prepares
+        alice = prepare(shared_randomness, qubit)
+
+        # Bob measures
+        bob = measure_povm(shared_randomness, alice['bits'], measurement)
+
+        # save simulation runs
+        p = np.abs(bob['probabilities'])
+        experiment['probabilities']['runs'][i, :] = p
+
+        # accumulate counts according to Bob's probabilities
+        index = random.choices(range(0, n), cum_weights=np.cumsum(p), k=1)[0]
+        experiment['probabilities']['stats'][index] = experiment['probabilities']['stats'][index] + 1
+
+    experiment['probabilities']['stats'] = experiment['probabilities']['stats'] / shots
+    experiment['probabilities']['born'] = bob['measurement'].probability(qubit)
+
+    return experiment
+
+
+def bell_singlet_full(shots, alice, bob):
+    """
+    Runs a classical simulation on a Bell singlet state for a set of local observables
+
+    Parameters
+    ---------
+    shots : int
+        Number of shots the simulation is run with
+
+    alice: tuple[Observable, Observable]
+        Alice's local projective measurements described as a tuple of observables
+
+    bob: tuple[Observable, Observable]
+        Bob's local projective measurements described as a tuple of observables
+
+    Returns
+    -------
+    dict
+        A dictionary with the Bell state ('state'), Alice's and Bob's local projective measurements ('alice', 'bob')
+        and the joint probabilities for each measurement outcome ('probabilities') in a nested structure including the
+        theoretical probabilities ('born'), the execution runs ('runs') and the probability statistics ('stats')
+    """
+
+    if type(alice) is not tuple:
+        raise ValueError('Alice\'s observables is not a valid tuple')
+    elif len(alice) != 2:
+        raise ValueError('Alice\'s number of observables is not valid:{}'.format(str(len(alice))))
+
+    if type(bob) is not tuple:
+        raise ValueError('Bob\'s observables is not a valid tuple')
+    elif len(bob) != 2:
+        raise ValueError('Bob\'s number of observables is not tuple:{}'.format(str(len(bob))))
+
+    state = BellState.PSI_MINUS
+
+    experiment = {
+        "state": state,
+        "alice": alice,
+        "bob": bob,
+        "probabilities": {
+            "runs": np.zeros((shots, 4, 4)),
+            "stats": np.zeros((4, 4)),
+            "born": np.zeros((4, 4))
+        }
+    }
+
+    # Compute theoretical probabilities
+    bell = BellScenario(state, alice, bob)
+    experiment['probabilities']['born'] = bell.probability().T
+
+    for i in range(2):
+
+        # Alice's state corresponding to the positive local projector
+        a = Qubit(alice[i].eigenvector(1))
+
+        for j in range(2):
+
+            # Bob's states corresponding to the positive and negative local projectors
+            b = (Qubit(bob[j].eigenvector(1)), Qubit(bob[j].eigenvector(-1)))
+
+            ab = bell_singlet(shots, a, b)
+
+            ij = int('{}{}'.format(i, j), 2)
+            experiment['probabilities']['runs'][:, :, ij] = ab['probabilities']['runs']
+            experiment['probabilities']['stats'][ij] = ab['probabilities']['stats']
+
+    return experiment
+
+
+def bell_singlet(shots, a, b):
+    """
+    Runs a classical simulation on a Bell singlet state for a set of states corresponding to local projection valued
+    measurements
+
+    Parameters
+    ---------
+    shots : int
+        Number of shots the simulation is run with
+
+    a: Qubit
+        Alice's state corresponding to the positive local projection valued measurement operator
+
+    b: tuple(Qubit, Qubit)
+        Bob's states corresponding to the positive and negative local projection valued measurement operators
+
+    Returns
+    -------
+    dict
+        A dictionary with the joint probabilities for each measurement outcome ('probabilities') in a nested structure
+        including the execution runs ('runs') and the probability statistics ('stats')
+    """
+
+    experiment = {
+        "probabilities": {
+            "runs": np.zeros((shots, 4)),
+            "stats": np.zeros((4,))
+        }
+    }
+
+    # Alice's positive local projector as bloch vector
+    x = np.asarray([a.bloch_vector()])
+
+    # Bob's local projectors as bloch vectors
+    y = np.asarray([b[0].bloch_vector(), b[1].bloch_vector()])
+
+    for i in range(shots):
+
+        # Alice and Bob's shared randomness
+        lambda1, lambda2 = qt.random.bloch_vector(), qt.random.bloch_vector()
+
+        # Alice performs local projective measurements
+        a = - np.sign(x @ lambda1)
+
+        # Alice sends bit to Bob
+        c = -a * np.sign(x @ lambda2)
+
+        # Bob flips the lambda if c = -1
+        lambda2 = c * lambda2
+
+        # compute lambda according to the probabilities {pb}
+        lambdas = np.array([lambda1, lambda2])
+
+        pb = 0.5 * np.array([1, 1])
+        index = random.choices(range(0, 2), cum_weights=np.cumsum(pb), k=1)[0]
+        ly = np.abs(np.matmul(lambdas, y.T))
+        _lambda = lambdas[np.argmax(ly, axis=0)[index]]
+
+        # compute probabilities
+        thetas = theta(np.matmul(y, _lambda.reshape(-1, 1)))
+        weighted_thetas = np.multiply(thetas, pb.reshape(-1, 1))
+        p = weighted_thetas[:, 0] / np.sum(weighted_thetas, axis=0)
+
+        bits = '{}{}'.format(int(0.5 * (1 - a[0])), np.where(p == 1)[0][0])
+        index = int(bits, 2)
+        experiment['probabilities']['stats'][index] += 1
+
+    experiment['probabilities']['stats'] = experiment['probabilities']['stats'] / shots
+
+    return experiment
+\end{minted}
+\newpage
+\subsection{quantum.py}\label{section:listings_quantum}
+This module implements the prepare-and-measure for a given input state and positive operator-valued measure in a quantum simulator using Qiskit. 
+\begin{minted}[
+frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+fontsize=\footnotesize,
+breaklines
+]{python}
+import numpy as np
+from qiskit import QuantumCircuit, transpile, Aer, IBMQ
+from qt.qubit import Qubit
+from qt.measurement import POVM
+
+
+def prepare_and_measure_povm(shots, qubit: Qubit, povm: POVM):
+    # TODO extend usage to any POVM of N elements (currently N =4)
+    qc = QuantumCircuit(2, 2)
+    u = povm.unitary()
+
+    qc.initialize(qubit.ket(), 0)
+    qc.unitary(u, [0, 1])
+    qc.measure([0, 1], [0, 1])
+
+    backend = Aer.get_backend('aer_simulator')
+    qc_transpiled = transpile(qc, backend)
+
+    job = backend.run(qc_transpiled, shots=shots, memory=True)
+    result = job.result()
+    counts = result.get_counts(qc_transpiled)
+
+    p = np.array([counts['00'], counts['01'], counts['10'], counts['11']])
+    p = p / np.sum(p)
+
+    results = {
+        "counts": counts,
+        "memory": result.get_memory(),
+        "probabilities": p
+    }
+    return results
+\end{minted}
+\newpage
+\subsection{main.py}\label{section:listing_main}
+This is the main program, which runs the classical and quantum simulations as well as other experiments discussed throughout this document. 
+\begin{minted}[
+frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+fontsize=\footnotesize,
+breaklines
+]{python}
+import math
+import matplotlib as mpl
+import matplotlib.pyplot as plt
+from healpy.pixelfunc import ang2pix
+from scipy.special import rel_entr
+
+import qt.classical
+import qt.quantum
+import qt.random
+
+from qt.qubit import X, Y, Z, Qubit
+from qt.bell import BellScenario, BellState
+from qt.measurement import POVM
+from qt.observable import Observable
+from qt.visualization import *
+
+from qiskit import transpile
+from qiskit import execute, Aer, IBMQ
+from qiskit.visualization import plot_histogram
+from qiskit import QuantumCircuit
+from qiskit.tools.monitor import job_monitor
+
+
+def random_states():
+    size = 100000
+    n = 4
+    pixels = 12 * n ** 2
+    indexes = np.zeros(size)
+    for i in range(size):
+        theta, phi = qt.random.qubit().bloch_angles()
+        pix = ang2pix(n, theta, phi)
+        indexes[i] = pix
+
+    mpl.rcParams['mathtext.fontset'] = 'stix'
+    mpl.rcParams['font.family'] = 'STIXGeneral'
+
+    fig, ax = plt.subplots()
+
+    count, bins, ignored = ax.hist(indexes, bins=range(pixels + 1), density=True, fill=True, facecolor='whitesmoke',
+                                   edgecolor='k', hatch='', linewidth=1, histtype='step')
+    ax.plot(bins, np.ones_like(bins) / pixels, linewidth=2, color='b', linestyle='-', zorder=2)
+    ax.set_xlabel('Pixel indices', labelpad=6)
+    ax.set_xticks(np.append(np.arange(0, pixels, 25), pixels))
+    ax.set_ylabel('Frequency', labelpad=6)
+    # ax.set_yticklabels(ax.get_yticklabels() * pixels)
+    ax.set_xlim(0, pixels)
+    plt.show()
+    return None
+
+
+def random_povm():
+    np.random.seed(0)
+    q1 = qt.random.qubit()
+    q2 = qt.random.qubit()
+
+    povm = POVM.new(np.array([q1, q2]))
+    elements = povm.elements
+
+    for i in range(elements.shape[0]):
+        print('\nE{} eigenvalues -> {}'.format(i, np.linalg.eig(elements[i])[0]))
+        print('\nE{}=\n{}'.format(i, elements[i]))
+        print('E{} >=0 > -> {}'.format(i, (np.all(np.linalg.eig(elements[i])[0] >= -np.finfo(np.float32).eps))))
+
+    print('Sum E_i = I -> {}'.format(np.allclose(np.identity(2), np.sum(elements, axis=0))))
+
+    return None
+
+
+def pm_pvm(shots):
+    # run experiment
+    np.random.seed(0)
+    experiment = qt.classical.prepare_and_measure_pvm(shots)
+
+    # plot probability convergence
+    qubit = experiment['qubit']
+    runs = experiment['probabilities']['runs']
+    stats = experiment['probabilities']['stats']
+    born = experiment['probabilities']['born']
+    print('Qubit: {}'.format(str(qubit)))
+    print('Stats:\np1={},p2={},pt={}'.format(stats[0], stats[1], np.sum(stats)))
+    print('Born:\np1={},p2={},pt={}'.format(born[0], born[1], np.sum(born)))
+
+    p = np.cumsum(runs[:, 0]) / (np.arange(len(runs[:, 0])) + 1)
+
+    plt.plot(p)
+    plt.axhline(y=born[0], color='r', linestyle='-')
+    plt.show()
+    return None
+
+
+def pm_random(shots):
+    # run experiment
+    # np.random.seed(1200)
+    np.random.seed(0)
+    experiment = qt.classical.prepare_and_measure_povm(shots, 4)
+
+    # plot probability convergence
+    qubit = experiment['qubit']
+    runs = experiment['probabilities']['runs']
+    stats = experiment['probabilities']['stats']
+    born = experiment['probabilities']['born']
+    print('Qubit: {}'.format(str(qubit)))
+    print('Stats:\np1={}, p2={}, p3={}, p4={}, pt={}'.format(stats[0], stats[1], stats[2], stats[3], np.sum(stats)))
+    print('Born:\np1={}, p2={}, p3={}, p4={}, pt={}'.format(born[0], born[1], born[2], born[3], np.sum(born)))
+
+    p1 = np.cumsum(runs[:, 0]) / (np.arange(len(runs[:, 0])) + 1)
+    p2 = np.cumsum(runs[:, 1]) / (np.arange(len(runs[:, 1])) + 1)
+    p3 = np.cumsum(runs[:, 2]) / (np.arange(len(runs[:, 2])) + 1)
+    p4 = np.cumsum(runs[:, 3]) / (np.arange(len(runs[:, 3])) + 1)
+
+    plt.plot(p1, color='r')
+    plt.plot(p2, color='g')
+    plt.plot(p3, color='b')
+    plt.plot(p4, color='y')
+    plt.axhline(y=born[0], color='r', linestyle='-')
+    plt.axhline(y=born[1], color='g', linestyle='-')
+    plt.axhline(y=born[2], color='b', linestyle='-')
+    plt.axhline(y=born[3], color='y', linestyle='-')
+    plt.title('Prepare and Measure with random state and POVM')
+    plt.show()
+    return None
+
+
+def pm_trine(shots):
+    # run experiment
+    psi = qt.qubit.Qubit(np.array([(3 + 1.j * math.sqrt(3)) / 4., -0.5]))
+
+    one = Qubit(np.array([1, 0])).rho()
+    two = Qubit(0.5 * np.array([1, math.sqrt(3)])).rho()
+    three = Qubit(0.5 * np.array([1, -math.sqrt(3)])).rho()
+    povm = POVM(weights=2./3 * np.array([1, 1, 1]), proj=np.array([one, two, three], dtype=complex))
+
+    experiment = qt.classical.prepare_and_measure_povm(shots, qubit=psi, measurement=povm)
+
+    # plot probability convergence
+    runs = experiment['probabilities']['runs']
+    stats = experiment['probabilities']['stats']
+    born = experiment['probabilities']['born']
+    print('Stats:\np1={}, p2={}, p3={}, pt={}'.format(stats[0], stats[1], stats[2], np.sum(stats)))
+    print('Born:\np1={}, p2={}, p3={}, pt={}'.format(born[0], born[1], born[2], np.sum(born)))
+
+    p1 = np.cumsum(runs[:, 0]) / (np.arange(len(runs[:, 0])) + 1)
+    p2 = np.cumsum(runs[:, 1]) / (np.arange(len(runs[:, 1])) + 1)
+    p3 = np.cumsum(runs[:, 2]) / (np.arange(len(runs[:, 2])) + 1)
+
+    plt.plot(p1, color='r')
+    plt.plot(p2, color='g')
+    plt.plot(p3, color='b')
+    plt.axhline(y=born[0], color='r', linestyle='-')
+    plt.axhline(y=born[1], color='g', linestyle='-')
+    plt.axhline(y=born[2], color='b', linestyle='-')
+    plt.title('Prepare and Measure with Trine POVM')
+    plt.show()
+
+    return None
+
+
+def pm_cross(shots):
+    # run experiment
+    psi = qt.qubit.Qubit(np.array([(3 + 1.j * math.sqrt(3)) / 4., -0.5]))
+
+    zero = np.array([[1, 0], [0, 0]])
+    one = np.array([[0, 0], [0, 1]])
+    plus = 0.5 * np.array([[1, 1], [1, 1]])
+    minus = 0.5 * np.array([[1, -1], [-1, 1]])
+
+    povm = POVM(weights=0.5 * np.array([1, 1, 1, 1]), proj=np.array([zero, one, plus, minus], dtype=complex))
+
+    experiment = qt.classical.prepare_and_measure_povm(shots, qubit=psi, measurement=povm)
+
+    # plot probability convergence
+    runs = experiment['probabilities']['runs']
+    stats = experiment['probabilities']['stats']
+    born = experiment['probabilities']['born']
+    print('Stats:\np1={}, p2={}, p3={}, pt={}'.format(stats[0], stats[1], stats[2], np.sum(stats)))
+    print('Born:\np1={}, p2={}, p3={}, pt={}'.format(born[0], born[1], born[2], np.sum(born)))
+
+    p1 = np.cumsum(runs[:, 0]) / (np.arange(len(runs[:, 0])) + 1)
+    p2 = np.cumsum(runs[:, 1]) / (np.arange(len(runs[:, 1])) + 1)
+    p3 = np.cumsum(runs[:, 2]) / (np.arange(len(runs[:, 2])) + 1)
+
+    plt.plot(p1, color='r')
+    plt.plot(p2, color='g')
+    plt.plot(p3, color='b')
+    plt.axhline(y=born[0], color='r', linestyle='-')
+    plt.axhline(y=born[1], color='g', linestyle='-')
+    plt.axhline(y=born[2], color='b', linestyle='-')
+    plt.title('Prepare and Measure with Cross POVM')
+    plt.show()
+
+    return None
+
+
+def pm_sic(shots):
+    # run experiment
+    psi = qt.qubit.Qubit(np.array([(3 + 1.j * math.sqrt(3)) / 4., -0.5]))
+
+    one = Qubit(np.array([1, 0])).rho()
+    two = Qubit(np.array([1/math.sqrt(3), math.sqrt(2/3)])).rho()
+    three = Qubit(np.array([1/math.sqrt(3),
+                            math.sqrt(2/3) * (math.cos(2 * math.pi/3) + 1.j * math.sin(2 * math.pi/3))])).rho()
+    four = Qubit(np.array([1/math.sqrt(3),
+                           math.sqrt(2/3) * (math.cos(4 * math.pi/3) + 1.j * math.sin(4 * math.pi/3))])).rho()
+
+    povm = POVM(weights=0.5 * np.array([1, 1, 1, 1]), proj=np.array([one, two, three, four], dtype=complex))
+
+    experiment = qt.classical.prepare_and_measure_povm(shots, qubit=psi, measurement=povm)
+
+    # plot probability convergence
+    runs = experiment['probabilities']['runs']
+    stats = experiment['probabilities']['stats']
+    born = experiment['probabilities']['born']
+    print('Stats:\np1={}, p2={}, p3={}, p4={}, pt={}'.format(stats[0], stats[1], stats[2], stats[3], np.sum(stats)))
+    print('Born:\np1={}, p2={}, p3={}, p4={}, pt={}'.format(born[0], born[1], born[2], born[3], np.sum(born)))
+
+    p1 = np.cumsum(runs[:, 0]) / (np.arange(len(runs[:, 0])) + 1)
+    p2 = np.cumsum(runs[:, 1]) / (np.arange(len(runs[:, 1])) + 1)
+    p3 = np.cumsum(runs[:, 2]) / (np.arange(len(runs[:, 2])) + 1)
+    p4 = np.cumsum(runs[:, 3]) / (np.arange(len(runs[:, 3])) + 1)
+
+    plt.plot(p1, color='r')
+    plt.plot(p2, color='g')
+    plt.plot(p3, color='b')
+    plt.plot(p4, color='y')
+    plt.axhline(y=born[0], color='r', linestyle='-')
+    plt.axhline(y=born[1], color='g', linestyle='-')
+    plt.axhline(y=born[2], color='b', linestyle='-')
+    plt.axhline(y=born[3], color='y', linestyle='-')
+    plt.title('Prepare and Measure with SIC-POVM of 4 elements')
+    plt.show()
+    return None
+
+
+def neumark():
+    psi = qt.qubit.Qubit(np.array([(3 + 1.j * math.sqrt(3)) / 4., -0.5]))
+    print(psi.bloch_vector())
+
+    zero = np.array([[1, 0], [0, 0]])
+    one = np.array([[0, 0], [0, 1]])
+    plus = 0.5 * np.array([[1, 1], [1, 1]])
+    minus = 0.5 * np.array([[1, -1], [-1, 1]])
+
+    povm = POVM(weights=0.5 * np.array([1, 1, 1, 1]), proj=np.array([zero, one, plus, minus], dtype=complex))
+    unitary = povm.unitary()
+    print(unitary)
+    return None
+
+
+def pm_circuit():
+    qubit = qt.qubit.Qubit(np.array([(3 + 1.j * math.sqrt(3)) / 4., -0.5]))
+
+    zero = np.array([[1, 0], [0, 0]])
+    one = np.array([[0, 0], [0, 1]])
+    plus = 0.5 * np.array([[1, 1], [1, 1]])
+    minus = 0.5 * np.array([[1, -1], [-1, 1]])
+    povm = POVM(weights=0.5 * np.array([1, 1, 1, 1]), proj=np.array([zero, one, plus, minus], dtype=complex))
+    print(povm.unitary())
+
+    shots = 10 ** 7
+    results = qt.quantum.prepare_and_measure_povm(shots, qubit, povm)
+    print('Probabilities={}'.format(results["probabilities"]))
+    return None
+
+
+def quantum_simulator():
+    qc = QuantumCircuit(2, 2)
+
+    psi = ((3 + 1.j * math.sqrt(3)) / 4., -0.5)
+
+    U = [[0.70710678 + 0.j, 0. + 0.j, 0.70710678 + 0.j, 0. + 0.j],
+         [0. + 0.j, 0.70710678 + 0.j, 0. + 0.j, 0.70710678 + 0.j],
+         [0.5 - 0.j, 0.5 + 0.j, -0.5 + 0.j, -0.5 + 0.j],
+         [-0.5 + 0.j, 0.5 + 0.j, 0.5 + 0.j, -0.5 + 0.j]]
+
+    qc.initialize(psi, 0)
+    qc.unitary(U, [0, 1])
+    qc.measure([0, 1], [0, 1])
+    qc.draw()
+
+    backend = Aer.get_backend('aer_simulator')
+    qc_transpiled = transpile(qc, backend)
+    qc_transpiled.draw()
+
+    job = backend.run(qc_transpiled, shots=4000)
+    result = job.result()
+    counts = result.get_counts(qc_transpiled)
+
+    print(counts)
+    plot_histogram(counts)
+
+    sum(counts.values())
+    print(counts['00'] / sum(counts.values()))
+    print(counts['01'] / sum(counts.values()))
+    print(counts['10'] / sum(counts.values()))
+    print(counts['11'] / sum(counts.values()))
+
+
+def quantum_computer():
+    qc = QuantumCircuit(2, 2)
+
+    psi = ((3 + 1.j * math.sqrt(3)) / 4., -0.5)
+
+    U = [[0.70710678 + 0.j, 0. + 0.j, 0.70710678 + 0.j, 0. + 0.j],
+         [0. + 0.j, 0.70710678 + 0.j, 0. + 0.j, 0.70710678 + 0.j],
+         [- 0.5 + 0.j, -0.5 + 0.j, 0.5 + 0.j, 0.5 + 0.j],
+         [-0.5 + 0.j, 0.5 + 0.j, 0.5 + 0.j, -0.5 + 0.j]]
+
+    qc.initialize(psi, 0)
+    qc.unitary(U, [0, 1])
+    qc.measure([0, 1], [0, 1])
+    qc.draw()
+
+    IBMQ.load_account()
+    provider = IBMQ.get_provider(hub='ibm-q', group='open', project='main')
+    qcomp = provider.get_backend('ibm_nairobi')
+    # running in ibm_nairobi. 4000 shots
+
+    qc_transpiled = transpile(qc, backend=qcomp)
+    job = execute(qc_transpiled, backend=qcomp, shots=4000)
+    job_monitor(job)
+    result = job.result()
+    counts = result.get_counts(qc_transpiled)
+    plot_histogram(counts)
+    sum(counts.values())
+    print(counts['00'] / sum(counts.values()))
+    print(counts['01'] / sum(counts.values()))
+    print(counts['10'] / sum(counts.values()))
+    print(counts['11'] / sum(counts.values()))
+
+
+def pm_kl_classical_born():
+    """
+    Runs PM classical protocol and plots Kullback-Leibler divergence among classical and Born probability distributions
+    """
+
+    # run experiment
+    np.random.seed(0)
+    shots = 10 ** 4
+
+    qubit = qt.qubit.Qubit(np.array([(3 + 1.j * math.sqrt(3)) / 4., -0.5]))
+    # P4 = {1/2|0x0|, 1/2|1x1|, 1/2|+x+|, 1/2|-x-|}
+    proj = np.array([[[1, 0], [0, 0]], [[0, 0], [0, 1]], [[.5, .5], [.5, .5]], [[.5, -.5], [-.5, .5]]])
+    measurement = POVM(weights=0.5 * np.array([1, 1, 1, 1]), proj=proj)
+
+    experiment = qt.classical.prepare_and_measure_povm(shots, 4, qubit=qubit, measurement=measurement)
+
+    # plot Kullback-Leibler divergence
+    runs = experiment['probabilities']['runs']
+    stats = experiment['probabilities']['stats']
+    born = experiment['probabilities']['born']
+    print('Stats:\np1={}, p2={}, p3={}, p4={}, pt={}'.format(stats[0], stats[1], stats[2], stats[3], np.sum(stats)))
+    print('Born:\np1={}, p2={}, p3={}, p4={}, pt={}'.format(born[0], born[1], born[2], born[3], np.sum(born)))
+
+    p1 = np.cumsum(runs[:, 0]) / (np.arange(len(runs[:, 0])) + 1)
+    p2 = np.cumsum(runs[:, 1]) / (np.arange(len(runs[:, 1])) + 1)
+    p3 = np.cumsum(runs[:, 2]) / (np.arange(len(runs[:, 2])) + 1)
+    p4 = np.cumsum(runs[:, 3]) / (np.arange(len(runs[:, 3])) + 1)
+
+    actual = np.vstack((p1, p2, p3, p4))
+    expected = np.repeat(born.reshape(born.shape[0], 1), actual.shape[1], axis=1)
+
+    rows, cols = actual.shape
+    kl = np.zeros((cols,))
+    for i in range(cols):
+        kl[i] = sum(rel_entr(expected[:, i], actual[:, i]))
+
+    plt.plot(kl, color='b')
+    plt.show()
+    return None
+
+
+def pm_kl_classical_quantum_simulator():
+    """
+    Runs classical protocol and quantum simulator and plots Kullback-Leibler divergence among classical and
+    quantum simulator probability distribution
+    """
+    shots = 10 ** 4
+
+    qubit = qt.qubit.Qubit(np.array([(3 + 1.j * math.sqrt(3)) / 4., -0.5]))
+    # P4 = {1/2|0x0|, 1/2|1x1|, 1/2|+x+|, 1/2|-x-|}
+    proj = np.array([[[1, 0], [0, 0]], [[0, 0], [0, 1]], [[.5, .5], [.5, .5]], [[.5, -.5], [-.5, .5]]], dtype=complex)
+    measurement = POVM(weights=0.5 * np.array([1, 1, 1, 1]), proj=proj)
+
+    # run classical protocol
+    experiment1 = qt.classical.prepare_and_measure_povm(shots, qubit=qubit, measurement=measurement)
+    runs = experiment1['probabilities']['runs']
+    born = experiment1['probabilities']['born']
+    p1 = np.cumsum(runs[:, 0]) / (np.arange(len(runs[:, 0])) + 1)
+    p2 = np.cumsum(runs[:, 1]) / (np.arange(len(runs[:, 1])) + 1)
+    p3 = np.cumsum(runs[:, 2]) / (np.arange(len(runs[:, 2])) + 1)
+    p4 = np.cumsum(runs[:, 3]) / (np.arange(len(runs[:, 3])) + 1)
+    experimental1 = np.vstack((p1, p2, p3, p4))
+    theoretical = np.repeat(born.reshape(born.shape[0], 1), experimental1.shape[1], axis=1)
+    print('Classical protocol executed')
+
+    # run quantum circuit in Qiskit simulator
+    experiment2 = qt.quantum.prepare_and_measure_povm(shots, qubit, measurement)
+    import collections
+    memory = experiment2["memory"]
+    experimental2 = np.zeros(experimental1.shape)
+    for i in range(len(memory)):
+        summary = collections.Counter(memory[0: i + 1])
+        summary = np.array([summary[k] for k in sorted(summary.keys())])
+        p = np.zeros((measurement.size(),))
+        p[:summary.shape[0]] = summary / np.sum(summary)
+        experimental2[:, i] = p
+    print('Quantum Circuit executed')
+
+    # plot kl divergence
+    _, cols = experimental1.shape
+    klte1 = np.zeros((cols,))
+    klte2 = np.zeros((cols,))
+    klee = np.zeros((cols,))
+
+    for i in range(cols):
+        klte1[i] = sum(rel_entr(theoretical[:, i], experimental1[:, i]))
+        klte2[i] = sum(rel_entr(theoretical[:, i], experimental2[:, i]))
+        klee[i] = sum(rel_entr(experimental2[:, i], experimental1[:, i]))
+
+    plt.title('Kullback-Leibler divergence {:.0E} shots'.format(shots))
+    plt.plot(klte1, color='b', label='Born vs Classical Protocol')
+    plt.plot(klte2, color='r', label='Born vs Quantum Simulator')
+    plt.legend()
+    plt.show()
+    return None
+
+
+def pm_kl_classical_quantum_simulator_born(shots):
+    np.random.seed(1976)
+    mpl.rcParams['mathtext.fontset'] = 'stix'
+    mpl.rcParams['font.family'] = 'STIXGeneral'
+
+    fig, ax = plt.subplots(1, 1, layout='constrained')
+
+    ax.xaxis.set_tick_params(which='major', size=5, width=1, direction='in', top='on')
+    ax.xaxis.set_tick_params(which='minor', size=3, width=1, direction='in', top='on')
+    ax.yaxis.set_tick_params(which='major', size=5, width=1, direction='in', right='on')
+    ax.yaxis.set_tick_params(which='minor', size=3, width=1, direction='in', right='on')
+
+    fig.suptitle(r'Cross-POVM')
+    fig.supxlabel('Number of shots')
+    fig.supylabel('Kullback-Leibler divergence')
+
+    qubit = qt.qubit.Qubit(np.array([(3 + 1.j * math.sqrt(3)) / 4., -0.5]))
+    proj = np.array([[[1, 0], [0, 0]], [[0, 0], [0, 1]], [[.5, .5], [.5, .5]], [[.5, -.5], [-.5, .5]]], dtype=complex)
+    measurement = POVM(weights=0.5 * np.array([1, 1, 1, 1]), proj=proj)
+
+    # run classical protocol
+    experiment1 = qt.classical.prepare_and_measure_povm(shots, qubit=qubit, measurement=measurement)
+    runs = experiment1['probabilities']['runs']
+    stats = experiment1['probabilities']['stats']
+    born = experiment1['probabilities']['born']
+    p1 = np.cumsum(runs[:, 0]) / (np.arange(len(runs[:, 0])) + 1)
+    p2 = np.cumsum(runs[:, 1]) / (np.arange(len(runs[:, 1])) + 1)
+    p3 = np.cumsum(runs[:, 2]) / (np.arange(len(runs[:, 2])) + 1)
+    p4 = np.cumsum(runs[:, 3]) / (np.arange(len(runs[:, 3])) + 1)
+    experimental1 = np.vstack((p1, p2, p3, p4))
+    theoretical = np.repeat(born.reshape(born.shape[0], 1), experimental1.shape[1], axis=1)
+    print('Stats:p1={}, p2={}, p3={}, p4={}, pt={}'.format(stats[0], stats[1], stats[2], stats[3], np.sum(stats)))
+    print('Born:p1={}, p2={}, p3={}, p4={}, pt={}'.format(born[0], born[1], born[2], born[3], np.sum(born)))
+    print('Classical protocol executed')
+
+    # run quantum circuit in Qiskit simulator
+    experiment2 = qt.quantum.prepare_and_measure_povm(shots, qubit=qubit, povm=measurement)
+    import collections
+    memory = experiment2["memory"]
+    print('Stats={}'.format(experiment2["probabilities"]))
+    print('Quantum Circuit executed')
+
+    experimental2 = np.zeros(experimental1.shape)
+    for i in range(len(memory)):
+        summary = collections.Counter(memory[0: i + 1])
+        summary = np.array([summary[k] for k in sorted(summary.keys())])
+        p = np.zeros((measurement.size(),))
+        p[:summary.shape[0]] = summary / np.sum(summary)
+        experimental2[:, i] = p
+
+    # plot kl divergence
+    _, cols = experimental1.shape
+    klte1 = np.zeros((cols,))
+    klte2 = np.zeros((cols,))
+    kle1t = np.zeros((cols,))
+    kle1e2 = np.zeros((cols,))
+
+    for i in range(cols):
+        klte1[i] = sum(rel_entr(theoretical[:, i], experimental1[:, i]))
+        klte2[i] = sum(rel_entr(theoretical[:, i], experimental2[:, i]))
+        kle1t[i] = sum(rel_entr(experimental1[:, i], theoretical[:, i]))
+        kle1e2[i] = sum(rel_entr(experimental1[:, i], experimental2[:, i]))
+
+    ax.plot(klte1, color='b', label='Born vs. Classical Protocol', linewidth=2)
+    ax.plot(klte2, color='r', label='Born vs. Quantum Simulator', linewidth=2, linestyle='-', alpha=0.7)
+    ax.plot(kle1e2, color='g', label='Classical Protocol vs. Quantum Simulator', linewidth=2, linestyle='-', alpha=0.7)
+    ax.legend()
+
+    plt.show()
+    return None
+
+
+def pm_kl_multiplot(shots):
+    np.random.seed(0)
+    mpl.rcParams['mathtext.fontset'] = 'stix'
+    mpl.rcParams['font.family'] = 'STIXGeneral'
+
+    cases = ['Cross-POVM', 'Trine-POVM', 'SIC-POVM', r"Random-PVM", r"Random-POVM", r"Random-POVM"]
+
+    fig, axs = plt.subplots(3, 2, figsize=(8, 10), layout='constrained')
+
+    for ax, title in zip(axs.flat, cases):
+        ax.xaxis.set_tick_params(which='major', size=5, width=1, direction='in', top='on')
+        ax.xaxis.set_tick_params(which='minor', size=3, width=1, direction='in', top='on')
+        ax.yaxis.set_tick_params(which='major', size=5, width=1, direction='in', right='on')
+        ax.yaxis.set_tick_params(which='minor', size=3, width=1, direction='in', right='on')
+        # ax.set_ylabel(r'$D_{KL}$', labelpad=2)
+        ax.set_title(title)
+
+    fig.supxlabel('Number of shots')
+    fig.supylabel('Kullback-Leibler divergence')
+
+    qubit = qt.qubit.Qubit(np.array([(3 + 1.j * math.sqrt(3)) / 4., -0.5]))
+
+    # EXPERIMENT 1: RANDOM-PVM
+    experiment1 = qt.classical.prepare_and_measure_pvm(shots)
+
+    qubit1 = experiment1['qubit']
+    runs1 = experiment1['probabilities']['runs']
+    stats1 = experiment1['probabilities']['stats']
+    born1 = experiment1['probabilities']['born']
+    print('EXPERIMENT 1:\nState:{}\nPVM:{}'.format(qubit1, 'RANDOM-PVM'))
+    print('Stats:p1={}, p2={}, pt={}'.format(stats1[0], stats1[1], np.sum(stats1)))
+    print('Born:p1={}, p2={}, pt={}'.format(born1[0], born1[1], np.sum(born1)))
+
+    p11 = np.cumsum(runs1[:, 0]) / (np.arange(len(runs1[:, 0])) + 1)
+    p12 = np.cumsum(runs1[:, 1]) / (np.arange(len(runs1[:, 1])) + 1)
+
+    actual1 = np.vstack((p11, p12))
+    expected1 = np.repeat(born1.reshape(born1.shape[0], 1), actual1.shape[1], axis=1)
+    plot_kl(axs[1][1], actual1, expected1)
+
+    # EXPERIMENT 2: CROSS-POVM
+    # P4 = {1/2|0x0|, 1/2|1x1|, 1/2|+x+|, 1/2|-x-|}
+    proj2 = np.array([[[1, 0], [0, 0]], [[0, 0], [0, 1]], [[.5, .5], [.5, .5]], [[.5, -.5], [-.5, .5]]])
+    measurement2 = POVM(weights=0.5 * np.array([1, 1, 1, 1]), proj=proj2)
+    experiment2 = qt.classical.prepare_and_measure_povm(shots, 4, qubit=qubit, measurement=measurement2)
+
+    runs2 = experiment2['probabilities']['runs']
+    stats2 = experiment2['probabilities']['stats']
+    born2 = experiment2['probabilities']['born']
+    print('EXPERIMENT 2:\nState:{}\nPOVM:{}'.format(qubit, 'CROSS-POVM'))
+    print('Stats:p1={}, p2={}, p3={}, p4={}, pt={}'.format(stats2[0], stats2[1], stats2[2], stats2[3], np.sum(stats2)))
+    print('Born:p1={}, p2={}, p3={}, p4={}, pt={}'.format(born2[0], born2[1], born2[2], born2[3], np.sum(born2)))
+
+    p21 = np.cumsum(runs2[:, 0]) / (np.arange(len(runs2[:, 0])) + 1)
+    p22 = np.cumsum(runs2[:, 1]) / (np.arange(len(runs2[:, 1])) + 1)
+    p23 = np.cumsum(runs2[:, 2]) / (np.arange(len(runs2[:, 2])) + 1)
+    p24 = np.cumsum(runs2[:, 3]) / (np.arange(len(runs2[:, 3])) + 1)
+
+    actual2 = np.vstack((p21, p22, p23, p24))
+    expected2 = np.repeat(born2.reshape(born2.shape[0], 1), actual2.shape[1], axis=1)
+    plot_kl(axs[0][0], actual2, expected2)
+
+    # EXPERIMENT 3: TRINE-POVM
+    one = Qubit(np.array([1, 0])).rho()
+    two = Qubit(0.5 * np.array([1, math.sqrt(3)])).rho()
+    three = Qubit(0.5 * np.array([1, -math.sqrt(3)])).rho()
+    measurement3 = POVM(weights=2. / 3 * np.array([1, 1, 1]), proj=np.array([one, two, three], dtype=complex))
+    experiment3 = qt.classical.prepare_and_measure_povm(shots, qubit=qubit, measurement=measurement3)
+
+    runs3 = experiment3['probabilities']['runs']
+    stats3 = experiment3['probabilities']['stats']
+    born3 = experiment3['probabilities']['born']
+    print('EXPERIMENT 3:\nState:{}\nPOVM:{}'.format(qubit, 'TRINE-POVM'))
+    print('Stats:p1={}, p2={}, p3={}, pt={}'.format(stats3[0], stats3[1], stats3[2], np.sum(stats3)))
+    print('Born:p1={}, p2={}, p3={}, pt={}'.format(born3[0], born3[1], born3[2], np.sum(born3)))
+
+    p31 = np.cumsum(runs3[:, 0]) / (np.arange(len(runs3[:, 0])) + 1)
+    p32 = np.cumsum(runs3[:, 1]) / (np.arange(len(runs3[:, 1])) + 1)
+    p33 = np.cumsum(runs3[:, 2]) / (np.arange(len(runs3[:, 2])) + 1)
+
+    actual3 = np.vstack((p31, p32, p33))
+    expected3 = np.repeat(born3.reshape(born3.shape[0], 1), actual3.shape[1], axis=1)
+    plot_kl(axs[0][1], actual3, expected3)
+
+    # EXPERIMENT 4: SIC-POVM
+    one = Qubit(np.array([1, 0])).rho()
+    two = Qubit(np.array([1/math.sqrt(3), math.sqrt(2/3)])).rho()
+    three = Qubit(np.array([1/math.sqrt(3),
+                            math.sqrt(2/3) * (math.cos(2 * math.pi/3) + 1.j * math.sin(2 * math.pi/3))])).rho()
+    four = Qubit(np.array([1/math.sqrt(3),
+                           math.sqrt(2/3) * (math.cos(4 * math.pi/3) + 1.j * math.sin(4 * math.pi/3))])).rho()
+    measurement4 = POVM(weights=0.5 * np.array([1, 1, 1, 1]), proj=np.array([one, two, three, four], dtype=complex))
+    experiment4 = qt.classical.prepare_and_measure_povm(shots, qubit=qubit, measurement=measurement4)
+
+    runs4 = experiment4['probabilities']['runs']
+    stats4 = experiment4['probabilities']['stats']
+    born4 = experiment4['probabilities']['born']
+    print('EXPERIMENT 4:\nState:{}\nPOVM:{}'.format(qubit, 'SIC-POVM'))
+    print('Stats:p1={}, p2={}, p3={}, p4={}, pt={}'.format(stats4[0], stats4[1], stats4[2], stats4[3], np.sum(stats4)))
+    print('Born:p1={}, p2={}, p3={}, p4={}, pt={}'.format(born4[0], born4[1], born4[2], born4[2], np.sum(born3)))
+
+    p41 = np.cumsum(runs4[:, 0]) / (np.arange(len(runs4[:, 0])) + 1)
+    p42 = np.cumsum(runs4[:, 1]) / (np.arange(len(runs4[:, 1])) + 1)
+    p43 = np.cumsum(runs4[:, 2]) / (np.arange(len(runs4[:, 2])) + 1)
+    p44 = np.cumsum(runs4[:, 3]) / (np.arange(len(runs4[:, 3])) + 1)
+
+    actual4 = np.vstack((p41, p42, p43, p44))
+    expected4 = np.repeat(born4.reshape(born4.shape[0], 1), actual4.shape[1], axis=1)
+    plot_kl(axs[1][0], actual4, expected4)
+
+    # EXPERIMENT 5: RANDOM-POVM-1
+    experiment5 = qt.classical.prepare_and_measure_povm(shots, 4)
+
+    qubit5 = experiment5['qubit']
+    runs5 = experiment5['probabilities']['runs']
+    stats5 = experiment5['probabilities']['stats']
+    born5 = experiment5['probabilities']['born']
+    print('EXPERIMENT 5:\nState:{}\nPOVM:{}'.format(qubit5, 'RANDOM-POVM-1'))
+    print('Stats:p1={}, p2={}, p3={}, p4={}, pt={}'.format(stats5[0], stats5[1], stats5[2], stats5[3], np.sum(stats5)))
+    print('Born:p1={}, p2={}, p3={}, p4={}, pt={}'.format(born5[0], born5[1], born5[2], born5[2], np.sum(born5)))
+
+    p51 = np.cumsum(runs5[:, 0]) / (np.arange(len(runs5[:, 0])) + 1)
+    p52 = np.cumsum(runs5[:, 1]) / (np.arange(len(runs5[:, 1])) + 1)
+    p53 = np.cumsum(runs5[:, 2]) / (np.arange(len(runs5[:, 2])) + 1)
+    p54 = np.cumsum(runs5[:, 3]) / (np.arange(len(runs5[:, 3])) + 1)
+
+    actual5 = np.vstack((p51, p52, p53, p54))
+    expected5 = np.repeat(born5.reshape(born5.shape[0], 1), actual5.shape[1], axis=1)
+    plot_kl(axs[2][0], actual5, expected5)
+
+    # EXPERIMENT 6: RANDOM-POVM-2
+    experiment6 = qt.classical.prepare_and_measure_povm(shots, 4)
+
+    qubit6 = experiment6['qubit']
+    runs6 = experiment6['probabilities']['runs']
+    stats6 = experiment6['probabilities']['stats']
+    born6 = experiment6['probabilities']['born']
+    print('EXPERIMENT 6:\nState:{}\nPOVM:{}'.format(qubit6, 'RANDOM-POVM-2'))
+    print('Stats:p1={}, p2={}, p3={}, p4={}, pt={}'.format(stats6[0], stats6[1], stats6[2], stats6[3], np.sum(stats6)))
+    print('Born:p1={}, p2={}, p3={}, p4={}, pt={}'.format(born6[0], born6[1], born6[2], born6[2], np.sum(born6)))
+
+    p61 = np.cumsum(runs6[:, 0]) / (np.arange(len(runs6[:, 0])) + 1)
+    p62 = np.cumsum(runs6[:, 1]) / (np.arange(len(runs6[:, 1])) + 1)
+    p63 = np.cumsum(runs6[:, 2]) / (np.arange(len(runs6[:, 2])) + 1)
+    p64 = np.cumsum(runs6[:, 3]) / (np.arange(len(runs6[:, 3])) + 1)
+
+    actual6 = np.vstack((p61, p62, p63, p64))
+    expected6 = np.repeat(born6.reshape(born6.shape[0], 1), actual6.shape[1], axis=1)
+    plot_kl(axs[2][1], actual6, expected6)
+
+    plt.show()
+    return None
+
+
+def plot_kl(ax, actual, expected, label='', color='b', linewidth=1, linestyle='-'):
+    rows, cols = actual.shape
+    kl = np.zeros((cols,))
+    for i in range(cols):
+        kl[i] = sum(rel_entr(expected[:, i], actual[:, i]))
+    # ax.plot(kl, color=color, label=label, linewidth=linewidth, linestyle=linestyle)
+    # ax.legend()
+    ax.plot(kl, color=color, linewidth=linewidth, linestyle=linestyle)
+
+
+def bell_sample_probabilities(shots):
+    np.random.seed(0)
+
+    a0 = Observable(Z)
+    a1 = Observable(X)
+    b0 = Observable(-1 / math.sqrt(2) * (X + Z))
+    b1 = Observable(1 / math.sqrt(2) * (X - Z))
+
+    alice = Qubit(a0.eigenvector(1))
+    bob = (Qubit(b0.eigenvector(1)), Qubit(b0.eigenvector(-1)))
+
+    experiment = qt.classical.bell_singlet_full(shots, alice=(a0, a1), bob=(b0, b1))
+    stats = experiment['probabilities']['stats']
+    born = experiment['probabilities']['born']
+    print('Stats:\n{}'.format(stats))
+    print('Born:\n{}'.format(born))
+    return None
+
+
+def bell(shots):
+    np.random.seed(0)
+
+    mpl.rcParams['mathtext.fontset'] = 'stix'
+    mpl.rcParams['font.family'] = 'STIXGeneral'
+
+    a0 = Observable(Z)
+    a1 = Observable(X)
+    b0 = Observable(-1 / math.sqrt(2) * (X + Z))
+    b1 = Observable(1 / math.sqrt(2) * (X - Z))
+
+    alice = Qubit(a0.eigenvector(1))
+    bob = (Qubit(b0.eigenvector(1)), Qubit(b0.eigenvector(-1)))
+
+    experiment = qt.classical.bell_singlet_full(shots, alice=(a0, a1), bob=(b0, b1))
+    actual = experiment['probabilities']['stats'].T
+    expected = experiment['probabilities']['born'].T
+
+    x = np.arange(0, 5)
+    y = np.arange(0, 5)
+
+    outcomes = ["$(+1,+1)$", "$(+1,-1)$", "$(-1,+1)$", "$(-1,-1)$"]
+    measurements = ["($A_0$,$B_0$)", "$(A_0,B_1)$", "$(A_1,B_0)$", "$(A_1,B_1)$"]
+
+    fig, ax = plt.subplots(1, 2, figsize=(14, 5))
+
+    # actual
+    im = ax[0].imshow(actual, cmap='PiYG')
+
+    ax[0].set_xticks(np.arange(len(measurements)), labels=measurements)
+    ax[0].set_yticks(np.arange(len(outcomes)), labels=outcomes)
+
+    for i in range(len(measurements)):
+        for j in range(len(outcomes)):
+            text = ax[0].text(j, i, round(actual[i, j], 4),
+                              ha="center", va="center", color="w")
+
+    ax[0].set_title("Classical Protocol")
+
+    # expected
+    im = ax[1].imshow(expected, cmap='PiYG')
+
+    ax[1].set_xticks(np.arange(len(measurements)), labels=measurements)
+    ax[1].set_yticks(np.arange(len(outcomes)), labels=outcomes)
+
+    for i in range(len(measurements)):
+        for j in range(len(outcomes)):
+            text = ax[1].text(j, i, round(expected[i, j], 4),
+                              ha="center", va="center", color="w")
+
+    ax[1].set_title("Born\'s rule ")
+
+    fig.tight_layout()
+    plt.show()
+    return None
+
+
+def bell_multiplot():
+    np.random.seed(0)
+
+    mpl.rcParams['mathtext.fontset'] = 'stix'
+    mpl.rcParams['font.family'] = 'STIXGeneral'
+
+    cases = [r'$shots=10$', r'$shots=100$', r'$shots=500$',
+             r'$shots=10^3$', r'$shots=5\cdot10^3$', r'$shots=10^4$',
+             r'$shots=2\cdot10^4$', r'$shots=5\cdot10^4$', r'$shots=10^5$']
+    outcomes = ["$(+1,+1)$", "$(+1,-1)$", "$(-1,+1)$", "$(-1,-1)$"]
+    measurements = ["($A_0$,$B_0$)", "$(A_0,B_1)$", "$(A_1,B_0)$", "$(A_1,B_1)$"]
+
+    fig, axs = plt.subplots(3, 3, figsize=(10, 10), layout='constrained')
+
+    for ax, title in zip(axs.flat, cases):
+        ax.xaxis.set_tick_params(which='major', size=5, width=1, direction='out', top='on')
+        ax.xaxis.set_tick_params(which='minor', size=3, width=1, direction='out', top='on')
+        ax.yaxis.set_tick_params(which='major', size=5, width=1, direction='out', right='on')
+        ax.yaxis.set_tick_params(which='minor', size=3, width=1, direction='out', right='on')
+        # ax.set_ylabel(r'$p_{C}(a_x, b_y | A_x, B_y)$', labelpad=2)
+        ax.set_title(title)
+        ax.set_xticks(np.arange(len(measurements)), labels=measurements)
+        ax.set_yticks(np.arange(len(outcomes)), labels=outcomes)
+
+    fig.supxlabel(r'$(A_x, B_y)$')
+    fig.supylabel(r'$(a_x, b_y)$')
+    fig.suptitle(r'$p_{C}(a_x, b_y\:|\:A_x, B_y)$')
+
+    a0 = Observable(Z)
+    a1 = Observable(X)
+    b0 = Observable(-1 / math.sqrt(2) * (X + Z))
+    b1 = Observable(1 / math.sqrt(2) * (X - Z))
+
+    alice = Qubit(a0.eigenvector(1))
+    bob = (Qubit(b0.eigenvector(1)), Qubit(b0.eigenvector(-1)))
+
+    # shots = 10
+    experiment1 = qt.classical.bell_singlet_full(10, alice=(a0, a1), bob=(b0, b1))
+    actual1 = experiment1['probabilities']['stats'].T
+    axs[0][0].imshow(actual1, cmap='PiYG')
+
+    # shots = 100
+    experiment2 = qt.classical.bell_singlet_full(100, alice=(a0, a1), bob=(b0, b1))
+    actual2 = experiment2['probabilities']['stats'].T
+    axs[0][1].imshow(actual2, cmap='PiYG')
+
+    # shots = 500
+    experiment3 = qt.classical.bell_singlet_full(500, alice=(a0, a1), bob=(b0, b1))
+    actual3 = experiment3['probabilities']['stats'].T
+    axs[0][2].imshow(actual3, cmap='PiYG')
+
+    # shots = 1000
+    experiment4 = qt.classical.bell_singlet_full(1000, alice=(a0, a1), bob=(b0, b1))
+    actual4 = experiment4['probabilities']['stats'].T
+    axs[1][0].imshow(actual4, cmap='PiYG')
+
+    # shots = 5000
+    experiment5 = qt.classical.bell_singlet_full(5000, alice=(a0, a1), bob=(b0, b1))
+    actual5 = experiment5['probabilities']['stats'].T
+    axs[1][1].imshow(actual5, cmap='PiYG')
+
+    # shots = 10000
+    experiment6 = qt.classical.bell_singlet_full(10000, alice=(a0, a1), bob=(b0, b1))
+    actual6 = experiment6['probabilities']['stats'].T
+    axs[1][2].imshow(actual6, cmap='PiYG')
+
+    # shots = 20000
+    experiment7 = qt.classical.bell_singlet_full(20000, alice=(a0, a1), bob=(b0, b1))
+    actual7 = experiment7['probabilities']['stats'].T
+    axs[2][0].imshow(actual7, cmap='PiYG')
+
+    # shots = 50000
+    experiment8 = qt.classical.bell_singlet_full(50000, alice=(a0, a1), bob=(b0, b1))
+    actual8 = experiment8['probabilities']['stats'].T
+    axs[2][1].imshow(actual8, cmap='PiYG')
+
+    # shots = 100000
+    experiment9 = qt.classical.bell_singlet_full(100000, alice=(a0, a1), bob=(b0, b1))
+    actual9 = experiment9['probabilities']['stats'].T
+    axs[2][2].imshow(actual9, cmap='PiYG')
+
+    fig.tight_layout()
+    plt.show()
+    return None
+\end{minted}
+\newpage
+\section{Simulator and Quantum Computer benchmarking}\label{section:benchmark}
+The prepare-and-measure scenario selected for the comparison is as follows
+\begin{equation}
+\begin{split}
+\ket{\Psi}&=\frac{3 + i \sqrt{3}}{4} \ket{0} - \frac{1}{2} \ket{1}\\
+\mathbb{P}_4&=\{\frac{1}{2}\ket{0}\bra{0}, \frac{1}{2}\ket{1}\bra{1}, \frac{1}{2}\ket{+}\bra{+}, \frac{1}{2}\ket{-}\bra{-} \}
+\end{split}
+\end{equation}
+A full analysis of the achievable performances when simulating such scenario with IBM Quantum simulators and computers can be found \href{https://github.com/inaki-ortizdelandaluce/qubit-communication-simulations/blob/main/tex/xls/qc_probabilities_summary.xlsx}{here}.
