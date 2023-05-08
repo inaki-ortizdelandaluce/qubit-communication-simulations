@@ -1,0 +1,305 @@
+\section{Simulator and Quantum Computer benchmarking}\label{section:benchmark}
+The prepare-and-measure scenario selected for the comparison is as follows
+\begin{equation}
+\begin{split}
+\ket{\Psi}&=\frac{3 + i \sqrt{3}}{4} \ket{0} - \frac{1}{2} \ket{1}\\
+\mathbb{P}_4&=\{\frac{1}{2}\ket{0}\bra{0}, \frac{1}{2}\ket{1}\bra{1}, \frac{1}{2}\ket{+}\bra{+}, \frac{1}{2}\ket{-}\bra{-} \}
+\end{split}
+\end{equation}
+A full analysis of the achievable performances when simulating such scenario with IBM Quantum simulators and computers can be found at \href{https://github.com/inaki-ortizdelandaluce/qubit-communication-simulations/blob/main/tex/xls/qc_probabilities_summary.xlsx}{here}.
+
+\begin{table}[!ht]
+    \centering
+    \begin{tabular}{ccccc}
+    \hline
+        \textbf{RESULTS} & \textbf{'00'} & \textbf{'01'} & \textbf{'10'} & \textbf{'11' } \\ \hline
+        \textbf{QS-SIMULATION} & 37 & 15 & 7 & 41  \\ 
+        \textbf{QC-NAIROBI} & 40 & 14 & 3 & 43  \\ 
+        \textbf{QC-PERTH} & 35 & 26 & 10 & 29  \\ 
+        \textbf{QC-OSLO} & 40 & 8 & 4 & 48  \\ 
+        \textbf{QC-JAKARTA} & 35 & 16 & 11 & 38  \\ 
+        \textbf{QC-LAGOS} & 38 & 10 & 6 & 46 \\ \hline
+    \end{tabular}
+    \caption{QS-QC: 100 SHOTS}
+\end{table}
+
+\begin{table}[!ht]
+    \centering
+    \begin{tabular}{ccccc}
+    \hline
+        \textbf{RESULTS} & \textbf{'00'} & \textbf{'01'} & \textbf{'10'} & \textbf{'11' } \\ \hline
+        \textbf{QS-SIMULATION} & 182 & 54 & 30 & 234  \\ 
+        \textbf{QC-NAIROBI} & 183 & 59 & 67 & 191  \\ 
+        \textbf{QC-PERTH} & 200 & 89 & 67 & 144  \\ 
+        \textbf{QC-OSLO} & 189 & 52 & 33 & 226  \\ 
+        \textbf{QC-JAKARTA} & 187 & 60 & 47 & 206  \\ 
+        \textbf{QC-LAGOS} & 164 & 59 & 43 & 234 \\ \hline
+    \end{tabular}
+    \caption{QS-QC: 500 SHOTS}
+\end{table}
+
+\begin{table}[!ht]
+    \centering
+    \begin{tabular}{ccccc}
+    \hline
+        \textbf{RESULTS} & \textbf{'00'} & \textbf{'01'} & \textbf{'10'} & \textbf{'11' } \\ \hline
+        \textbf{QS-SIMULATION} & 362 & 117 & 67 & 454  \\ 
+        \textbf{QC-NAIROBI} & 335 & 162 & 112 & 391  \\ 
+        \textbf{QC-PERTH} & 337 & 185 & 121 & 357  \\ 
+        \textbf{QC-OSLO} & 379 & 100 & 52 & 469  \\ 
+        \textbf{QC-JAKARTA} & 378 & 160 & 76 & 386  \\ 
+        \textbf{QC-LAGOS} & 366 & 113 & 60 & 461 \\ \hline
+    \end{tabular}
+    \caption{QS-QC: 1000 SHOTS}
+\end{table}
+
+\begin{table}[!ht]
+    \centering
+    \begin{tabular}{ccccc}
+    \hline
+        \textbf{RESULTS} & \textbf{'00'} & \textbf{'01'} & \textbf{'10'} & \textbf{'11' } \\ \hline
+        \textbf{QS-SIMULATION} & 1484 & 513 & 268 & 1735  \\ 
+        \textbf{QC-NAIROBI} & 1417 & 453 & 392 & 1738  \\ 
+        \textbf{QC-PERTH} & 1534 & 656 & 391 & 1419  \\ 
+        \textbf{QC-OSLO} & 1455 & 418 & 266 & 1861  \\ 
+        \textbf{QC-JAKARTA} & 1498 & 547 & 371 & 1584  \\ 
+        \textbf{QC-LAGOS} & 1378 & 424 & 258 & 1940 \\ \hline
+    \end{tabular}
+    \caption{QS-QC: 4000 SHOTS}
+\end{table}
+
+\begin{table}[!ht]
+    \centering
+    \begin{tabular}{ccccc}
+    \hline
+        \textbf{RESULTS} & \textbf{'00'} & \textbf{'01'} & \textbf{'10'} & \textbf{'11' } \\ \hline
+        \textbf{QS-SIMULATION} & 3772 & 1223 & 623 & 4382  \\ 
+        \textbf{QC-NAIROBI} & 3782 & 1724 & 900 & 3594  \\ 
+        \textbf{QC-PERTH} & 3703 & 1867 & 1177 & 3253  \\ 
+        \textbf{QC-OSLO} & 3583 & 1083 & 702 & 4632  \\ 
+        \textbf{QC-JAKARTA} & 3829 & 1427 & 880 & 3864  \\ 
+        \textbf{QC-LAGOS} & 3570 & 1133 & 625 & 4672 \\ \hline
+    \end{tabular}
+    \caption{QS-QC: 10000 SHOTS}
+\end{table}
+
+\begin{table}[!ht]
+    \centering
+    \begin{tabular}{ccccc}
+    \hline
+        \textbf{RESULTS} & \textbf{'00'} & \textbf{'01'} & \textbf{'10'} & \textbf{'11' } \\ \hline
+        \textbf{QS-SIMULATION} & 7560 & 2409 & 1164 & 8867  \\ 
+        \textbf{QC-NAIROBI} & 6904 & 2294 & 1940 & 8862  \\ 
+        \textbf{QC-PERTH} & 6556 & 3034 & 2252 & 8158  \\ 
+        \textbf{QC-OSLO} & 7563 & 2275 & 1274 & 8888  \\ 
+        \textbf{QC-JAKARTA} & 7325 & 2970 & 1971 & 7734  \\ 
+        \textbf{QC-LAGOS} & 7315 & 2594 & 1405 & 8686 \\ \hline
+    \end{tabular}
+    \caption{QS-QC: 20000 SHOTS}
+\end{table}
+
+\begin{table}[!ht]
+    \centering
+    \begin{tabular}{ccccc}
+    \hline
+        \textbf{RESULTS} & \textbf{'00'} & \textbf{'01'} & \textbf{'10'} & \textbf{'11' } \\ \hline
+        \textbf{QS-SIMULATION} & 0,37 & 0,15 & 0,07 & 0,41  \\ 
+        \textbf{QC-NAIROBI} & 0,4 & 0,14 & 0,03 & 0,43  \\ 
+        \textbf{QC-PERTH} & 0,35 & 0,26 & 0,1 & 0,29  \\ 
+        \textbf{QC-OSLO} & 0,4 & 0,08 & 0,04 & 0,48  \\ 
+        \textbf{QC-JAKARTA} & 0,35 & 0,16 & 0,11 & 0,38  \\ 
+        \textbf{QC-LAGOS} & 0,38 & 0,1 & 0,06 & 0,46 \\ \hline
+    \end{tabular}
+    \caption{QS-QC: 100 SHOTS (Probabilities)}
+\end{table}
+
+\begin{table}[!ht]
+    \centering
+    \begin{tabular}{ccccc}
+    \hline
+        \textbf{RESULTS} & \textbf{'00'} & \textbf{'01'} & \textbf{'10'} & \textbf{'11' } \\ \hline
+        \textbf{QS-SIMULATION} & 0,364 & 0,108 & 0,06 & 0,468  \\ 
+        \textbf{QC-NAIROBI} & 0,366 & 0,118 & 0,134 & 0,382  \\ 
+        \textbf{QC-PERTH} & 0,4 & 0,178 & 0,134 & 0,288  \\ 
+        \textbf{QC-OSLO} & 0,378 & 0,104 & 0,066 & 0,452  \\ 
+        \textbf{QC-JAKARTA} & 0,374 & 0,12 & 0,094 & 0,412  \\ 
+        \textbf{QC-LAGOS} & 0,328 & 0,118 & 0,086 & 0,468 \\ \hline
+    \end{tabular}
+    \caption{QS-QC: 500 SHOTS (Probabilities)}
+\end{table}
+
+
+\begin{table}[!ht]
+    \centering
+    \begin{tabular}{ccccc}
+    \hline
+        \textbf{RESULTS} & \textbf{'00'} & \textbf{'01'} & \textbf{'10'} & \textbf{'11' } \\ \hline
+        \textbf{QS-SIMULATION} & 0,362 & 0,117 & 0,067 & 0,454  \\ 
+        \textbf{QC-NAIROBI} & 0,335 & 0,162 & 0,112 & 0,391  \\ 
+        \textbf{QC-PERTH} & 0,337 & 0,185 & 0,121 & 0,357  \\ 
+        \textbf{QC-OSLO} & 0,379 & 0,1 & 0,052 & 0,469  \\ 
+        \textbf{QC-JAKARTA} & 0,378 & 0,16 & 0,076 & 0,386  \\ 
+        \textbf{QC-LAGOS} & 0,366 & 0,113 & 0,06 & 0,461 \\ \hline
+    \end{tabular}
+    \caption{QS-QC: 1000 SHOTS (Probabilities)}
+\end{table}
+
+\begin{table}[!ht]
+    \centering
+    \begin{tabular}{ccccc}
+    \hline
+        \textbf{RESULTS} & \textbf{'00'} & \textbf{'01'} & \textbf{'10'} & \textbf{'11' } \\ \hline
+        \textbf{QS-SIMULATION} & 0,371 & 0,12825 & 0,067 & 0,43375  \\ 
+        \textbf{QC-NAIROBI} & 0,35425 & 0,11325 & 0,098 & 0,4345  \\ 
+        \textbf{QC-PERTH} & 0,3835 & 0,164 & 0,09775 & 0,35475  \\ 
+        \textbf{QC-OSLO} & 0,36375 & 0,1045 & 0,0665 & 0,46525  \\ 
+        \textbf{QC-JAKARTA} & 0,3745 & 0,13675 & 0,09275 & 0,396  \\ 
+        \textbf{QC-LAGOS} & 0,3445 & 0,106 & 0,0645 & 0,485 \\ \hline
+    \end{tabular}
+    \caption{QS-QC: 4000 SHOTS (Probabilities)}
+\end{table}
+
+\begin{table}[!ht]
+    \centering
+    \begin{tabular}{ccccc}
+    \hline
+        \textbf{RESULTS} & \textbf{'00'} & \textbf{'01'} & \textbf{'10'} & \textbf{'11' } \\ \hline
+        \textbf{QS-SIMULATION} & 0,3772 & 0,1223 & 0,0623 & 0,4382  \\ 
+        \textbf{QC-NAIROBI} & 0,3782 & 0,1724 & 0,09 & 0,3594  \\ 
+        \textbf{QC-PERTH} & 0,3703 & 0,1867 & 0,1177 & 0,3253  \\ 
+        \textbf{QC-OSLO} & 0,3583 & 0,1083 & 0,0702 & 0,4632  \\ 
+        \textbf{QC-JAKARTA} & 0,3829 & 0,1427 & 0,088 & 0,3864  \\ 
+        \textbf{QC-LAGOS} & 0,357 & 0,1133 & 0,0625 & 0,4672 \\ \hline
+    \end{tabular}
+    \caption{QS-QC: 10000 SHOTS (Probabilities)}
+\end{table}
+
+\begin{table}[!ht]
+    \centering
+    \begin{tabular}{ccccc}
+    \hline
+        \textbf{RESULTS} & \textbf{'00'} & \textbf{'01'} & \textbf{'10'} & \textbf{'11' } \\ \hline
+        \textbf{QS-SIMULATION} & 0,378 & 0,12045 & 0,0582 & 0,44335  \\ 
+        \textbf{QC-NAIROBI} & 0,3452 & 0,1147 & 0,097 & 0,4431  \\ 
+        \textbf{QC-PERTH} & 0,3278 & 0,1517 & 0,1126 & 0,4079  \\ 
+        \textbf{QC-OSLO} & 0,37815 & 0,11375 & 0,0637 & 0,4444  \\ 
+        \textbf{QC-JAKARTA} & 0,36625 & 0,1485 & 0,09855 & 0,3867  \\ 
+        \textbf{QC-LAGOS} & 0,36575 & 0,1297 & 0,07025 & 0,4343 \\ \hline
+    \end{tabular}
+    \caption{QS-QC: 20000 SHOTS (Probabilities)}
+\end{table}
+
+
+\begin{table}[!ht]
+    \centering
+    \begin{tabular}{ccccc}
+    \hline
+        \textbf{RESULTS} & \textbf{'00'} & \textbf{'01'} & \textbf{'10'} & \textbf{'11' } \\ \hline
+        \textbf{QC-NAIROBI} & 0,03 & 0,01 & 0,04 & 0,02  \\ 
+        \textbf{QC-PERTH} & 0,02 & 0,11 & 0,03 & 0,12  \\ 
+        \textbf{QC-OSLO} & 0,03 & 0,07 & 0,03 & 0,07  \\ 
+        \textbf{QC-JAKARTA} & 0,02 & 0,01 & 0,04 & 0,03  \\ 
+        \textbf{QC-LAGOS} & 0,01 & 0,05 & 0,01 & 0,05 \\ \hline
+    \end{tabular}
+    \caption{QC ERROR: 100 SHOTS}
+\end{table}
+
+\begin{table}[!ht]
+    \centering
+    \begin{tabular}{ccccc}
+    \hline
+        \textbf{RESULTS} & \textbf{'00'} & \textbf{'01'} & \textbf{'10'} & \textbf{'11' } \\ \hline
+        \textbf{QC-NAIROBI} & 0,002 & 0,01 & 0,074 & 0,086  \\ 
+        \textbf{QC-PERTH} & 0,036 & 0,07 & 0,074 & 0,18  \\ 
+        \textbf{QC-OSLO} & 0,014 & 0,004 & 0,006 & 0,016  \\ 
+        \textbf{QC-JAKARTA} & 0,01 & 0,012 & 0,034 & 0,056  \\ 
+        \textbf{QC-LAGOS} & 0,036 & 0,01 & 0,026 & 0 \\ \hline
+    \end{tabular}
+    \caption{QC ERROR: 500 SHOTS}
+\end{table}
+
+\begin{table}[!ht]
+    \centering
+    \begin{tabular}{ccccc}
+    \hline
+        \textbf{RESULTS} & \textbf{'00'} & \textbf{'01'} & \textbf{'10'} & \textbf{'11' } \\ \hline
+        \textbf{QC-NAIROBI} & 0,027 & 0,045 & 0,045 & 0,063  \\ 
+        \textbf{QC-PERTH} & 0,025 & 0,068 & 0,054 & 0,097  \\ 
+        \textbf{QC-OSLO} & 0,017 & 0,017 & 0,015 & 0,015  \\ 
+        \textbf{QC-JAKARTA} & 0,016 & 0,043 & 0,009 & 0,068  \\ 
+        \textbf{QC-LAGOS} & 0,004 & 0,004 & 0,007 & 0,007 \\ \hline
+    \end{tabular}
+    \caption{QC ERROR: 1000 SHOTS}
+\end{table}
+
+\begin{table}[!ht]
+    \centering
+    \begin{tabular}{ccccc}
+    \hline
+        \textbf{RESULTS} & \textbf{'00'} & \textbf{'01'} & \textbf{'10'} & \textbf{'11' } \\ \hline
+        \textbf{QC-NAIROBI} & 0,01675 & 0,015 & 0,031 & 0,00075  \\ 
+        \textbf{QC-PERTH} & 0,0125 & 0,03575 & 0,03075 & 0,079  \\ 
+        \textbf{QC-OSLO} & 0,00725 & 0,02375 & 0,0005 & 0,0315  \\ 
+        \textbf{QC-JAKARTA} & 0,0035 & 0,0085 & 0,02575 & 0,03775  \\ 
+        \textbf{QC-LAGOS} & 0,0265 & 0,02225 & 0,0025 & 0,05125 \\ \hline
+    \end{tabular}
+    \caption{QC ERROR: 4000 SHOTS}
+\end{table}
+
+\begin{table}[!ht]
+    \centering
+    \begin{tabular}{ccccc}
+    \hline
+        \textbf{RESULTS} & \textbf{'00'} & \textbf{'01'} & \textbf{'10'} & \textbf{'11' } \\ \hline
+        \textbf{QC-NAIROBI} & 0,001 & 0,0501 & 0,0277 & 0,0788  \\ 
+        \textbf{QC-PERTH} & 0,0069 & 0,0644 & 0,0554 & 0,1129  \\ 
+        \textbf{QC-OSLO} & 0,0189 & 0,014 & 0,0079 & 0,025  \\ 
+        \textbf{QC-JAKARTA} & 0,0057 & 0,0204 & 0,0257 & 0,0518  \\ 
+        \textbf{QC-LAGOS} & 0,0202 & 0,009 & 0,0002 & 0,029 \\ \hline
+    \end{tabular}
+    \caption{QC ERROR: 10000 SHOTS}
+\end{table}
+
+\begin{table}[!ht]
+    \centering
+    \begin{tabular}{ccccc}
+    \hline
+        \textbf{RESULTS} & \textbf{'00'} & \textbf{'01'} & \textbf{'10'} & \textbf{'11' } \\ \hline
+        \textbf{QC-NAIROBI} & 0,0328 & 0,00575 & 0,0388 & 0,00025  \\ 
+        \textbf{QC-PERTH} & 0,0502 & 0,03125 & 0,0544 & 0,03545  \\ 
+        \textbf{QC-OSLO} & 0,000 & 0,007 & 0,006 & 0,001  \\ 
+        \textbf{QC-JAKARTA} & 0,01175 & 0,02805 & 0,04035 & 0,05665  \\ 
+        \textbf{QC-LAGOS} & 0,01225 & 0,00925 & 0,01205 & 0,00905 \\ \hline
+    \end{tabular}
+    \caption{QC ERROR: 20000 SHOTS}
+\end{table}
+
+
+\begin{table}[!ht]
+    \centering
+    \begin{tabular}{ccccccc}
+    \hline
+        \textbf{RESULTS} & \textbf{100 SH.} & \textbf{500  SH.} & \textbf{1000 SH.} & \textbf{4000 SH.} & \textbf{10000 SH.} & \textbf{20000 SH.} \\ \hline
+        \textbf{QC-NAIROBI} & 0,1 & 0,172 & 0,18 & 0,0635 & 0,1576 & 0,0776  \\ 
+        \textbf{QC-PERTH} & 0,28 & 0,36 & 0,244 & 0,158 & 0,2396 & 0,1713  \\ 
+        \textbf{QC-OSLO} & 0,2 & 0,04 & 0,064 & 0,063 & 0,0658 & 0,0134  \\ 
+        \textbf{QC-JAKARTA} & 0,1 & 0,112 & 0,136 & 0,0755 & 0,1036 & 0,1368  \\ 
+        \textbf{QC-LAGOS} & 0,12 & 0,072 & 0,022 & 0,1025 & 0,0584 & 0,0426 \\ \hline
+    \end{tabular}
+    \caption{TOTAL ERROR QC}
+\end{table}
+
+
+\begin{table}[!ht]
+    \centering
+    \begin{tabular}{cc}
+    \hline
+        \textbf{RESULTS} & \textbf{AVERAGE ERROR } \\ \hline
+        \textbf{QC-PERTH} & 0,24215  \\ 
+        \textbf{QC-NAIROBI} & 0,125116667  \\ 
+        \textbf{QC-JAKARTA} & 0,11065  \\ 
+        \textbf{QC-OSLO} & 0,074366667  \\ 
+        \textbf{QC-LAGOS} & 0,069583333 \\ \hline
+    \end{tabular}
+    \caption{AVERAGE ERROR QC}
+\end{table}
