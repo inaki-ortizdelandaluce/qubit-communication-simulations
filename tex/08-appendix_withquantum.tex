@@ -1920,20 +1920,55 @@ The prepare-and-measure scenario selected for the comparison is as follows
 \end{equation}
 A full analysis of the achievable performances when simulating such scenario with IBM Quantum simulators and computers can be found \href{https://github.com/inaki-ortizdelandaluce/qubit-communication-simulations/blob/main/tex/xls/qc_probabilities_summary.xlsx}{here}.
 
+
+
 \begin{table}[!ht]
-    \centering
-    \begin{tabular}{llllllllll}
+    \raggedleft
+    \begin{tabular}{cccccccccc}
     \hline
-        \textbf{} & \textbf{100 SHOTS} & \textbf{} & \textbf{} & \textbf{ } & \textbf{} & \textbf{} & \textbf{} & \textbf{} & \textbf{} \\ \hline
-        \textbf{RESULTS} & '00' & '01' & '10' & '11'  & ~ & ~ & ~ & ~ & ~ \\ 
+        \textbf{RESULTS} & \textbf{'00'} & \textbf{'01'} & \textbf{'10'} & \textbf{'11' } & \textbf{} & \textbf{} & \textbf{} & \textbf{} & \textbf{} \\ \hline
         \textbf{QS-SIMULATION} & 37 & 15 & 7 & 41  & ~ & ~ & ~ & ~ & ~ \\ 
         \textbf{QC-NAIROBI} & 40 & 14 & 3 & 43  & ~ & ~ & ~ & ~ & ~ \\ 
         \textbf{QC-PERTH} & 35 & 26 & 10 & 29  & ~ & ~ & ~ & ~ & ~ \\ 
         \textbf{QC-OSLO} & 40 & 8 & 4 & 48  & ~ & ~ & ~ & ~ & ~ \\ 
         \textbf{QC-JAKARTA} & 35 & 16 & 11 & 38  & ~ & ~ & ~ & ~ & ~ \\ 
-        \textbf{QC-LAGOS} & 38 & 10 & 6 & 46 & ~ & ~ & ~ & ~ & ~ \\ 
-        \textbf{} & ~ & ~ & ~ & ~ & ~ & ~ & ~ & ~ & ~ \\ 
-        \textbf{} & ~ & ~ & ~ & ~ & ~ & ~ & ~ & ~ & ~ \\ \hline
+        \textbf{QC-LAGOS} & 38 & 10 & 6 & 46 & ~ & ~ & ~ & ~ & ~ \\  \hline
     \end{tabular}
+    \caption{QS-QC:100 SHOTS}
 \end{table}
+
+
+\begin{table}[!ht]
+    \raggedleft
+    \begin{tabular}{cccccccccc}
+    \hline
+        \textbf{RESULTS} & \textbf{'00'} & \textbf{'01'} & \textbf{'10'} & \textbf{'11' } & \textbf{} & \textbf{} & \textbf{} & \textbf{} & \textbf{} \\ \hline
+        \textbf{QS-SIMULATION} & 182 & 54 & 30 & 234  & ~ & ~ & ~ & ~ & ~ \\ 
+        \textbf{QC-NAIROBI} & 183 & 59 & 67 & 191  & ~ & ~ & ~ & ~ & ~ \\ 
+        \textbf{QC-PERTH} & 200 & 89 & 67 & 144  & ~ & ~ & ~ & ~ & ~ \\ 
+        \textbf{QC-OSLO} & 189 & 52 & 33 & 226  & ~ & ~ & ~ & ~ & ~ \\ 
+        \textbf{QC-JAKARTA} & 187 & 60 & 47 & 206  & ~ & ~ & ~ & ~ & ~ \\ 
+        \textbf{QC-LAGOS} & 164 & 59 & 43 & 234 & ~ & ~ & ~ & ~ & ~ \\  \hline
+    \end{tabular}
+    \caption{QS-QC: 500 SHOTS}
+\end{table}
+
+\begin{table}[!ht]
+    \raggedleft
+    \begin{tabular}{cccccccccc}
+    \hline
+        \textbf{RESULTS} & \textbf{'00'} & \textbf{'01'} & \textbf{'10'} & \textbf{'11' } & \textbf{} & \textbf{} & \textbf{} & \textbf{} & \textbf{} \\ \hline
+        \textbf{QS-SIMULATION} & 362 & 117 & 67 & 454  & ~ & ~ & ~ & ~ & ~ \\ 
+        \textbf{QC-NAIROBI} & 335 & 162 & 112 & 391  & ~ & ~ & ~ & ~ & ~ \\ 
+        \textbf{QC-PERTH} & 337 & 185 & 121 & 357  & ~ & ~ & ~ & ~ & ~ \\ 
+        \textbf{QC-OSLO} & 379 & 100 & 52 & 469  & ~ & ~ & ~ & ~ & ~ \\ 
+        \textbf{QC-JAKARTA} & 378 & 160 & 76 & 386  & ~ & ~ & ~ & ~ & ~ \\ 
+        \textbf{QC-LAGOS} & 366 & 113 & 60 & 461 & ~ & ~ & ~ & ~ & ~ \\ \hline
+    \end{tabular}
+    \caption{QS-QC: 1000 SHOTS}
+\end{table}
+
+
+
+
 
