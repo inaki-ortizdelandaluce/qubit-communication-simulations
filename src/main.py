@@ -139,7 +139,7 @@ def pm_trine(shots):
     one = Qubit(np.array([1, 0])).rho()
     two = Qubit(0.5 * np.array([1, math.sqrt(3)])).rho()
     three = Qubit(0.5 * np.array([1, -math.sqrt(3)])).rho()
-    povm = POVM(weights=2./3 * np.array([1, 1, 1]), proj=np.array([one, two, three], dtype=complex))
+    povm = POVM(weights=2. / 3 * np.array([1, 1, 1]), proj=np.array([one, two, three], dtype=complex))
 
     experiment = qt.classical.prepare_and_measure_povm(shots, qubit=psi, measurement=povm)
 
@@ -207,11 +207,11 @@ def pm_sic(shots):
     psi = qt.qubit.Qubit(np.array([(3 + 1.j * math.sqrt(3)) / 4., -0.5]))
 
     one = Qubit(np.array([1, 0])).rho()
-    two = Qubit(np.array([1/math.sqrt(3), math.sqrt(2/3)])).rho()
-    three = Qubit(np.array([1/math.sqrt(3),
-                            math.sqrt(2/3) * (math.cos(2 * math.pi/3) + 1.j * math.sin(2 * math.pi/3))])).rho()
-    four = Qubit(np.array([1/math.sqrt(3),
-                           math.sqrt(2/3) * (math.cos(4 * math.pi/3) + 1.j * math.sin(4 * math.pi/3))])).rho()
+    two = Qubit(np.array([1 / math.sqrt(3), math.sqrt(2 / 3)])).rho()
+    three = Qubit(np.array([1 / math.sqrt(3),
+                            math.sqrt(2 / 3) * (math.cos(2 * math.pi / 3) + 1.j * math.sin(2 * math.pi / 3))])).rho()
+    four = Qubit(np.array([1 / math.sqrt(3),
+                           math.sqrt(2 / 3) * (math.cos(4 * math.pi / 3) + 1.j * math.sin(4 * math.pi / 3))])).rho()
 
     povm = POVM(weights=0.5 * np.array([1, 1, 1, 1]), proj=np.array([one, two, three, four], dtype=complex))
 
@@ -674,11 +674,11 @@ def pm_kl_multiplot(shots):
 
     # EXPERIMENT 4: SIC-POVM
     one = Qubit(np.array([1, 0])).rho()
-    two = Qubit(np.array([1/math.sqrt(3), math.sqrt(2/3)])).rho()
-    three = Qubit(np.array([1/math.sqrt(3),
-                            math.sqrt(2/3) * (math.cos(2 * math.pi/3) + 1.j * math.sin(2 * math.pi/3))])).rho()
-    four = Qubit(np.array([1/math.sqrt(3),
-                           math.sqrt(2/3) * (math.cos(4 * math.pi/3) + 1.j * math.sin(4 * math.pi/3))])).rho()
+    two = Qubit(np.array([1 / math.sqrt(3), math.sqrt(2 / 3)])).rho()
+    three = Qubit(np.array([1 / math.sqrt(3),
+                            math.sqrt(2 / 3) * (math.cos(2 * math.pi / 3) + 1.j * math.sin(2 * math.pi / 3))])).rho()
+    four = Qubit(np.array([1 / math.sqrt(3),
+                           math.sqrt(2 / 3) * (math.cos(4 * math.pi / 3) + 1.j * math.sin(4 * math.pi / 3))])).rho()
     measurement4 = POVM(weights=0.5 * np.array([1, 1, 1, 1]), proj=np.array([one, two, three, four], dtype=complex))
     experiment4 = qt.classical.prepare_and_measure_povm(shots, qubit=qubit, measurement=measurement4)
 
@@ -998,6 +998,126 @@ def bell_multiplot():
     return None
 
 
+def quantum_benchmarking_probability():
+    mpl.rcParams['mathtext.fontset'] = 'stix'
+    mpl.rcParams['font.family'] = 'STIXGeneral'
+
+    cases = [r'$shots=100$', r'$shots=500$',
+             r'$shots=10^3$', r'$shots=4\cdot10^3$',
+             r'$shots=10^4$', r'$shots=2\cdot10^4$']
+
+    fig, axs = plt.subplots(3, 2, figsize=(8, 10), layout='constrained')
+
+    for ax, title in zip(axs.flat, cases):
+        ax.xaxis.set_tick_params(which='major', size=5, width=1, direction='out', top='on')
+        ax.xaxis.set_tick_params(which='minor', size=3, width=1, direction='out', top='on')
+        ax.yaxis.set_tick_params(which='major', size=5, width=1, direction='out', right='on')
+        ax.yaxis.set_tick_params(which='minor', size=3, width=1, direction='out', right='on')
+        ax.set_title(title)
+
+    measures = ("00", "01", "10", "11")
+    x = np.arange(len(measures))  # the label locations
+    width = 0.15  # the width of the bars
+
+    # shots = 100
+    p1 = {
+        "Aer Simulator": (0.37, 0.15, 0.07, 0.41),
+        "Nairobi": (0.4, 0.14, 0.03, 0.43),
+        "Perth": (0.35, 0.26, 0.1, 0.29),
+        "Oslo": (0.4, 0.08, 0.04, 0.48),
+        "Jakarta": (0.35, 0.16, 0.11, 0.38),
+        "Lagos": (0.38, 0.1, 0.06, 0.46)
+    }
+
+    # shots = 500
+    p2 = {
+        "Aer Simulator": (0.364, 0.108, 0.06, 0.468),
+        "Nairobi": (0.366, 0.118, 0.134, 0.382),
+        "Perth": (0.4, 0.178, 0.134, 0.288),
+        "Oslo": (0.378, 0.104, 0.066, 0.452),
+        "Jakarta": (0.374, 0.12, 0.094, 0.412),
+        "Lagos": (0.328, 0.118, 0.086, 0.468)
+    }
+
+    # shots = 1000
+    p3 = {
+        "Aer Simulator": (0.362, 0.117, 0.067, 0.454),
+        "Nairobi": (0.335, 0.162, 0.112, 0.391),
+        "Perth": (0.337, 0.185, 0.121, 0.357),
+        "Oslo": (0.379, 0.1, 0.052, 0.469),
+        "Jakarta": (0.378, 0.16, 0.076, 0.386),
+        "Lagos": (0.366, 0.113, 0.06, 0.461)
+    }
+
+    # shots = 4000
+    p4 = {
+        "Aer Simulator": (0.371, 0.12825, 0.067, 0.43375),
+        "Nairobi": (0.35425, 0.11325, 0.098, 0.4345),
+        "Perth": (0.3835, 0.164, 0.09775, 0.35475),
+        "Oslo": (0.36375, 0.1045, 0.0665, 0.46525),
+        "Jakarta": (0.3745, 0.13675, 0.09275, 0.396),
+        "Lagos": (0.3445, 0.106, 0.0645, 0.485)
+    }
+
+    # shots = 10000
+    p5 = {
+        "Aer Simulator": (0.3772, 0.1223, 0.0623, 0.4382),
+        "Nairobi": (0.3782, 0.1724, 0.09, 0.3594),
+        "Perth": (0.3703, 0.1867, 0.1177, 0.3253),
+        "Oslo": (0.3583, 0.1083, 0.0702, 0.4632),
+        "Jakarta": (0.3829, 0.1427, 0.088, 0.3864),
+        "Lagos": (0.357, 0.1133, 0.0625, 0.4672)
+    }
+
+    # shots = 20000
+    p6 = {
+        "Aer Simulator": (0.378, 0.12045, 0.0582, 0.44335),
+        "Nairobi": (0.3452, 0.1147, 0.097, 0.4431),
+        "Perth": (0.3278, 0.1517, 0.1126, 0.4079),
+        "Oslo": (0.37815, 0.11375, 0.0637, 0.4444),
+        "Jakarta": (0.36625, 0.1485, 0.09855, 0.3867),
+        "Lagos": (0.36575, 0.1297, 0.07025, 0.4343)
+    }
+
+    plot_bar(axs[0][0], x, measures, p1)
+    plot_bar(axs[0][1], x, measures, p2)
+    plot_bar(axs[1][0], x, measures, p3)
+    plot_bar(axs[1][1], x, measures, p4)
+    plot_bar(axs[2][0], x, measures, p5)
+    plot_bar(axs[2][1], x, measures, p6)
+
+    fig.tight_layout()
+    plt.show()
+
+    return None
+
+
+def plot_bar(ax, x, measures, p):
+    multiplier = 1
+    width = 0.15  # the width of the bars
+    bar_colors = plt.cm.get_cmap('tab10', 10)
+    for attribute, measurement in p.items():
+        offset = width * multiplier
+        rects = ax.bar(x + offset, measurement, width, label=attribute, color=bar_colors(multiplier))
+        if multiplier == 1:
+            ax.bar_label(rects, padding=3, fontsize=8)
+        multiplier += 1
+
+    ax.set_ylabel('Probability')
+    ax.set_xticks(x + width * len(measures), measures)
+    ax.legend(loc='upper left', ncols=3, fontsize=6)
+
+    return None
+
+
+def quantum_benchmarking_error():
+    return None
+
+
+def quantum_benchmarking_total_error():
+    return None
+
+
 if __name__ == "__main__":
     # random_states()
     # random_povm()
@@ -1020,4 +1140,5 @@ if __name__ == "__main__":
     # bell_sample_probabilities(10**7)
     # bell_sample_heatmap()
     # bell(10**7)
-    bell_multiplot()
+    # bell_multiplot()
+    quantum_benchmarking_probability()
