@@ -1198,6 +1198,40 @@ def quantum_benchmarking_error():
 
 
 def quantum_benchmarking_total_error():
+
+    mpl.rcParams['mathtext.fontset'] = 'stix'
+    mpl.rcParams['font.family'] = 'STIXGeneral'
+
+    fig, ax = plt.subplots(layout='constrained')
+
+    error = {
+        "Nairobi": (0.1, 0.172, 0.18, 0.0635, 0.1576, 0.0776),
+        "Perth": (0.28, 0.36, 0.244, 0.158, 0.2396, 0.1713),
+        "Oslo": (0.2, 0.04, 0.064, 0.063, 0.0658, 0.0134),
+        "Jakarta": (0.1, 0.112, 0.136, 0.0755, 0.1036, 0.1368),
+        "Lagos": (0.12, 0.072, 0.022, 0.1025, 0.0584, 0.0426)
+    }
+
+    width = 0.15  # the width of the bars
+    bar_colors = plt.cm.get_cmap('tab10', 10)
+    multiplier = 2
+    shots = (r'100', r'500', r'$10^3$', r'$4\cdot10^3$',
+             r'$10^4$', r'$2\cdot10^4$')
+
+    x = np.arange(len(shots))
+    for attribute, measurement in error.items():
+        offset = width * multiplier
+        rects = ax.bar(x + offset, measurement, width, label=attribute, color=bar_colors(multiplier))
+        ax.bar_label(rects, padding=3, fontsize=8)
+        multiplier += 1
+
+    ax.set_ylabel('Total Error')
+    ax.set_xlabel('Shots')
+    ax.set_xticks(x + width * 4, shots)
+    ax.legend(loc='upper left', ncols=3, fontsize=6)
+
+    plt.show()
+
     return None
 
 
@@ -1225,4 +1259,5 @@ if __name__ == "__main__":
     # bell(10**7)
     # bell_multiplot()
     # quantum_benchmarking_probability()
-    quantum_benchmarking_error()
+    # quantum_benchmarking_error()
+    quantum_benchmarking_total_error()
