@@ -21,14 +21,11 @@ Prove by classical and quantum computer based experiments that a qubit transmiss
 
 ### &#10003; Quantum Simulation using IBM Quantum resources
 
----
 ## &#9989; Simulate using Bell scenarios
 
 ### &#10003; Bell's singlet and local projective measurements
 
 ### &#10003; CHSH inequality
-
----
 
  # Other References
 - [The Communication Cost of Simulating Bell Correlations - Toner and Bacon, 2003](https://arxiv.org/abs/quant-ph/0304076)
