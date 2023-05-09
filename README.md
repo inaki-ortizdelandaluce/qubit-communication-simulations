@@ -19,7 +19,7 @@ Prove by classical and quantum computer based experiments that a qubit transmiss
 
 ### &#10003; Classical simulation
 
-### &#10003; Simulation using Qiskit Quantum Simulator
+### &#10003; Quantum Simulation using IBM Quantum resources
 
 ---
 ## &#9989; Simulate using Bell scenarios
