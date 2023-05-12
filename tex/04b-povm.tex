@@ -6,7 +6,7 @@ Even if the final goal is to build POVMs to test how the classical protocol conv
 \begin{equation}\label{eq:cross-povm}
     \mathbb{P}_4 = \{\frac{1}{2}\ket{0}\bra{0}, \frac{1}{2}\ket{1}\bra{1}, \frac{1}{2}\ket{+}\bra{+}, \frac{1}{2}\ket{-}\bra{-} \}
 \end{equation}
-    \item The Trine-POVM, consisting of POVM elements uniformly distributed on an equatorial plane of the Bloch sphere, such that $\mathbb{P}_3=\{E_1, E_2, E_3\}$ and $E_k=\frac{2}{3}\ket{\Psi_{k}}\bra{\Psi_{k}}$, where
+    \item The Trine-POVM, consisting of POVM elements uniformly distributed on an equatorial plane of the Bloch sphere, with $\mathbb{P}_3=\{E_1, E_2, E_3\}$ and $E_k=\frac{2}{3}\ket{\Psi_{k}}\bra{\Psi_{k}}$, where
 \begin{equation}\label{eq:trine-povm}
 \begin{split}
 \ket{\Psi_1}&=\ket{0}\\
@@ -14,7 +14,7 @@ Even if the final goal is to build POVMs to test how the classical protocol conv
 \ket{\Psi_3}&=\frac{1}{2}\ket{0} - \frac{\sqrt{3}}{2} \ket{1}
 \end{split}
 \end{equation}
-    \item The SIC-POVMs, a well-known family of symmetric informationally complete positive operator-valued measures, which are proven to be very relevant in quantum state tomography and quantum cryptography fields among others \cite{renes2004}. The simplest SIC-POVM is the one with states the vertices of a regular tetrahedron in the Bloch sphere, see Figure \ref{fig:sic_povm}, such that $\mathbb{P}_4=\{E_1, E_2, E_3, E_4\}$ and $E_k=\frac{1}{2}\ket{\Psi_{k}}\bra{\Psi_{k}}$, where
+    \item The SIC-POVMs, a well-known family of symmetric informationally complete positive operator-valued measures, which are proven to be very relevant in quantum state tomography and quantum cryptography fields among others \cite{renes2004}. The simplest SIC-POVM is the one with states the vertices of a regular tetrahedron in the Bloch sphere, see Figure \ref{fig:sic_povm}, with $\mathbb{P}_4=\{E_1, E_2, E_3, E_4\}$ and $E_k=\frac{1}{2}\ket{\Psi_{k}}\bra{\Psi_{k}}$, where
 \begin{equation}\label{eq:sic-povm}
 \begin{split}
 \ket{\Psi_1}&=\ket{0}\\ 
@@ -74,12 +74,12 @@ which will implement the POVMs in the form required by the classical simulation 
 \subsubsection{Measurement in quantum circuit model}\label{section:neumark}
 To compare the probability distributions obtained from classical protocols with those from quantum simulators or noisy quantum computers, we must develop a technique for encoding positive operator-valued measures in a quantum circuit model. For a POVM of $N$ elements, such technique requires to create a $N\times N$ unitary matrix $U$ representing the measurement process.
 
-Neumark's theorem \cite{neumark1940} asserts that one can extend the Hilbert space of states $\mathcal{H}$ in which the rank-1 POVM elements 
+Neumark's theorem \cite{neumark1940} asserts that one can extend the Hilbert space of states $\mathcal{H}$ in which rank-1 POVM elements 
 \begin{equation}\label{eq:neumark_povm}
 B_k = \ket{v_{k}} \bra{v_{k}},\ \text{where}\ \sum_{k=1}^{N} B_{k} = \mathbb{1}
 \end{equation}
  are defined, in such a way that there exists in the extended space $\mathcal{K}$ a set of orthogonal projectors $\Pi_{k}$ such that $B_k$
- is the result of projecting $\Pi_{k}$ from $\mathcal{K}$ into $\mathcal{H}$. Following Peres \cite{peres1995}, we can add $N-2$ extra dimensions to $\mathcal{H}$ by introducing unit vectors $\ket{u_{k}}$ othogonal to each other and to all $\ket{v_{k}}$ in Equation (\ref{eq:neumark_povm}). Then we can build a complete orthonormal basis $\ket{w_{k}}$ in the enlarged space $\mathcal{K}$ such that
+ is the result of projecting $\Pi_{k}$ from $\mathcal{K}$ into $\mathcal{H}$. Following Peres \cite{peres1995}, we can add $N-2$ extra dimensions to $\mathcal{H}$ by introducing unit vectors $\ket{u_{k}}$ orthogonal to each other and to all $\ket{v_{k}}$ in Equation (\ref{eq:neumark_povm}). Then we can build a complete orthonormal basis $\ket{w_{k}}$ in the enlarged space $\mathcal{K}$ such that
 \begin{equation}
 \ket{w_{k}} := \ket{v_{k}} + \sum_{s=3}^{N} c_{k s} \ket{u_{k}}
 \end{equation}

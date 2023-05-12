@@ -42,7 +42,7 @@ The outcome probabilities for a given random POVM measure can be obtained analyt
 \label{table:quantum_resources}
 \end{table}
 
-The quantum circuit resulting from applying Neumark's extension to a particular state and POVM measure is shown in Figure \ref{fig:quantum_circuit_example}. A summary of the achievable probability performances for such circuit using different quantum resources can be found in Table \ref{table:quantum_results}. Noisy quantum computers currently available to the public are limited to running circuits with a maximum of twenty thousand shots, so this results in less accuracy than desired. On the other hand, the Qiskit Aer simulator can perform noise-free simulations with a full range of shots, hence leading to better performances, as we will see later in the classical simulation results discussion. A full and comprehensive benchmark of IBM's free-access simulators and quantum computers for this prepare-and-measure scenario can be found in Appendix \ref{section:benchmark}.
+The quantum circuit resulting from applying Neumark's extension to a particular state and POVM measure is shown in Figure \ref{fig:quantum_circuit_example}. A summary of the achievable probability performances for such circuit using different quantum resources can be found in Table \ref{table:quantum_results}. Noisy quantum computers currently available to the public are limited to run circuits with a maximum of twenty thousand shots. This, together with the lack of error correction measures available, results in less accuracy than desired. On the other hand, the Qiskit Aer simulator can perform noise-free simulations with a full range of shots, hence leading to better performances, as we will see later in the classical simulation results discussion. A full and comprehensive benchmark of IBM's free-access simulators and quantum computers for this prepare-and-measure scenario can be found in Appendix \ref{section:benchmark}.
 
 \begin{figure}[!ht]
 \centering
@@ -54,7 +54,7 @@ The quantum circuit resulting from applying Neumark's extension to a particular 
 \label{fig:quantum_circuit_example}
 \end{figure}
 
-A set of simulations have also been conducted for the prepare-and-measure classical protocol using a random assortment of states and measurements, in addition to a collection of well-known measures like the Cross-POVM (\ref{eq:cross-povm}), the Trine-POVM (\ref{eq:trine-povm}) and a four-element SIC-POVM sample (\ref{eq:sic-povm}). 
+Beyond all this, a set of simulations have been conducted for the prepare-and-measure classical protocol using a random assortment of states and measurements, in addition to a collection of well-known measures like the Cross-POVM (\ref{eq:cross-povm}), the Trine-POVM (\ref{eq:trine-povm}) and a four-element SIC-POVM sample (\ref{eq:sic-povm}). 
 
 \begin{sidewaystable}
 \begin{tabular}{c|cccc|cccc|cccc|cccc}
@@ -100,7 +100,7 @@ Lagos           & $\scriptstyle0.380$ & $\scriptstyle0.100$ & $\scriptstyle0.060
                         & $\scriptstyle0.375$ & $\scriptstyle0.125$ & $\scriptstyle0.064$ & $\scriptstyle0.435$ \\
 \bottomrule        
 \end{tabular}
-\caption{Example of probability distributions for circuit's classical measurement outcomes $\{00, 01, 10, 11\}$ obtained with different IBM Quantum systems and simulators. The prepare-and-measure scenario is that with state $\ket{\Psi}=\frac{3 + i \sqrt{3}}{4} \ket{0} - \frac{1}{2} \ket{1}$ and POVM measure $\mathbb{P}_4 = \{\frac{1}{2}\ket{0}\bra{0}, \frac{1}{2}\ket{1}\bra{1}, \frac{1}{2}\ket{+}\bra{+}, \frac{1}{2}\ket{-}\bra{-} \}$.}
+\caption{Example of probability distributions for circuit's classical measurement outcomes $\{00, 01, 10, 11\}$ obtained with different IBM Quantum simulators and quantum computers. The prepare-and-measure scenario used is that with state $\ket{\Psi}=\frac{3 + i \sqrt{3}}{4} \ket{0} - \frac{1}{2} \ket{1}$ and POVM measure $\mathbb{P}_4 = \{\frac{1}{2}\ket{0}\bra{0}, \frac{1}{2}\ket{1}\bra{1}, \frac{1}{2}\ket{+}\bra{+}, \frac{1}{2}\ket{-}\bra{-} \}$.}
 \label{table:quantum_results}
 \end{sidewaystable}
 
@@ -155,8 +155,9 @@ $^{6}\:\ket{\Psi}= (-0.461 + 0.195i) \ket{0} - (0.767 - 0.402i) \ket{1}$}
 \label{fig:classical_results_kl}
 \end{figure}
 
-\subsection{Bell simulation outcomes}
 Taking advantage of the analysis performed comparing theoretical and simulated probability distributions, we have extended the variational distance analysis to the prepare-and-measure scenario using IBM Quantum simulators. Figure \ref{fig:classical_quantum_results_kl} shows that existing quantum simulators converge to the expected theoretical values slightly slower than the classical simulations. The outcome probabilities after $10^7$ simulation runs are available in Table \ref{table:classical_quantum_results}.
+
+\subsection{Bell simulation outcomes}
 
 \begin{figure}[h!]
 \centering
