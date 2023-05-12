@@ -71,7 +71,7 @@ which also leads to the famous Clauser-Horne-Shimony-Holt expression
 CHSH \vcentcolon= \mathbb{E}[A_{0},B_{0}]\,+\mathbb{E}[A_{1},B_{0}]\,+\mathbb{E}[A_{0},B_{1}]\,-\mathbb{E}[A_{1},B_{1}]
 \end{equation}
 
-The classical protocol described in [RTQ22] using a Bell singlet state $\ket{\Psi^{-}}$, proves that a classical communication of one single bit is enough to reproduce the joint probabilities when Alice performs projective measurements an Bob can either perform projective or positive operator-valued measurements. Similarly as in the prepare and measure scenario, the classical probability distribution can be defined as
+The classical protocol described in \cite{renner2023} using a Bell singlet state $\ket{\Psi^{-}}$, proves that a classical communication of one single bit is enough to reproduce the joint probabilities when Alice performs projective measurements an Bob can either perform projective or positive operator-valued measurements. Similarly as in the prepare and measure scenario, the classical probability distribution can be defined as
 \begin{equation}\label{eq:prob_classic_bell}
 p_C(a_{x}, b_{y}|A_{x},B_{y}) = \int_{\lambda} d\lambda\ \pi(\lambda) p_A(c|A_{x}, \lambda)\ p_B(b_{y}|B_{y}, c, \lambda)
 \end{equation}
@@ -84,7 +84,7 @@ Given Equations (\ref{eq:prob_quantum_bell}) and (\ref{eq:prob_classic_bell}), t
 
 \subsection{Classical simulation protocols}\label{section:protocols}
 \subsubsection{Prepare-and-measure with one qubit}\label{section:protocol_pm}
-The classical prepare-and-measure protocol proposed by Renner, Tavakoli and Quintino \cite{renner2023} is restricted to qubits ($d_Q=2$), and makes an extensive use of the geometrical properties of a qubit state in the Bloch sphere. Since mixed qubit states are convex combinations of pure states, the protocol is also restricted to the usage of pure states only. Toner and Bacon proved that making a further restriction to projective measurements, i.e. $B_{k}^{2} = B_{k}$, the classical simulation cost was upper bounded by two classical bits ($d_C=2$) \cite{toner2003}, but \cite{renner2023} generalizes the results to positive operator-valued measures with a minimal and therefore necessary classical cost of two qubits. Finally, the protocol is also restricted without any loss of generality to POVMs proportional to rank-1 projectors, following results in \cite{barrett2002}.
+The classical prepare-and-measure protocol proposed by Renner, Tavakoli and Quintino \cite{renner2023} is restricted to qubits ($d_Q=2$), and makes an extensive use of the geometrical properties of a qubit state in the Bloch sphere. Since mixed qubit states are convex combinations of pure states, the protocol is also restricted to the usage of pure states. Toner and Bacon proved that making a further restriction to projective measurements, i.e. $B_{k}^{2} = B_{k}$, the classical simulation cost was upper bounded by two classical bits ($d_C=2$) \cite{toner2003}, but \cite{renner2023} generalizes the results to positive operator-valued measures with a minimal and therefore necessary classical cost of two qubits. Finally, the protocol is also restricted without any loss of generality to POVMs proportional to rank-1 projectors, following results in \cite{barrett2002}.
 
 In Bloch notation, qubit states $\rho$ are represented by three-dimensional real normalized vectors $\vec{x} \in \mathbb{R}^{3}$, and rank-1 POVM projectors as 
 \begin{equation}\label{eq:rank1_povm}
@@ -133,32 +133,12 @@ p_B(k|\{B_{k}\},\vec{\lambda}) = \frac{p_{k}\ \Theta(\vec{y}_{k} \cdot \vec{\lam
 \nextlevel[2]
 \end{msc}
 \end{center}
-\caption{Classical prepare-and-measure protocol sequence: Alice sends two bits $c_1, c_2$ resulting from projecting the qubit state's Bloch vector $\vec{x}$ with respect to the shared random vectors $\vec{\lambda}_1, \vec{\lambda}_2$ through a classical channel, Bob flips the shared random vectors when necessary, and finally computes classical probability outcomes according to Equation (\ref{eq:prob_classic_bob}).}
+\caption{Classical prepare-and-measure protocol sequence: Alice sends two bits $c_1$ and $c_2$ resulting from projecting the qubit state's Bloch vector $\vec{x}$ with respect to the shared random vectors $\vec{\lambda}_1$ and $\vec{\lambda}_2$, through a classical channel, Bob flips the shared random vectors when necessary, and finally computes classical probability outcomes according to Equation (\ref{eq:prob_classic_bob}).}
 \label{fig:msc_pm}
 \end{figure}
 
-%https://tex.stackexchange.com/questions/368604/how-to-draw-a-half-and-half-colored-circle
-%\pgfmathsetmacro{\radius}{2}
-%\begin{tikzpicture}
-%    %\fill[gray!50,opacity=0.7] (0,0) circle (\radius); 
-%    %\fill[gray!10, opacity=1] (0,0) -- (135:\radius) arc (135:315:\radius) -- cycle; 
-%    \draw[] circle(\radius);
-%    \draw[thick,->] (0,0,0) -- (\radius,0,0) node[anchor=north west]{$\vec{\lambda}_1$};
-%    \draw[thick,->] (0,0,0) -- (-0.3473, 1.9696,0) node[anchor=south east]{$\vec{\lambda}_2$};
-%    \draw[thick,->] (0,0,0) -- (1.4142, 1.4142,0) node[anchor=south]{$\vec{x}$};
-%    \draw[dashed] (-1.414,1.414,0) -- (1.414,-1.414,0) node[anchor=south]{};    
-%\end{tikzpicture}
-
-%\tdplotsetmaincoords{40}{0}
-%\tdplotsetrotatedcoords{150}{50}{20}
-%\begin{tikzpicture}[scale=2,line join=bevel,tdplot_rotated_coords,fill %opacity=1,declare function={ colorFunc(\t)=ifthenelse(\t>0,60,300);}]
-%\pgfsetlinewidth{.0pt}
-%    \tdplotsphericalsurfaceplot[parametricfill]{72}{36}{2}%{transparent!0}{colorFunc(180*floor(\tdplotphi/180))
-%    }{}{}{}
-%\end{tikzpicture}
-
 \subsubsection{Bell with singlet state}\label{section:protocol_bell}
-Toner a Bacon showed in \cite{toner2003} that only a single bit was required to classically simulate local projective measurements on a qubit pair in a singlet state $\ket{\psi^{-}}=\frac{1}{\sqrt{2}}(\ket{01} - \ket{10})$. Renner, Tavakoli and Quintino again extended such result being Alice restricted to local projective measurements with outcomes $a=\pm 1$, and Bob allowed to perform any arbitrary POVM measure \cite{renner2023}. The steps for this protocol, sketched in Figure \ref{fig:msc_bell}, are the following:
+Toner a Bacon \cite{toner2003} proved that only a single bit was required to simulate classically local projective measurements on a qubit pair in a singlet state $\ket{\psi^{-}}=(\ket{01} - \ket{10})/\sqrt{2}$. Renner, Tavakoli and Quintino \cite{renner2023} have again extended the result being Alice restricted to local projective measurements with outcomes $a=\pm 1$, and Bob allowed to perform any arbitrary POVM measure. The steps for this protocol, sketched in Figure \ref{fig:msc_bell}, are the following:
 \begin{enumerate}
  \item Alice and Bob share two normalized vectors $\vec{\lambda}_1^{\prime}, \vec{\lambda}_2 \in \mathbb{R}^{3}$, which are uniformly and independently distributed on the unit radius sphere $S_2$.
  \item Instead of performing a measurement with projectors $\ket{\pm\vec{x}}\bra{\pm\vec{x}} = (\mathbb{1} + \vec{x} \cdot \vec{\sigma})/2$, Alice outputs $a = -sgn(\vec{x} \cdot \vec{\lambda}^{\prime}_1)$ and sends the bit $c = sgn(\vec{x} \cdot \vec{\lambda}^{\prime}_1) \cdot sgn(\vec{x} \cdot \vec{\lambda}_2)$ to Bob, where 
@@ -190,8 +170,8 @@ sgn(z) =
 \nextlevel[2]
 \end{msc}
 \end{center}
-\caption{Classical Bell with singlet state protocol sequence: Alice sends one bit $c$ resulting from projecting the associated projective measurement's Bloch vector $\vec{x}$ with respect to the shared random vectors $\vec{\lambda}_1, \vec{\lambda}_2$ through a classical channel, Bob flips the shared random vectors when necessary, and finally computes classical probability outcomes according to the response function from the prepare-and measure protocol, see Equation (\ref{eq:prob_classic_bob}).}
+\caption{Classical Bell with singlet state protocol sequence: Alice sends one bit $c$ resulting from projecting the associated projective measurement's Bloch vector $\vec{x}$ with respect to the shared random vectors $\vec{\lambda}_1$ and $\vec{\lambda}_2$ through a classical channel, Bob flips the shared random vectors when necessary, and finally computes classical probability outcomes according to the response function from the prepare-and measure protocol, see Equation (\ref{eq:prob_classic_bob}).}
 \label{fig:msc_bell}
 \end{figure}
 
-It can be proved that when Alice outputs $a=+1$, $\vec{\lambda}^{\prime}_1$ and $\vec{\lambda}^{\prime}_2$ are distributed on $S_2$ according to $\rho(\vec{\lambda}^{\prime}_i) = H(-\vec{x} \cdot \vec{\lambda}^{\prime}_i)/(2\pi)$, which corresponds to a classical description of Bob's post-measurement state $-\vec{x}$ and, conversely, when Alice outputs $a=-1$, the random vectors are distributed according to a distribution corresponding to Bob's post-measurement state $\vec{x}$, and therefore Bob can apply the same response function as in the prepare-and-measure protocol. % described in Section \ref{section:protocol_pm}. 
+It can be proved that when Alice outputs $a=+1$, $\vec{\lambda}^{\prime}_1$ and $\vec{\lambda}^{\prime}_2$ are distributed on $S_2$ according to $\rho(\vec{\lambda}^{\prime}_i) = H(-\vec{x} \cdot \vec{\lambda}^{\prime}_i)/(2\pi)$, which corresponds to a classical description of Bob's post-measurement state $-\vec{x}$ and, conversely, when Alice outputs $a=-1$, the random vectors are distributed according to a distribution corresponding to Bob's post-measurement state $\vec{x}$, such that Bob can apply the same response function as in the prepare-and-measure protocol. % described in Section \ref{section:protocol_pm}. 
