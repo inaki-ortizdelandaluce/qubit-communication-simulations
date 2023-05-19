@@ -138,7 +138,7 @@ p_B(k|\{B_{k}\},\vec{\lambda}) = \frac{p_{k}\ \Theta(\vec{y}_{k} \cdot \vec{\lam
 \end{figure}
 
 \subsubsection{Bell with singlet state}\label{section:protocol_bell}
-Toner a Bacon \cite{toner2003} proved that only a single bit was required to simulate classically local projective measurements on a qubit pair in a singlet state $\ket{\psi^{-}}=(\ket{01} - \ket{10})/\sqrt{2}$. Renner, Tavakoli and Quintino \cite{renner2023} have again extended the result being Alice restricted to local projective measurements with outcomes $a=\pm 1$, and Bob allowed to perform any arbitrary POVM measure. The steps for this protocol, sketched in Figure \ref{fig:msc_bell}, are the following:
+Toner and Bacon \cite{toner2003} proved that only a single bit was required to simulate classically local projective measurements on a qubit pair in a singlet state $\ket{\psi^{-}}=(\ket{01} - \ket{10})/\sqrt{2}$. Renner, Tavakoli and Quintino \cite{renner2023} have again extended the result being Alice restricted to local projective measurements with outcomes $a=\pm 1$, and Bob allowed to perform any arbitrary POVM measure. The steps for this protocol, sketched in Figure \ref{fig:msc_bell}, are the following:
 \begin{enumerate}
  \item Alice and Bob share two normalized vectors $\vec{\lambda}_1^{\prime}, \vec{\lambda}_2 \in \mathbb{R}^{3}$, which are uniformly and independently distributed on the unit radius sphere $S_2$.
  \item Instead of performing a measurement with projectors $\ket{\pm\vec{x}}\bra{\pm\vec{x}} = (\mathbb{1} + \vec{x} \cdot \vec{\sigma})/2$, Alice outputs $a = -sgn(\vec{x} \cdot \vec{\lambda}^{\prime}_1)$ and sends the bit $c = sgn(\vec{x} \cdot \vec{\lambda}^{\prime}_1) \cdot sgn(\vec{x} \cdot \vec{\lambda}_2)$ to Bob, where 
